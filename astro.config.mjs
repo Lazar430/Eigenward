@@ -5,7 +5,7 @@ import rehypeKatex from "rehype-katex";
 
 export default defineConfig({
   site: "https://Lazar430.github.io",
-  base: "/eigenward",
+  base: "/Eigenward",
   trailingSlash: "always",
 
   integrations: [
