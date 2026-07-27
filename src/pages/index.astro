@@ -1,11 +1,325 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { withBase } from "@/utils/paths";
+import katex from "katex";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const theoremFormula = katex.renderToString(
+  String.raw`e^{i\pi} + 1 = 0`,
+  {
+    displayMode: true,
+    throwOnError: false
+  }
+);
+
+const problemFormula = katex.renderToString(
+  String.raw`\sum_{k=1}^{n} k^3 = \left(\frac{n(n+1)}{2}\right)^2`,
+  {
+    displayMode: true,
+    throwOnError: false
+  }
+);
+
+const featuredPosts = [
+  {
+    eyebrow: "Linear Algebra",
+    title: "Why vector spaces exist",
+    text: "A motivated path from arrows and equations to abstraction, bases, and dimension."
+  },
+  {
+    eyebrow: "Geometry",
+    title: "What a conic really is",
+    text: "From school curves to quadratic forms, affine changes of coordinates, and classification."
+  },
+  {
+    eyebrow: "Proofs",
+    title: "How to read a proof",
+    text: "A practical guide to understanding proofs as mechanisms rather than text to memorize."
+  },
+  {
+    eyebrow: "Analysis",
+    title: "The meaning of a limit",
+    text: "Why epsilon arguments are not arbitrary formalism, but a language for controlled approximation."
+  },
+  {
+    eyebrow: "Computation",
+    title: "Turing machines as mathematics",
+    text: "A first look at computation as a rigorous mathematical object."
+  }
+];
+
+const branches = [
+  {
+    label: "Logic",
+    className: "logic",
+    href: withBase("branches/")
+  },
+  {
+    label: "Set Theory",
+    className: "sets",
+    href: withBase("branches/")
+  },
+  {
+    label: "Algebra",
+    className: "algebra",
+    href: withBase("branches/linear-algebra/")
+  },
+  {
+    label: "Geometry",
+    className: "geometry",
+    href: withBase("branches/")
+  },
+  {
+    label: "Analysis",
+    className: "analysis",
+    href: withBase("branches/")
+  },
+  {
+    label: "Topology",
+    className: "topology",
+    href: withBase("branches/")
+  },
+  {
+    label: "Number Theory",
+    className: "number",
+    href: withBase("branches/")
+  },
+  {
+    label: "Combinatorics",
+    className: "combinatorics",
+    href: withBase("branches/")
+  },
+  {
+    label: "Computing",
+    className: "computing",
+    href: withBase("branches/")
+  },
+  {
+    label: "Mathematical Physics",
+    className: "physics",
+    href: withBase("branches/")
+  }
+];
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<BaseLayout
+  title="Home"
+  description="A mathematical library of proofs, problems, animations, essays, and research notes."
+>
+  <section class="home-hero">
+    <p class="home-kicker">
+      Proofs · problems · animations · research notes
+    </p>
+
+    <h1>A finitely large napkin.</h1>
+
+    <p class="home-lead">
+      For those seeking guidance, look to eigenward.
+    </p>
+  </section>
+
+  <figure class="sanderson-quote">
+    <blockquote>
+      “The devils in the upper right quadrant aren't nearly appreciative enough
+      of projective geometry”
+    </blockquote>
+
+    <figcaption>— Grant Sanderson</figcaption>
+  </figure>
+
+  <section class="front-section">
+    <div class="section-header">
+      <h2>Rough sketch of topics</h2>
+
+      <p>
+        For a more detailed overview of stuff you can find in here, check the
+        Branches page.
+      </p>
+    </div>
+
+    <div
+      class="math-graph"
+      aria-label="Graph map of mathematical branches"
+    >
+      <svg
+        class="math-graph-lines"
+        viewBox="0 0 1000 560"
+        aria-hidden="true"
+      >
+        <line x1="500" y1="92" x2="210" y2="205" />
+        <line x1="500" y1="92" x2="500" y2="220" />
+        <line x1="500" y1="92" x2="790" y2="205" />
+
+        <line x1="210" y1="205" x2="225" y2="380" />
+        <line x1="500" y1="220" x2="390" y2="385" />
+        <line x1="500" y1="220" x2="610" y2="385" />
+        <line x1="790" y1="205" x2="775" y2="380" />
+
+        <line x1="390" y1="385" x2="225" y2="380" />
+        <line x1="610" y1="385" x2="775" y2="380" />
+        <line x1="390" y1="385" x2="500" y2="500" />
+        <line x1="610" y1="385" x2="500" y2="500" />
+      </svg>
+
+      {
+        branches.map((branch) => (
+          <a
+            class={`math-node ${branch.className}`}
+            href={branch.href}
+          >
+            {branch.label}
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="front-section">
+    <div class="carousel-header">
+      <div class="section-header">
+        <h2>Featured posts</h2>
+
+        <p>
+          Current rotation of things I deem to be interesting.
+        </p>
+      </div>
+
+      <div
+        class="carousel-controls"
+        aria-label="Featured posts controls"
+      >
+        <button
+          type="button"
+          data-carousel-prev
+          aria-label="Previous featured posts"
+        >
+          ←
+        </button>
+
+        <button
+          type="button"
+          data-carousel-next
+          aria-label="Next featured posts"
+        >
+          →
+        </button>
+      </div>
+    </div>
+
+    <div
+      class="featured-carousel"
+      data-featured-track
+    >
+      {
+        featuredPosts.map((post) => (
+          <a
+            class="featured-card"
+            href={withBase("articles/")}
+          >
+            <span class="eyebrow">{post.eyebrow}</span>
+
+            <h3>{post.title}</h3>
+
+            <p>{post.text}</p>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="front-section">
+    <div class="weekly-grid">
+      <a
+        class="spotlight-card problem-card"
+        href={withBase("problems/")}
+      >
+        <span class="eyebrow">Problem of the week</span>
+
+        <h2>A sum of cubes</h2>
+
+        <div
+          class="spotlight-math"
+          set:html={problemFormula}
+        />
+
+        <p>
+          Prove the identity without induction by giving both sides a geometric
+          or combinatorial interpretation.
+        </p>
+      </a>
+
+      <a
+        class="spotlight-card theorem-card"
+        href={withBase("articles/")}
+      >
+        <span class="eyebrow">Theorem of the week</span>
+
+        <h2>Euler's identity</h2>
+
+        <div
+          class="spotlight-math"
+          set:html={theoremFormula}
+        />
+
+        <p>
+          A compact meeting point of analysis, geometry, trigonometry, and
+          complex numbers.
+        </p>
+      </a>
+
+      <a
+        class="spotlight-card mathematician-card"
+        href={withBase("articles/")}
+      >
+        <span class="eyebrow">Mathematician of the month</span>
+
+        <h2>Emmy Noether</h2>
+
+        <p>
+          A central figure in modern algebra, symmetry, invariant theory, and
+          the structural way mathematics is now written.
+        </p>
+      </a>
+    </div>
+  </section>
+
+  <section class="background-explainer">
+    <div>
+      <span class="eyebrow">About the background</span>
+
+      <h2>What are Julia sets?</h2>
+
+      <p>
+        For those who might be wondering what are the
+        definitely-not-distracting-from-the-actual-content things in the
+        background.
+      </p>
+    </div>
+
+    <a
+      class="button secondary"
+      href={withBase("articles/julia-background/")}
+    >
+      How was this animated?
+    </a>
+  </section>
+
+  <script>
+    const track = document.querySelector("[data-featured-track]");
+    const previous = document.querySelector("[data-carousel-prev]");
+    const next = document.querySelector("[data-carousel-next]");
+
+    previous?.addEventListener("click", () => {
+      track?.scrollBy({
+        left: -420,
+        behavior: "smooth"
+      });
+    });
+
+    next?.addEventListener("click", () => {
+      track?.scrollBy({
+        left: 420,
+        behavior: "smooth"
+      });
+    });
+  </script>
+</BaseLayout>

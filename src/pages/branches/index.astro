@@ -1,0 +1,3254 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { withBase } from "@/utils/paths";
+
+type GroupId =
+  | "foundations"
+  | "algebra-number"
+  | "geometry-topology"
+  | "analysis-probability"
+  | "discrete-computation"
+  | "physics-applied";
+
+type GraphNode = {
+  id: string;
+  label: string;
+  group: GroupId | "root";
+  x: number;
+  y: number;
+  href: string;
+  kind: "root" | "hub" | "topic";
+};
+
+type GraphEdge = {
+  from: string;
+  to: string;
+  kind: "structural" | "bridge";
+};
+
+const STAGE_WIDTH = 2880;
+const STAGE_HEIGHT = 3260;
+const TOPIC_START_Y = 525;
+const ROW_GAP = 168;
+const COLUMN_OFFSET = 106;
+
+const groups = [
+  {
+    "id": "foundations",
+    "label": "Foundations & Logic",
+    "shortLabel": "Foundations",
+    "x": 240,
+    "description": "Logic, axioms, formal systems, semantics, and the foundations of mathematical reasoning."
+  },
+  {
+    "id": "algebra-number",
+    "label": "Algebra & Number Theory",
+    "shortLabel": "Algebra / Number",
+    "x": 720,
+    "description": "Structure, symmetry, equations, arithmetic, and exact symbolic relationships."
+  },
+  {
+    "id": "geometry-topology",
+    "label": "Geometry & Topology",
+    "shortLabel": "Geometry / Topology",
+    "x": 1200,
+    "description": "Shape, space, continuity, curvature, deformation, and geometric invariants."
+  },
+  {
+    "id": "analysis-probability",
+    "label": "Analysis & Probability",
+    "shortLabel": "Analysis / Probability",
+    "x": 1680,
+    "description": "Limits, continuous change, infinite-dimensional methods, randomness, and differential equations."
+  },
+  {
+    "id": "discrete-computation",
+    "label": "Discrete Mathematics & Computing",
+    "shortLabel": "Discrete / Computing",
+    "x": 2160,
+    "description": "Finite structures, algorithms, complexity, information, optimization, and symbolic computation."
+  },
+  {
+    "id": "physics-applied",
+    "label": "Mathematical Physics & Applications",
+    "shortLabel": "Physics / Applied",
+    "x": 2640,
+    "description": "Mathematical models of physical systems and applications throughout science and society."
+  }
+] as const;
+
+const topics = [
+  {
+    "id": "logic",
+    "label": "Mathematical Logic",
+    "group": "foundations",
+    "row": 0,
+    "col": 0,
+    "prerequisites": [
+      "hub-foundations"
+    ]
+  },
+  {
+    "id": "set-theory",
+    "label": "Set Theory",
+    "group": "foundations",
+    "row": 0,
+    "col": 1,
+    "prerequisites": [
+      "hub-foundations"
+    ]
+  },
+  {
+    "id": "proof-theory",
+    "label": "Proof Theory",
+    "group": "foundations",
+    "row": 1,
+    "col": 0,
+    "prerequisites": [
+      "logic"
+    ]
+  },
+  {
+    "id": "model-theory",
+    "label": "Model Theory",
+    "group": "foundations",
+    "row": 1,
+    "col": 1,
+    "prerequisites": [
+      "logic",
+      "set-theory"
+    ]
+  },
+  {
+    "id": "computability-theory",
+    "label": "Computability Theory",
+    "group": "foundations",
+    "row": 2,
+    "col": 0,
+    "prerequisites": [
+      "logic"
+    ]
+  },
+  {
+    "id": "recursion-theory",
+    "label": "Recursion Theory",
+    "group": "foundations",
+    "row": 2,
+    "col": 1,
+    "prerequisites": [
+      "computability-theory"
+    ]
+  },
+  {
+    "id": "type-theory",
+    "label": "Type Theory",
+    "group": "foundations",
+    "row": 3,
+    "col": 0,
+    "prerequisites": [
+      "logic",
+      "proof-theory"
+    ]
+  },
+  {
+    "id": "order-theory",
+    "label": "Order Theory",
+    "group": "foundations",
+    "row": 3,
+    "col": 1,
+    "prerequisites": [
+      "set-theory"
+    ]
+  },
+  {
+    "id": "axiomatic-set-theory",
+    "label": "Axiomatic Set Theory",
+    "group": "foundations",
+    "row": 4,
+    "col": 0,
+    "prerequisites": [
+      "set-theory",
+      "logic"
+    ]
+  },
+  {
+    "id": "descriptive-set-theory",
+    "label": "Descriptive Set Theory",
+    "group": "foundations",
+    "row": 4,
+    "col": 1,
+    "prerequisites": [
+      "axiomatic-set-theory",
+      "general-topology"
+    ]
+  },
+  {
+    "id": "category-theory",
+    "label": "Category Theory",
+    "group": "foundations",
+    "row": 5,
+    "col": 0,
+    "prerequisites": [
+      "set-theory",
+      "abstract-algebra"
+    ]
+  },
+  {
+    "id": "categorical-logic",
+    "label": "Categorical Logic",
+    "group": "foundations",
+    "row": 5,
+    "col": 1,
+    "prerequisites": [
+      "category-theory",
+      "model-theory"
+    ]
+  },
+  {
+    "id": "topos-theory",
+    "label": "Topos Theory",
+    "group": "foundations",
+    "row": 6,
+    "col": 0,
+    "prerequisites": [
+      "category-theory",
+      "logic"
+    ]
+  },
+  {
+    "id": "homotopy-type-theory",
+    "label": "Homotopy Type Theory",
+    "group": "foundations",
+    "row": 6,
+    "col": 1,
+    "prerequisites": [
+      "type-theory",
+      "homotopy-theory"
+    ]
+  },
+  {
+    "id": "universal-algebra",
+    "label": "Universal Algebra",
+    "group": "foundations",
+    "row": 7,
+    "col": 0,
+    "prerequisites": [
+      "logic",
+      "abstract-algebra"
+    ]
+  },
+  {
+    "id": "foundations-of-mathematics",
+    "label": "Foundations of Mathematics",
+    "group": "foundations",
+    "row": 7,
+    "col": 1,
+    "prerequisites": [
+      "logic",
+      "set-theory",
+      "type-theory"
+    ]
+  },
+  {
+    "id": "constructive-mathematics",
+    "label": "Constructive Mathematics",
+    "group": "foundations",
+    "row": 8,
+    "col": 0,
+    "prerequisites": [
+      "logic",
+      "type-theory"
+    ]
+  },
+  {
+    "id": "intuitionistic-logic",
+    "label": "Intuitionistic Logic",
+    "group": "foundations",
+    "row": 8,
+    "col": 1,
+    "prerequisites": [
+      "logic",
+      "constructive-mathematics"
+    ]
+  },
+  {
+    "id": "modal-logic",
+    "label": "Modal Logic",
+    "group": "foundations",
+    "row": 9,
+    "col": 0,
+    "prerequisites": [
+      "logic"
+    ]
+  },
+  {
+    "id": "philosophical-logic",
+    "label": "Philosophical Logic",
+    "group": "foundations",
+    "row": 9,
+    "col": 1,
+    "prerequisites": [
+      "logic"
+    ]
+  },
+  {
+    "id": "formal-verification",
+    "label": "Formal Verification",
+    "group": "foundations",
+    "row": 10,
+    "col": 0,
+    "prerequisites": [
+      "proof-theory",
+      "computability-theory"
+    ]
+  },
+  {
+    "id": "proof-assistants",
+    "label": "Proof Assistants",
+    "group": "foundations",
+    "row": 10,
+    "col": 1,
+    "prerequisites": [
+      "type-theory",
+      "formal-verification"
+    ]
+  },
+  {
+    "id": "computational-logic",
+    "label": "Computational Logic",
+    "group": "foundations",
+    "row": 11,
+    "col": 0,
+    "prerequisites": [
+      "logic",
+      "algorithms"
+    ]
+  },
+  {
+    "id": "automated-theorem-proving",
+    "label": "Automated Theorem Proving",
+    "group": "foundations",
+    "row": 11,
+    "col": 1,
+    "prerequisites": [
+      "computational-logic",
+      "proof-theory"
+    ]
+  },
+  {
+    "id": "elementary-algebra",
+    "label": "Elementary Algebra",
+    "group": "algebra-number",
+    "row": 0,
+    "col": 0,
+    "prerequisites": [
+      "hub-algebra-number"
+    ]
+  },
+  {
+    "id": "linear-algebra",
+    "label": "Linear Algebra",
+    "group": "algebra-number",
+    "row": 0,
+    "col": 1,
+    "prerequisites": [
+      "hub-algebra-number"
+    ]
+  },
+  {
+    "id": "abstract-algebra",
+    "label": "Abstract Algebra",
+    "group": "algebra-number",
+    "row": 1,
+    "col": 0,
+    "prerequisites": [
+      "elementary-algebra",
+      "linear-algebra"
+    ]
+  },
+  {
+    "id": "elementary-number-theory",
+    "label": "Elementary Number Theory",
+    "group": "algebra-number",
+    "row": 1,
+    "col": 1,
+    "prerequisites": [
+      "elementary-algebra"
+    ]
+  },
+  {
+    "id": "group-theory",
+    "label": "Group Theory",
+    "group": "algebra-number",
+    "row": 2,
+    "col": 0,
+    "prerequisites": [
+      "abstract-algebra"
+    ]
+  },
+  {
+    "id": "ring-theory",
+    "label": "Ring Theory",
+    "group": "algebra-number",
+    "row": 2,
+    "col": 1,
+    "prerequisites": [
+      "abstract-algebra"
+    ]
+  },
+  {
+    "id": "field-theory",
+    "label": "Field Theory",
+    "group": "algebra-number",
+    "row": 3,
+    "col": 0,
+    "prerequisites": [
+      "ring-theory"
+    ]
+  },
+  {
+    "id": "module-theory",
+    "label": "Module Theory",
+    "group": "algebra-number",
+    "row": 3,
+    "col": 1,
+    "prerequisites": [
+      "ring-theory",
+      "linear-algebra"
+    ]
+  },
+  {
+    "id": "galois-theory",
+    "label": "Galois Theory",
+    "group": "algebra-number",
+    "row": 4,
+    "col": 0,
+    "prerequisites": [
+      "field-theory",
+      "group-theory"
+    ]
+  },
+  {
+    "id": "commutative-algebra",
+    "label": "Commutative Algebra",
+    "group": "algebra-number",
+    "row": 4,
+    "col": 1,
+    "prerequisites": [
+      "ring-theory",
+      "module-theory"
+    ]
+  },
+  {
+    "id": "representation-theory",
+    "label": "Representation Theory",
+    "group": "algebra-number",
+    "row": 5,
+    "col": 0,
+    "prerequisites": [
+      "group-theory",
+      "linear-algebra"
+    ]
+  },
+  {
+    "id": "lie-theory",
+    "label": "Lie Theory",
+    "group": "algebra-number",
+    "row": 5,
+    "col": 1,
+    "prerequisites": [
+      "group-theory",
+      "linear-algebra",
+      "differential-geometry"
+    ]
+  },
+  {
+    "id": "homological-algebra",
+    "label": "Homological Algebra",
+    "group": "algebra-number",
+    "row": 6,
+    "col": 0,
+    "prerequisites": [
+      "module-theory",
+      "category-theory"
+    ]
+  },
+  {
+    "id": "clifford-algebra",
+    "label": "Clifford Algebra",
+    "group": "algebra-number",
+    "row": 6,
+    "col": 1,
+    "prerequisites": [
+      "linear-algebra",
+      "quadratic-forms"
+    ]
+  },
+  {
+    "id": "quadratic-forms",
+    "label": "Quadratic Forms",
+    "group": "algebra-number",
+    "row": 7,
+    "col": 0,
+    "prerequisites": [
+      "linear-algebra",
+      "elementary-number-theory"
+    ]
+  },
+  {
+    "id": "noncommutative-algebra",
+    "label": "Noncommutative Algebra",
+    "group": "algebra-number",
+    "row": 7,
+    "col": 1,
+    "prerequisites": [
+      "ring-theory",
+      "module-theory"
+    ]
+  },
+  {
+    "id": "algebraic-number-theory",
+    "label": "Algebraic Number Theory",
+    "group": "algebra-number",
+    "row": 8,
+    "col": 0,
+    "prerequisites": [
+      "field-theory",
+      "commutative-algebra",
+      "elementary-number-theory"
+    ]
+  },
+  {
+    "id": "analytic-number-theory",
+    "label": "Analytic Number Theory",
+    "group": "algebra-number",
+    "row": 8,
+    "col": 1,
+    "prerequisites": [
+      "elementary-number-theory",
+      "real-analysis",
+      "complex-analysis"
+    ]
+  },
+  {
+    "id": "diophantine-equations",
+    "label": "Diophantine Equations",
+    "group": "algebra-number",
+    "row": 9,
+    "col": 0,
+    "prerequisites": [
+      "elementary-number-theory",
+      "abstract-algebra"
+    ]
+  },
+  {
+    "id": "p-adic-analysis",
+    "label": "p-adic Analysis",
+    "group": "algebra-number",
+    "row": 9,
+    "col": 1,
+    "prerequisites": [
+      "algebraic-number-theory",
+      "analysis"
+    ]
+  },
+  {
+    "id": "modular-forms",
+    "label": "Modular Forms",
+    "group": "algebra-number",
+    "row": 10,
+    "col": 0,
+    "prerequisites": [
+      "complex-analysis",
+      "algebraic-number-theory",
+      "group-theory"
+    ]
+  },
+  {
+    "id": "arithmetic-geometry",
+    "label": "Arithmetic Geometry",
+    "group": "algebra-number",
+    "row": 10,
+    "col": 1,
+    "prerequisites": [
+      "algebraic-geometry",
+      "algebraic-number-theory",
+      "homology-cohomology"
+    ]
+  },
+  {
+    "id": "computational-algebra",
+    "label": "Computational Algebra",
+    "group": "algebra-number",
+    "row": 11,
+    "col": 0,
+    "prerequisites": [
+      "abstract-algebra",
+      "algorithms"
+    ]
+  },
+  {
+    "id": "computational-number-theory",
+    "label": "Computational Number Theory",
+    "group": "algebra-number",
+    "row": 11,
+    "col": 1,
+    "prerequisites": [
+      "elementary-number-theory",
+      "algorithms"
+    ]
+  },
+  {
+    "id": "finite-fields",
+    "label": "Finite Fields",
+    "group": "algebra-number",
+    "row": 12,
+    "col": 0,
+    "prerequisites": [
+      "field-theory",
+      "elementary-number-theory"
+    ]
+  },
+  {
+    "id": "computer-algebra",
+    "label": "Computer Algebra",
+    "group": "algebra-number",
+    "row": 12,
+    "col": 1,
+    "prerequisites": [
+      "computational-algebra",
+      "symbolic-computation"
+    ]
+  },
+  {
+    "id": "geometry",
+    "label": "Geometry",
+    "group": "geometry-topology",
+    "row": 0,
+    "col": 0,
+    "prerequisites": [
+      "hub-geometry-topology"
+    ]
+  },
+  {
+    "id": "trigonometry",
+    "label": "Trigonometry",
+    "group": "geometry-topology",
+    "row": 0,
+    "col": 1,
+    "prerequisites": [
+      "geometry"
+    ]
+  },
+  {
+    "id": "euclidean-geometry",
+    "label": "Euclidean Geometry",
+    "group": "geometry-topology",
+    "row": 1,
+    "col": 0,
+    "prerequisites": [
+      "geometry"
+    ]
+  },
+  {
+    "id": "affine-geometry",
+    "label": "Affine Geometry",
+    "group": "geometry-topology",
+    "row": 1,
+    "col": 1,
+    "prerequisites": [
+      "euclidean-geometry",
+      "linear-algebra"
+    ]
+  },
+  {
+    "id": "projective-geometry",
+    "label": "Projective Geometry",
+    "group": "geometry-topology",
+    "row": 2,
+    "col": 0,
+    "prerequisites": [
+      "affine-geometry",
+      "linear-algebra"
+    ]
+  },
+  {
+    "id": "convex-geometry",
+    "label": "Convex Geometry",
+    "group": "geometry-topology",
+    "row": 2,
+    "col": 1,
+    "prerequisites": [
+      "euclidean-geometry",
+      "linear-algebra"
+    ]
+  },
+  {
+    "id": "discrete-geometry",
+    "label": "Discrete Geometry",
+    "group": "geometry-topology",
+    "row": 3,
+    "col": 0,
+    "prerequisites": [
+      "euclidean-geometry",
+      "combinatorics"
+    ]
+  },
+  {
+    "id": "computational-geometry",
+    "label": "Computational Geometry",
+    "group": "geometry-topology",
+    "row": 3,
+    "col": 1,
+    "prerequisites": [
+      "discrete-geometry",
+      "algorithms"
+    ]
+  },
+  {
+    "id": "non-euclidean-geometry",
+    "label": "Non-Euclidean Geometry",
+    "group": "geometry-topology",
+    "row": 4,
+    "col": 0,
+    "prerequisites": [
+      "euclidean-geometry",
+      "trigonometry"
+    ]
+  },
+  {
+    "id": "metric-geometry",
+    "label": "Metric Geometry",
+    "group": "geometry-topology",
+    "row": 4,
+    "col": 1,
+    "prerequisites": [
+      "geometry",
+      "general-topology"
+    ]
+  },
+  {
+    "id": "general-topology",
+    "label": "General Topology",
+    "group": "geometry-topology",
+    "row": 5,
+    "col": 0,
+    "prerequisites": [
+      "set-theory",
+      "real-analysis"
+    ]
+  },
+  {
+    "id": "manifold-theory",
+    "label": "Manifold Theory",
+    "group": "geometry-topology",
+    "row": 5,
+    "col": 1,
+    "prerequisites": [
+      "general-topology",
+      "linear-algebra",
+      "real-analysis"
+    ]
+  },
+  {
+    "id": "differential-geometry",
+    "label": "Differential Geometry",
+    "group": "geometry-topology",
+    "row": 6,
+    "col": 0,
+    "prerequisites": [
+      "manifold-theory",
+      "multivariable-calculus"
+    ]
+  },
+  {
+    "id": "riemannian-geometry",
+    "label": "Riemannian Geometry",
+    "group": "geometry-topology",
+    "row": 6,
+    "col": 1,
+    "prerequisites": [
+      "differential-geometry",
+      "linear-algebra"
+    ]
+  },
+  {
+    "id": "symplectic-geometry",
+    "label": "Symplectic Geometry",
+    "group": "geometry-topology",
+    "row": 7,
+    "col": 0,
+    "prerequisites": [
+      "differential-geometry",
+      "hamiltonian-mechanics"
+    ]
+  },
+  {
+    "id": "complex-geometry",
+    "label": "Complex Geometry",
+    "group": "geometry-topology",
+    "row": 7,
+    "col": 1,
+    "prerequisites": [
+      "complex-analysis",
+      "differential-geometry"
+    ]
+  },
+  {
+    "id": "algebraic-geometry",
+    "label": "Algebraic Geometry",
+    "group": "geometry-topology",
+    "row": 8,
+    "col": 0,
+    "prerequisites": [
+      "commutative-algebra",
+      "projective-geometry"
+    ]
+  },
+  {
+    "id": "algebraic-topology",
+    "label": "Algebraic Topology",
+    "group": "geometry-topology",
+    "row": 8,
+    "col": 1,
+    "prerequisites": [
+      "general-topology",
+      "abstract-algebra"
+    ]
+  },
+  {
+    "id": "homotopy-theory",
+    "label": "Homotopy Theory",
+    "group": "geometry-topology",
+    "row": 9,
+    "col": 0,
+    "prerequisites": [
+      "algebraic-topology",
+      "category-theory"
+    ]
+  },
+  {
+    "id": "homology-cohomology",
+    "label": "Homology & Cohomology",
+    "group": "geometry-topology",
+    "row": 9,
+    "col": 1,
+    "prerequisites": [
+      "algebraic-topology",
+      "homological-algebra"
+    ]
+  },
+  {
+    "id": "differential-topology",
+    "label": "Differential Topology",
+    "group": "geometry-topology",
+    "row": 10,
+    "col": 0,
+    "prerequisites": [
+      "manifold-theory",
+      "general-topology"
+    ]
+  },
+  {
+    "id": "geometric-topology",
+    "label": "Geometric Topology",
+    "group": "geometry-topology",
+    "row": 10,
+    "col": 1,
+    "prerequisites": [
+      "general-topology",
+      "manifold-theory"
+    ]
+  },
+  {
+    "id": "knot-theory",
+    "label": "Knot Theory",
+    "group": "geometry-topology",
+    "row": 11,
+    "col": 0,
+    "prerequisites": [
+      "algebraic-topology",
+      "geometric-topology"
+    ]
+  },
+  {
+    "id": "low-dimensional-topology",
+    "label": "Low-Dimensional Topology",
+    "group": "geometry-topology",
+    "row": 11,
+    "col": 1,
+    "prerequisites": [
+      "geometric-topology",
+      "knot-theory"
+    ]
+  },
+  {
+    "id": "geometric-group-theory",
+    "label": "Geometric Group Theory",
+    "group": "geometry-topology",
+    "row": 12,
+    "col": 0,
+    "prerequisites": [
+      "group-theory",
+      "metric-geometry"
+    ]
+  },
+  {
+    "id": "geometric-measure-theory",
+    "label": "Geometric Measure Theory",
+    "group": "geometry-topology",
+    "row": 12,
+    "col": 1,
+    "prerequisites": [
+      "measure-theory",
+      "differential-geometry"
+    ]
+  },
+  {
+    "id": "fractal-geometry",
+    "label": "Fractal Geometry",
+    "group": "geometry-topology",
+    "row": 13,
+    "col": 0,
+    "prerequisites": [
+      "metric-geometry",
+      "measure-theory",
+      "dynamical-systems"
+    ]
+  },
+  {
+    "id": "computational-topology",
+    "label": "Computational Topology",
+    "group": "geometry-topology",
+    "row": 13,
+    "col": 1,
+    "prerequisites": [
+      "algebraic-topology",
+      "algorithms"
+    ]
+  },
+  {
+    "id": "topological-data-analysis",
+    "label": "Topological Data Analysis",
+    "group": "geometry-topology",
+    "row": 14,
+    "col": 0,
+    "prerequisites": [
+      "computational-topology",
+      "statistics",
+      "machine-learning-theory"
+    ]
+  },
+  {
+    "id": "spherical-hyperbolic-geometry",
+    "label": "Spherical & Hyperbolic Geometry",
+    "group": "geometry-topology",
+    "row": 14,
+    "col": 1,
+    "prerequisites": [
+      "non-euclidean-geometry",
+      "differential-geometry"
+    ]
+  },
+  {
+    "id": "topology",
+    "label": "Topology",
+    "group": "geometry-topology",
+    "row": 15,
+    "col": 0,
+    "prerequisites": [
+      "general-topology"
+    ]
+  },
+  {
+    "id": "geometric-analysis",
+    "label": "Geometric Analysis",
+    "group": "geometry-topology",
+    "row": 15,
+    "col": 1,
+    "prerequisites": [
+      "differential-geometry",
+      "partial-differential-equations"
+    ]
+  },
+  {
+    "id": "calculus",
+    "label": "Calculus",
+    "group": "analysis-probability",
+    "row": 0,
+    "col": 0,
+    "prerequisites": [
+      "hub-analysis-probability"
+    ]
+  },
+  {
+    "id": "probability-theory",
+    "label": "Probability Theory",
+    "group": "analysis-probability",
+    "row": 0,
+    "col": 1,
+    "prerequisites": [
+      "hub-analysis-probability"
+    ]
+  },
+  {
+    "id": "real-analysis",
+    "label": "Real Analysis",
+    "group": "analysis-probability",
+    "row": 1,
+    "col": 0,
+    "prerequisites": [
+      "calculus",
+      "set-theory"
+    ]
+  },
+  {
+    "id": "multivariable-calculus",
+    "label": "Multivariable Calculus",
+    "group": "analysis-probability",
+    "row": 1,
+    "col": 1,
+    "prerequisites": [
+      "calculus",
+      "linear-algebra"
+    ]
+  },
+  {
+    "id": "complex-analysis",
+    "label": "Complex Analysis",
+    "group": "analysis-probability",
+    "row": 2,
+    "col": 0,
+    "prerequisites": [
+      "real-analysis",
+      "calculus"
+    ]
+  },
+  {
+    "id": "measure-theory",
+    "label": "Measure Theory",
+    "group": "analysis-probability",
+    "row": 2,
+    "col": 1,
+    "prerequisites": [
+      "real-analysis",
+      "set-theory"
+    ]
+  },
+  {
+    "id": "functional-analysis",
+    "label": "Functional Analysis",
+    "group": "analysis-probability",
+    "row": 3,
+    "col": 0,
+    "prerequisites": [
+      "real-analysis",
+      "linear-algebra",
+      "measure-theory"
+    ]
+  },
+  {
+    "id": "operator-theory",
+    "label": "Operator Theory",
+    "group": "analysis-probability",
+    "row": 3,
+    "col": 1,
+    "prerequisites": [
+      "functional-analysis"
+    ]
+  },
+  {
+    "id": "fourier-analysis",
+    "label": "Fourier Analysis",
+    "group": "analysis-probability",
+    "row": 4,
+    "col": 0,
+    "prerequisites": [
+      "real-analysis",
+      "linear-algebra"
+    ]
+  },
+  {
+    "id": "harmonic-analysis",
+    "label": "Harmonic Analysis",
+    "group": "analysis-probability",
+    "row": 4,
+    "col": 1,
+    "prerequisites": [
+      "fourier-analysis",
+      "measure-theory",
+      "functional-analysis"
+    ]
+  },
+  {
+    "id": "distribution-theory",
+    "label": "Distribution Theory",
+    "group": "analysis-probability",
+    "row": 5,
+    "col": 0,
+    "prerequisites": [
+      "functional-analysis",
+      "measure-theory"
+    ]
+  },
+  {
+    "id": "calculus-of-variations",
+    "label": "Calculus of Variations",
+    "group": "analysis-probability",
+    "row": 5,
+    "col": 1,
+    "prerequisites": [
+      "real-analysis",
+      "functional-analysis"
+    ]
+  },
+  {
+    "id": "ordinary-differential-equations",
+    "label": "Ordinary Differential Equations",
+    "group": "analysis-probability",
+    "row": 6,
+    "col": 0,
+    "prerequisites": [
+      "calculus",
+      "linear-algebra"
+    ]
+  },
+  {
+    "id": "partial-differential-equations",
+    "label": "Partial Differential Equations",
+    "group": "analysis-probability",
+    "row": 6,
+    "col": 1,
+    "prerequisites": [
+      "multivariable-calculus",
+      "real-analysis",
+      "ordinary-differential-equations"
+    ]
+  },
+  {
+    "id": "dynamical-systems",
+    "label": "Dynamical Systems",
+    "group": "analysis-probability",
+    "row": 7,
+    "col": 0,
+    "prerequisites": [
+      "ordinary-differential-equations",
+      "topology"
+    ]
+  },
+  {
+    "id": "ergodic-theory",
+    "label": "Ergodic Theory",
+    "group": "analysis-probability",
+    "row": 7,
+    "col": 1,
+    "prerequisites": [
+      "measure-theory",
+      "dynamical-systems",
+      "probability-theory"
+    ]
+  },
+  {
+    "id": "asymptotic-analysis",
+    "label": "Asymptotic Analysis",
+    "group": "analysis-probability",
+    "row": 8,
+    "col": 0,
+    "prerequisites": [
+      "real-analysis",
+      "complex-analysis"
+    ]
+  },
+  {
+    "id": "convex-analysis",
+    "label": "Convex Analysis",
+    "group": "analysis-probability",
+    "row": 8,
+    "col": 1,
+    "prerequisites": [
+      "real-analysis",
+      "convex-geometry",
+      "linear-algebra"
+    ]
+  },
+  {
+    "id": "numerical-analysis",
+    "label": "Numerical Analysis",
+    "group": "analysis-probability",
+    "row": 9,
+    "col": 0,
+    "prerequisites": [
+      "real-analysis",
+      "linear-algebra",
+      "algorithms"
+    ]
+  },
+  {
+    "id": "optimization",
+    "label": "Optimization",
+    "group": "analysis-probability",
+    "row": 9,
+    "col": 1,
+    "prerequisites": [
+      "calculus",
+      "linear-algebra",
+      "convex-analysis"
+    ]
+  },
+  {
+    "id": "computational-analysis",
+    "label": "Computational Analysis",
+    "group": "analysis-probability",
+    "row": 10,
+    "col": 0,
+    "prerequisites": [
+      "numerical-analysis",
+      "computability-theory"
+    ]
+  },
+  {
+    "id": "numerical-linear-algebra",
+    "label": "Numerical Linear Algebra",
+    "group": "analysis-probability",
+    "row": 10,
+    "col": 1,
+    "prerequisites": [
+      "linear-algebra",
+      "numerical-analysis"
+    ]
+  },
+  {
+    "id": "stochastic-processes",
+    "label": "Stochastic Processes",
+    "group": "analysis-probability",
+    "row": 11,
+    "col": 0,
+    "prerequisites": [
+      "probability-theory",
+      "measure-theory"
+    ]
+  },
+  {
+    "id": "markov-chains",
+    "label": "Markov Chains",
+    "group": "analysis-probability",
+    "row": 11,
+    "col": 1,
+    "prerequisites": [
+      "probability-theory",
+      "linear-algebra"
+    ]
+  },
+  {
+    "id": "stochastic-calculus",
+    "label": "Stochastic Calculus",
+    "group": "analysis-probability",
+    "row": 12,
+    "col": 0,
+    "prerequisites": [
+      "stochastic-processes",
+      "real-analysis"
+    ]
+  },
+  {
+    "id": "stochastic-analysis",
+    "label": "Stochastic Analysis",
+    "group": "analysis-probability",
+    "row": 12,
+    "col": 1,
+    "prerequisites": [
+      "stochastic-calculus",
+      "functional-analysis",
+      "partial-differential-equations"
+    ]
+  },
+  {
+    "id": "statistics",
+    "label": "Mathematical Statistics",
+    "group": "analysis-probability",
+    "row": 13,
+    "col": 0,
+    "prerequisites": [
+      "probability-theory",
+      "real-analysis",
+      "linear-algebra"
+    ]
+  },
+  {
+    "id": "bayesian-statistics",
+    "label": "Bayesian Statistics",
+    "group": "analysis-probability",
+    "row": 13,
+    "col": 1,
+    "prerequisites": [
+      "statistics",
+      "probability-theory"
+    ]
+  },
+  {
+    "id": "time-series",
+    "label": "Time-Series Analysis",
+    "group": "analysis-probability",
+    "row": 14,
+    "col": 0,
+    "prerequisites": [
+      "statistics",
+      "stochastic-processes",
+      "fourier-analysis"
+    ]
+  },
+  {
+    "id": "queueing-theory",
+    "label": "Queueing Theory",
+    "group": "analysis-probability",
+    "row": 14,
+    "col": 1,
+    "prerequisites": [
+      "stochastic-processes",
+      "markov-chains"
+    ]
+  },
+  {
+    "id": "analysis",
+    "label": "Analysis",
+    "group": "analysis-probability",
+    "row": 15,
+    "col": 0,
+    "prerequisites": [
+      "real-analysis",
+      "complex-analysis"
+    ]
+  },
+  {
+    "id": "inverse-problem-theory",
+    "label": "Inverse-Problem Theory",
+    "group": "analysis-probability",
+    "row": 15,
+    "col": 1,
+    "prerequisites": [
+      "functional-analysis",
+      "optimization",
+      "statistics"
+    ]
+  },
+  {
+    "id": "discrete-mathematics",
+    "label": "Discrete Mathematics",
+    "group": "discrete-computation",
+    "row": 0,
+    "col": 0,
+    "prerequisites": [
+      "hub-discrete-computation"
+    ]
+  },
+  {
+    "id": "algorithms",
+    "label": "Algorithms",
+    "group": "discrete-computation",
+    "row": 0,
+    "col": 1,
+    "prerequisites": [
+      "hub-discrete-computation"
+    ]
+  },
+  {
+    "id": "combinatorics",
+    "label": "Combinatorics",
+    "group": "discrete-computation",
+    "row": 1,
+    "col": 0,
+    "prerequisites": [
+      "discrete-mathematics"
+    ]
+  },
+  {
+    "id": "data-structures",
+    "label": "Data Structures",
+    "group": "discrete-computation",
+    "row": 1,
+    "col": 1,
+    "prerequisites": [
+      "algorithms",
+      "discrete-mathematics"
+    ]
+  },
+  {
+    "id": "graph-theory",
+    "label": "Graph Theory",
+    "group": "discrete-computation",
+    "row": 2,
+    "col": 0,
+    "prerequisites": [
+      "combinatorics"
+    ]
+  },
+  {
+    "id": "enumerative-combinatorics",
+    "label": "Enumerative Combinatorics",
+    "group": "discrete-computation",
+    "row": 2,
+    "col": 1,
+    "prerequisites": [
+      "combinatorics",
+      "elementary-algebra"
+    ]
+  },
+  {
+    "id": "extremal-combinatorics",
+    "label": "Extremal Combinatorics",
+    "group": "discrete-computation",
+    "row": 3,
+    "col": 0,
+    "prerequisites": [
+      "combinatorics",
+      "graph-theory"
+    ]
+  },
+  {
+    "id": "algebraic-combinatorics",
+    "label": "Algebraic Combinatorics",
+    "group": "discrete-computation",
+    "row": 3,
+    "col": 1,
+    "prerequisites": [
+      "combinatorics",
+      "abstract-algebra",
+      "linear-algebra"
+    ]
+  },
+  {
+    "id": "probabilistic-combinatorics",
+    "label": "Probabilistic Combinatorics",
+    "group": "discrete-computation",
+    "row": 4,
+    "col": 0,
+    "prerequisites": [
+      "combinatorics",
+      "probability-theory"
+    ]
+  },
+  {
+    "id": "ramsey-theory",
+    "label": "Ramsey Theory",
+    "group": "discrete-computation",
+    "row": 4,
+    "col": 1,
+    "prerequisites": [
+      "combinatorics",
+      "graph-theory"
+    ]
+  },
+  {
+    "id": "matroid-theory",
+    "label": "Matroid Theory",
+    "group": "discrete-computation",
+    "row": 5,
+    "col": 0,
+    "prerequisites": [
+      "combinatorics",
+      "linear-algebra"
+    ]
+  },
+  {
+    "id": "design-theory",
+    "label": "Design Theory",
+    "group": "discrete-computation",
+    "row": 5,
+    "col": 1,
+    "prerequisites": [
+      "combinatorics",
+      "finite-fields"
+    ]
+  },
+  {
+    "id": "complexity-theory",
+    "label": "Complexity Theory",
+    "group": "discrete-computation",
+    "row": 6,
+    "col": 0,
+    "prerequisites": [
+      "algorithms",
+      "computability-theory"
+    ]
+  },
+  {
+    "id": "automata-theory",
+    "label": "Automata Theory",
+    "group": "discrete-computation",
+    "row": 6,
+    "col": 1,
+    "prerequisites": [
+      "discrete-mathematics",
+      "computability-theory"
+    ]
+  },
+  {
+    "id": "formal-languages",
+    "label": "Formal Languages",
+    "group": "discrete-computation",
+    "row": 7,
+    "col": 0,
+    "prerequisites": [
+      "automata-theory",
+      "logic"
+    ]
+  },
+  {
+    "id": "information-theory",
+    "label": "Information Theory",
+    "group": "discrete-computation",
+    "row": 7,
+    "col": 1,
+    "prerequisites": [
+      "probability-theory",
+      "combinatorics"
+    ]
+  },
+  {
+    "id": "coding-theory",
+    "label": "Coding Theory",
+    "group": "discrete-computation",
+    "row": 8,
+    "col": 0,
+    "prerequisites": [
+      "information-theory",
+      "linear-algebra",
+      "combinatorics"
+    ]
+  },
+  {
+    "id": "cryptography",
+    "label": "Cryptography",
+    "group": "discrete-computation",
+    "row": 8,
+    "col": 1,
+    "prerequisites": [
+      "computational-number-theory",
+      "complexity-theory",
+      "probability-theory"
+    ]
+  },
+  {
+    "id": "symbolic-computation",
+    "label": "Symbolic Computation",
+    "group": "discrete-computation",
+    "row": 9,
+    "col": 0,
+    "prerequisites": [
+      "algorithms",
+      "abstract-algebra"
+    ]
+  },
+  {
+    "id": "scientific-computing",
+    "label": "Scientific Computing",
+    "group": "discrete-computation",
+    "row": 9,
+    "col": 1,
+    "prerequisites": [
+      "algorithms",
+      "numerical-analysis"
+    ]
+  },
+  {
+    "id": "computational-combinatorics",
+    "label": "Computational Combinatorics",
+    "group": "discrete-computation",
+    "row": 10,
+    "col": 0,
+    "prerequisites": [
+      "combinatorics",
+      "algorithms"
+    ]
+  },
+  {
+    "id": "discrete-optimization",
+    "label": "Discrete Optimization",
+    "group": "discrete-computation",
+    "row": 10,
+    "col": 1,
+    "prerequisites": [
+      "algorithms",
+      "combinatorics",
+      "optimization"
+    ]
+  },
+  {
+    "id": "operations-research",
+    "label": "Operations Research",
+    "group": "discrete-computation",
+    "row": 11,
+    "col": 0,
+    "prerequisites": [
+      "optimization",
+      "probability-theory",
+      "algorithms"
+    ]
+  },
+  {
+    "id": "game-theory",
+    "label": "Game Theory",
+    "group": "discrete-computation",
+    "row": 11,
+    "col": 1,
+    "prerequisites": [
+      "probability-theory",
+      "optimization",
+      "linear-algebra"
+    ]
+  },
+  {
+    "id": "network-science",
+    "label": "Network Science",
+    "group": "discrete-computation",
+    "row": 12,
+    "col": 0,
+    "prerequisites": [
+      "graph-theory",
+      "probability-theory",
+      "statistics"
+    ]
+  },
+  {
+    "id": "machine-learning-theory",
+    "label": "Machine Learning Theory",
+    "group": "discrete-computation",
+    "row": 12,
+    "col": 1,
+    "prerequisites": [
+      "probability-theory",
+      "statistics",
+      "optimization",
+      "algorithms"
+    ]
+  },
+  {
+    "id": "randomized-algorithms",
+    "label": "Randomized Algorithms",
+    "group": "discrete-computation",
+    "row": 13,
+    "col": 0,
+    "prerequisites": [
+      "algorithms",
+      "probability-theory"
+    ]
+  },
+  {
+    "id": "quantum-computing",
+    "label": "Quantum Computing",
+    "group": "discrete-computation",
+    "row": 13,
+    "col": 1,
+    "prerequisites": [
+      "linear-algebra",
+      "complexity-theory",
+      "quantum-mechanics"
+    ]
+  },
+  {
+    "id": "computational-complexity",
+    "label": "Advanced Complexity Theory",
+    "group": "discrete-computation",
+    "row": 14,
+    "col": 0,
+    "prerequisites": [
+      "complexity-theory",
+      "logic",
+      "probability-theory"
+    ]
+  },
+  {
+    "id": "computational-mathematics",
+    "label": "Computational Mathematics",
+    "group": "discrete-computation",
+    "row": 14,
+    "col": 1,
+    "prerequisites": [
+      "algorithms",
+      "numerical-analysis",
+      "symbolic-computation"
+    ]
+  },
+  {
+    "id": "algorithmic-game-theory",
+    "label": "Algorithmic Game Theory",
+    "group": "discrete-computation",
+    "row": 15,
+    "col": 0,
+    "prerequisites": [
+      "game-theory",
+      "algorithms",
+      "complexity-theory"
+    ]
+  },
+  {
+    "id": "computational-information",
+    "label": "Computational Information Theory",
+    "group": "discrete-computation",
+    "row": 15,
+    "col": 1,
+    "prerequisites": [
+      "information-theory",
+      "algorithms",
+      "statistics"
+    ]
+  },
+  {
+    "id": "mathematical-physics",
+    "label": "Mathematical Physics",
+    "group": "physics-applied",
+    "row": 0,
+    "col": 0,
+    "prerequisites": [
+      "hub-physics-applied"
+    ]
+  },
+  {
+    "id": "classical-mechanics",
+    "label": "Classical Mechanics",
+    "group": "physics-applied",
+    "row": 0,
+    "col": 1,
+    "prerequisites": [
+      "hub-physics-applied",
+      "calculus",
+      "ordinary-differential-equations"
+    ]
+  },
+  {
+    "id": "lagrangian-mechanics",
+    "label": "Lagrangian Mechanics",
+    "group": "physics-applied",
+    "row": 1,
+    "col": 0,
+    "prerequisites": [
+      "classical-mechanics",
+      "calculus-of-variations"
+    ]
+  },
+  {
+    "id": "hamiltonian-mechanics",
+    "label": "Hamiltonian Mechanics",
+    "group": "physics-applied",
+    "row": 1,
+    "col": 1,
+    "prerequisites": [
+      "lagrangian-mechanics",
+      "ordinary-differential-equations"
+    ]
+  },
+  {
+    "id": "continuum-mechanics",
+    "label": "Continuum Mechanics",
+    "group": "physics-applied",
+    "row": 2,
+    "col": 0,
+    "prerequisites": [
+      "multivariable-calculus",
+      "partial-differential-equations",
+      "tensor-analysis"
+    ]
+  },
+  {
+    "id": "fluid-dynamics",
+    "label": "Fluid Dynamics",
+    "group": "physics-applied",
+    "row": 2,
+    "col": 1,
+    "prerequisites": [
+      "continuum-mechanics",
+      "partial-differential-equations"
+    ]
+  },
+  {
+    "id": "electromagnetism",
+    "label": "Electromagnetism",
+    "group": "physics-applied",
+    "row": 3,
+    "col": 0,
+    "prerequisites": [
+      "multivariable-calculus",
+      "partial-differential-equations",
+      "differential-geometry"
+    ]
+  },
+  {
+    "id": "tensor-analysis",
+    "label": "Tensor Analysis",
+    "group": "physics-applied",
+    "row": 3,
+    "col": 1,
+    "prerequisites": [
+      "linear-algebra",
+      "multivariable-calculus",
+      "differential-geometry"
+    ]
+  },
+  {
+    "id": "special-relativity",
+    "label": "Special Relativity",
+    "group": "physics-applied",
+    "row": 4,
+    "col": 0,
+    "prerequisites": [
+      "linear-algebra",
+      "classical-mechanics"
+    ]
+  },
+  {
+    "id": "general-relativity",
+    "label": "General Relativity",
+    "group": "physics-applied",
+    "row": 4,
+    "col": 1,
+    "prerequisites": [
+      "riemannian-geometry",
+      "tensor-analysis",
+      "partial-differential-equations"
+    ]
+  },
+  {
+    "id": "quantum-mechanics",
+    "label": "Quantum Mechanics",
+    "group": "physics-applied",
+    "row": 5,
+    "col": 0,
+    "prerequisites": [
+      "linear-algebra",
+      "complex-analysis",
+      "ordinary-differential-equations",
+      "probability-theory"
+    ]
+  },
+  {
+    "id": "quantum-field-theory",
+    "label": "Quantum Field Theory",
+    "group": "physics-applied",
+    "row": 5,
+    "col": 1,
+    "prerequisites": [
+      "quantum-mechanics",
+      "special-relativity",
+      "distribution-theory"
+    ]
+  },
+  {
+    "id": "statistical-mechanics",
+    "label": "Statistical Mechanics",
+    "group": "physics-applied",
+    "row": 6,
+    "col": 0,
+    "prerequisites": [
+      "probability-theory",
+      "classical-mechanics",
+      "thermodynamics"
+    ]
+  },
+  {
+    "id": "thermodynamics",
+    "label": "Thermodynamics",
+    "group": "physics-applied",
+    "row": 6,
+    "col": 1,
+    "prerequisites": [
+      "calculus",
+      "classical-mechanics"
+    ]
+  },
+  {
+    "id": "condensed-matter",
+    "label": "Condensed-Matter Theory",
+    "group": "physics-applied",
+    "row": 7,
+    "col": 0,
+    "prerequisites": [
+      "quantum-mechanics",
+      "statistical-mechanics"
+    ]
+  },
+  {
+    "id": "gauge-theory",
+    "label": "Gauge Theory",
+    "group": "physics-applied",
+    "row": 7,
+    "col": 1,
+    "prerequisites": [
+      "differential-geometry",
+      "lie-theory",
+      "quantum-field-theory"
+    ]
+  },
+  {
+    "id": "string-theory",
+    "label": "String Theory",
+    "group": "physics-applied",
+    "row": 8,
+    "col": 0,
+    "prerequisites": [
+      "quantum-field-theory",
+      "general-relativity",
+      "complex-geometry"
+    ]
+  },
+  {
+    "id": "integrable-systems",
+    "label": "Integrable Systems",
+    "group": "physics-applied",
+    "row": 8,
+    "col": 1,
+    "prerequisites": [
+      "dynamical-systems",
+      "hamiltonian-mechanics",
+      "lie-theory"
+    ]
+  },
+  {
+    "id": "control-theory",
+    "label": "Control Theory",
+    "group": "physics-applied",
+    "row": 9,
+    "col": 0,
+    "prerequisites": [
+      "ordinary-differential-equations",
+      "linear-algebra",
+      "optimization"
+    ]
+  },
+  {
+    "id": "signal-processing",
+    "label": "Signal Processing",
+    "group": "physics-applied",
+    "row": 9,
+    "col": 1,
+    "prerequisites": [
+      "fourier-analysis",
+      "probability-theory",
+      "linear-algebra"
+    ]
+  },
+  {
+    "id": "inverse-problems",
+    "label": "Inverse Problems",
+    "group": "physics-applied",
+    "row": 10,
+    "col": 0,
+    "prerequisites": [
+      "partial-differential-equations",
+      "functional-analysis",
+      "optimization",
+      "statistics"
+    ]
+  },
+  {
+    "id": "mathematical-biology",
+    "label": "Mathematical Biology",
+    "group": "physics-applied",
+    "row": 10,
+    "col": 1,
+    "prerequisites": [
+      "dynamical-systems",
+      "probability-theory",
+      "statistics"
+    ]
+  },
+  {
+    "id": "mathematical-economics",
+    "label": "Mathematical Economics",
+    "group": "physics-applied",
+    "row": 11,
+    "col": 0,
+    "prerequisites": [
+      "optimization",
+      "game-theory",
+      "probability-theory"
+    ]
+  },
+  {
+    "id": "mathematical-finance",
+    "label": "Mathematical Finance",
+    "group": "physics-applied",
+    "row": 11,
+    "col": 1,
+    "prerequisites": [
+      "stochastic-calculus",
+      "probability-theory",
+      "partial-differential-equations"
+    ]
+  },
+  {
+    "id": "mathematical-chemistry",
+    "label": "Mathematical Chemistry",
+    "group": "physics-applied",
+    "row": 12,
+    "col": 0,
+    "prerequisites": [
+      "graph-theory",
+      "quantum-mechanics",
+      "dynamical-systems"
+    ]
+  },
+  {
+    "id": "materials-science",
+    "label": "Mathematics of Materials",
+    "group": "physics-applied",
+    "row": 12,
+    "col": 1,
+    "prerequisites": [
+      "continuum-mechanics",
+      "partial-differential-equations",
+      "geometry"
+    ]
+  },
+  {
+    "id": "geophysics",
+    "label": "Mathematical Geophysics",
+    "group": "physics-applied",
+    "row": 13,
+    "col": 0,
+    "prerequisites": [
+      "fluid-dynamics",
+      "inverse-problems",
+      "partial-differential-equations"
+    ]
+  },
+  {
+    "id": "quantum-information",
+    "label": "Quantum Information",
+    "group": "physics-applied",
+    "row": 13,
+    "col": 1,
+    "prerequisites": [
+      "quantum-mechanics",
+      "information-theory",
+      "linear-algebra"
+    ]
+  },
+  {
+    "id": "celestial-mechanics",
+    "label": "Celestial Mechanics",
+    "group": "physics-applied",
+    "row": 14,
+    "col": 0,
+    "prerequisites": [
+      "classical-mechanics",
+      "dynamical-systems",
+      "asymptotic-analysis"
+    ]
+  },
+  {
+    "id": "mathematical-engineering",
+    "label": "Engineering Mathematics",
+    "group": "physics-applied",
+    "row": 14,
+    "col": 1,
+    "prerequisites": [
+      "partial-differential-equations",
+      "numerical-analysis",
+      "control-theory"
+    ]
+  },
+  {
+    "id": "mathematical-ecology",
+    "label": "Mathematical Ecology",
+    "group": "physics-applied",
+    "row": 15,
+    "col": 0,
+    "prerequisites": [
+      "mathematical-biology",
+      "stochastic-processes",
+      "dynamical-systems"
+    ]
+  },
+  {
+    "id": "mathematical-epidemiology",
+    "label": "Mathematical Epidemiology",
+    "group": "physics-applied",
+    "row": 15,
+    "col": 1,
+    "prerequisites": [
+      "mathematical-biology",
+      "statistics",
+      "network-science"
+    ]
+  }
+] as const;
+
+const bridgeEdges: GraphEdge[] = [
+  {
+    "from": "category-theory",
+    "to": "algebraic-topology",
+    "kind": "bridge"
+  },
+  {
+    "from": "category-theory",
+    "to": "algebraic-geometry",
+    "kind": "bridge"
+  },
+  {
+    "from": "category-theory",
+    "to": "homological-algebra",
+    "kind": "bridge"
+  },
+  {
+    "from": "model-theory",
+    "to": "algebraic-geometry",
+    "kind": "bridge"
+  },
+  {
+    "from": "computability-theory",
+    "to": "complexity-theory",
+    "kind": "bridge"
+  },
+  {
+    "from": "type-theory",
+    "to": "computational-logic",
+    "kind": "bridge"
+  },
+  {
+    "from": "linear-algebra",
+    "to": "quantum-mechanics",
+    "kind": "bridge"
+  },
+  {
+    "from": "linear-algebra",
+    "to": "statistics",
+    "kind": "bridge"
+  },
+  {
+    "from": "representation-theory",
+    "to": "quantum-mechanics",
+    "kind": "bridge"
+  },
+  {
+    "from": "lie-theory",
+    "to": "gauge-theory",
+    "kind": "bridge"
+  },
+  {
+    "from": "modular-forms",
+    "to": "string-theory",
+    "kind": "bridge"
+  },
+  {
+    "from": "algebraic-number-theory",
+    "to": "cryptography",
+    "kind": "bridge"
+  },
+  {
+    "from": "algebraic-geometry",
+    "to": "coding-theory",
+    "kind": "bridge"
+  },
+  {
+    "from": "differential-geometry",
+    "to": "general-relativity",
+    "kind": "bridge"
+  },
+  {
+    "from": "symplectic-geometry",
+    "to": "hamiltonian-mechanics",
+    "kind": "bridge"
+  },
+  {
+    "from": "knot-theory",
+    "to": "quantum-field-theory",
+    "kind": "bridge"
+  },
+  {
+    "from": "topological-data-analysis",
+    "to": "machine-learning-theory",
+    "kind": "bridge"
+  },
+  {
+    "from": "fourier-analysis",
+    "to": "signal-processing",
+    "kind": "bridge"
+  },
+  {
+    "from": "partial-differential-equations",
+    "to": "fluid-dynamics",
+    "kind": "bridge"
+  },
+  {
+    "from": "probability-theory",
+    "to": "information-theory",
+    "kind": "bridge"
+  },
+  {
+    "from": "probability-theory",
+    "to": "randomized-algorithms",
+    "kind": "bridge"
+  },
+  {
+    "from": "optimization",
+    "to": "machine-learning-theory",
+    "kind": "bridge"
+  },
+  {
+    "from": "graph-theory",
+    "to": "network-science",
+    "kind": "bridge"
+  },
+  {
+    "from": "information-theory",
+    "to": "quantum-information",
+    "kind": "bridge"
+  },
+  {
+    "from": "complexity-theory",
+    "to": "quantum-computing",
+    "kind": "bridge"
+  },
+  {
+    "from": "scientific-computing",
+    "to": "mathematical-physics",
+    "kind": "bridge"
+  },
+  {
+    "from": "stochastic-calculus",
+    "to": "mathematical-finance",
+    "kind": "bridge"
+  },
+  {
+    "from": "dynamical-systems",
+    "to": "mathematical-biology",
+    "kind": "bridge"
+  }
+];
+
+const groupMap = new Map(groups.map((group) => [group.id, group]));
+
+const rootNode: GraphNode = {
+  id: "mathematics",
+  label: "Mathematics",
+  group: "root",
+  x: STAGE_WIDTH / 2,
+  y: 88,
+  href: withBase("branches/"),
+  kind: "root",
+};
+
+const hubNodes: GraphNode[] = groups.map((group) => ({
+  id: `hub-${group.id}`,
+  label: group.label,
+  group: group.id,
+  x: group.x,
+  y: 278,
+  href: withBase(`branches/${group.id}/`),
+  kind: "hub",
+}));
+
+const topicNodes: GraphNode[] = topics.map((topic) => {
+  const group = groupMap.get(topic.group);
+
+  if (!group) throw new Error(`Unknown group: ${topic.group}`);
+
+  return {
+    id: topic.id,
+    label: topic.label,
+    group: topic.group,
+    x: group.x + (topic.col === 0 ? -COLUMN_OFFSET : COLUMN_OFFSET),
+    y: TOPIC_START_Y + topic.row * ROW_GAP,
+    href: withBase(`branches/${topic.id}/`),
+    kind: "topic",
+  };
+});
+
+const allNodes = [rootNode, ...hubNodes, ...topicNodes];
+const nodeMap = new Map(allNodes.map((node) => [node.id, node]));
+
+const hubEdges: GraphEdge[] = groups.map((group) => ({
+  from: "mathematics",
+  to: `hub-${group.id}`,
+  kind: "structural",
+}));
+
+const prerequisiteEdges: GraphEdge[] = topics.flatMap((topic) =>
+  topic.prerequisites.map((from) => ({
+    from,
+    to: topic.id,
+    kind: "structural" as const,
+  })),
+);
+
+const allEdges = [...hubEdges, ...prerequisiteEdges, ...bridgeEdges].filter(
+  (edge, index, edges) =>
+    nodeMap.has(edge.from) &&
+    nodeMap.has(edge.to) &&
+    edges.findIndex(
+      (candidate) =>
+        candidate.from === edge.from &&
+        candidate.to === edge.to &&
+        candidate.kind === edge.kind,
+    ) === index,
+);
+
+const groupForNode = (nodeId: string) => {
+  const node = nodeMap.get(nodeId);
+  return node?.group === "root" ? "root" : node?.group ?? "root";
+};
+---
+
+<BaseLayout title="Branches">
+  <main class="branches-page">
+    <header class="branches-hero">
+      <p class="eyebrow">A map of the subject</p>
+      <h1>Branches of Mathematics</h1>
+
+      <p class="branches-intro">
+        Mathematics is not a collection of sealed compartments. It is a network
+        of ideas: subjects grow from earlier subjects, split into specialized
+        theories, and reconnect through unexpected bridges.
+      </p>
+
+      <p class="branches-note">
+        Solid arrows show major prerequisite or developmental paths. Dashed
+        arrows show especially important cross-disciplinary connections. No
+        such map can be perfectly canonical, since many subjects naturally
+        belong to several areas at once.
+      </p>
+    </header>
+
+    <section class="graph-panel" aria-labelledby="graph-heading">
+      <div class="graph-panel-heading">
+        <div>
+          <p class="section-kicker">Interactive subject map</p>
+          <h2 id="graph-heading">Graph of all the subjects</h2>
+        </div>
+
+        <div class="graph-key" aria-label="Connection legend">
+          <span><i class="key-line structural"></i> prerequisite path</span>
+          <span><i class="key-line bridge"></i> cross-disciplinary bridge</span>
+        </div>
+      </div>
+
+      <div class="graph-controls">
+        <label class="search-control">
+          <span>Find a subject</span>
+          <input
+            id="branch-search"
+            type="search"
+            placeholder="Try “topology”, “quantum”, “computational”…"
+            autocomplete="off"
+          />
+        </label>
+
+        <label class="group-control">
+          <span>Area</span>
+          <select id="group-filter">
+            <option value="all">All areas</option>
+            {groups.map((group) => (
+              <option value={group.id}>{group.label}</option>
+            ))}
+          </select>
+        </label>
+
+        <!--<button id="graph-reset" type="button">Reset view</button>-->
+
+        <output id="graph-result-count" aria-live="polite">
+          {topicNodes.length} subjects shown
+        </output>
+      </div>
+
+      <div class="group-legend" aria-label="Subject-area colors">
+        {groups.map((group) => (
+          <button
+            class={`group-chip group-${group.id}`}
+            type="button"
+            data-group-jump={group.id}
+          >
+            <span class="group-dot"></span>
+            {group.shortLabel}
+          </button>
+        ))}
+      </div>
+
+    </section>
+
+    <div class="graph-viewport" id="graph-viewport" tabindex="0">
+      <div
+        class="math-map-stage"
+        id="math-map-stage"
+        data-stage-width={STAGE_WIDTH}
+        data-stage-height={STAGE_HEIGHT}
+        style={`width:${STAGE_WIDTH}px; height:${STAGE_HEIGHT}px;`}
+      >
+          <div
+            class="math-map"
+            id="math-map"
+            style={`width:${STAGE_WIDTH}px; height:${STAGE_HEIGHT}px;`}
+            role="list"
+            aria-label="Dependency graph of mathematical subjects"
+          >
+          {groups.map((group) => (
+            <div
+              class={`lane group-${group.id}`}
+              style={`left:${group.x - 218}px;`}
+              aria-hidden="true"
+            >
+              <span>{group.shortLabel}</span>
+            </div>
+          ))}
+
+          <svg
+            class="math-map-lines"
+            viewBox={`0 0 ${STAGE_WIDTH} ${STAGE_HEIGHT}`}
+            width={STAGE_WIDTH}
+            height={STAGE_HEIGHT}
+            aria-hidden="true"
+          >
+            <defs>
+              <marker
+                id="arrowhead"
+                markerWidth="8"
+                markerHeight="8"
+                refX="6"
+                refY="4"
+                orient="auto"
+                markerUnits="strokeWidth"
+              >
+                <path d="M 0 0 L 8 4 L 0 8 z"></path>
+              </marker>
+            </defs>
+
+            {allEdges.map((edge) => {
+              const from = nodeMap.get(edge.from);
+              const to = nodeMap.get(edge.to);
+
+              if (!from || !to) return null;
+
+              return (
+                <line
+                  class:list={[
+                    "graph-edge",
+                    edge.kind,
+                    `edge-group-${groupForNode(edge.to)}`,
+                  ]}
+                  x1={from.x}
+                  y1={from.y}
+                  x2={to.x}
+                  y2={to.y}
+                  data-from={edge.from}
+                  data-to={edge.to}
+                  marker-end="url(#arrowhead)"
+                />
+              );
+            })}
+          </svg>
+
+          {allNodes.map((node) => (
+            <a
+              id={`node-${node.id}`}
+              class:list={[
+                "math-node",
+                `group-${node.group}`,
+                `kind-${node.kind}`,
+                node.id === "linear-algebra" && "is-live",
+              ]}
+              href={node.href}
+              style={`left:${node.x}px; top:${node.y}px;`}
+              data-node-id={node.id}
+              data-node-label={node.label.toLowerCase()}
+              data-node-group={node.group}
+              role="listitem"
+            >
+              <span class="node-label">{node.label}</span>
+              {node.id === "linear-algebra" && (
+                <span class="node-status">available</span>
+              )}
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  </main>
+</BaseLayout>
+
+<script>
+  const viewport = document.querySelector<HTMLDivElement>("#graph-viewport");
+  const mapStage = document.querySelector<HTMLDivElement>("#math-map-stage");
+  const map = document.querySelector<HTMLDivElement>("#math-map");
+  const stageWidth = Number(mapStage?.dataset.stageWidth ?? 0);
+  const stageHeight = Number(mapStage?.dataset.stageHeight ?? 0);
+  const search = document.querySelector<HTMLInputElement>("#branch-search");
+  const groupFilter =
+    document.querySelector<HTMLSelectElement>("#group-filter");
+  const bridgeToggle =
+    document.querySelector<HTMLInputElement>("#bridge-toggle");
+  const resetButton =
+    document.querySelector<HTMLButtonElement>("#graph-reset");
+  const resultCount =
+    document.querySelector<HTMLOutputElement>("#graph-result-count");
+  const nodes = Array.from(
+    document.querySelectorAll<HTMLAnchorElement>(".math-node"),
+  );
+  const edges = Array.from(
+    document.querySelectorAll<SVGLineElement>(".graph-edge"),
+  );
+  const groupButtons = Array.from(
+    document.querySelectorAll<HTMLButtonElement>("[data-group-jump]"),
+  );
+
+  const MIN_SCALE = 0.28;
+  const MAX_SCALE = 2.2;
+  const ZOOM_SENSITIVITY = 0.0011;
+  const ZOOM_RESPONSE = 18;
+  const DRAG_THRESHOLD = 5;
+
+  let scale = 1;
+  let targetScale = 1;
+  let zoomFrame: number | null = null;
+  let previousZoomTime = 0;
+
+  let zoomAnchorGraphX = 0;
+  let zoomAnchorGraphY = 0;
+  let zoomAnchorViewportX = 0;
+  let zoomAnchorViewportY = 0;
+
+  let isDragging = false;
+  let dragStartX = 0;
+  let dragStartY = 0;
+  let dragStartScrollLeft = 0;
+  let dragStartScrollTop = 0;
+
+  function clamp(value: number, minimum: number, maximum: number) {
+    return Math.min(maximum, Math.max(minimum, value));
+  }
+
+  function applyScale(nextScale: number) {
+    if (!map || !mapStage || stageWidth <= 0 || stageHeight <= 0) return;
+
+    scale = clamp(nextScale, MIN_SCALE, MAX_SCALE);
+
+    map.style.transform = `translate3d(0, 0, 0) scale(${scale})`;
+    mapStage.style.width = `${stageWidth * scale}px`;
+    mapStage.style.height = `${stageHeight * scale}px`;
+  }
+
+  function centerGraph() {
+    if (!viewport) return;
+
+    const root = document.querySelector<HTMLElement>("#node-mathematics");
+    if (!root) return;
+
+    viewport.scrollLeft =
+      root.offsetLeft * scale -
+      viewport.clientWidth / 2 +
+      (root.offsetWidth * scale) / 2;
+
+    viewport.scrollTop = 0;
+  }
+
+  function keepZoomAnchorFixed() {
+    if (!viewport) return;
+
+    viewport.scrollLeft =
+      zoomAnchorGraphX * scale - zoomAnchorViewportX;
+
+    viewport.scrollTop =
+      zoomAnchorGraphY * scale - zoomAnchorViewportY;
+  }
+
+  function animateZoom(timestamp: number) {
+    if (!viewport) {
+      zoomFrame = null;
+      previousZoomTime = 0;
+      return;
+    }
+
+    const elapsed =
+      previousZoomTime === 0
+        ? 1 / 60
+        : Math.min((timestamp - previousZoomTime) / 1000, 0.05);
+
+    previousZoomTime = timestamp;
+
+    // Time-based exponential smoothing gives approximately the same motion
+    // regardless of monitor refresh rate.
+    const easing = 1 - Math.exp(-ZOOM_RESPONSE * elapsed);
+    const nextScale = scale + (targetScale - scale) * easing;
+
+    applyScale(nextScale);
+    keepZoomAnchorFixed();
+
+    if (Math.abs(targetScale - scale) < 0.0005) {
+      applyScale(targetScale);
+      keepZoomAnchorFixed();
+
+      zoomFrame = null;
+      previousZoomTime = 0;
+      return;
+    }
+
+    zoomFrame = requestAnimationFrame(animateZoom);
+  }
+
+  function requestZoom(
+    clientX: number,
+    clientY: number,
+    requestedScale: number,
+  ) {
+    if (!viewport) return;
+
+    const rect = viewport.getBoundingClientRect();
+
+    zoomAnchorViewportX = clientX - rect.left;
+    zoomAnchorViewportY = clientY - rect.top;
+
+    // Store the graph-space point underneath the cursor. During the animation
+    // the viewport is repositioned so this exact point remains under it.
+    zoomAnchorGraphX =
+      (viewport.scrollLeft + zoomAnchorViewportX) / scale;
+
+    zoomAnchorGraphY =
+      (viewport.scrollTop + zoomAnchorViewportY) / scale;
+
+    targetScale = clamp(requestedScale, MIN_SCALE, MAX_SCALE);
+
+    if (zoomFrame === null) {
+      previousZoomTime = 0;
+      zoomFrame = requestAnimationFrame(animateZoom);
+    }
+  }
+
+  viewport?.addEventListener(
+    "wheel",
+    (event) => {
+      event.preventDefault();
+
+      if (!viewport) return;
+
+      // Firefox and some touchpads report wheel values in lines or pages,
+      // while most browsers report pixels. Normalize all three cases.
+      const deltaMultiplier =
+        event.deltaMode === WheelEvent.DOM_DELTA_LINE
+          ? 16
+          : event.deltaMode === WheelEvent.DOM_DELTA_PAGE
+            ? viewport.clientHeight
+            : 1;
+
+      const normalizedDelta = event.deltaY * deltaMultiplier;
+      const zoomFactor = Math.exp(
+        -normalizedDelta * ZOOM_SENSITIVITY,
+      );
+
+      requestZoom(
+        event.clientX,
+        event.clientY,
+        targetScale * zoomFactor,
+      );
+    },
+    { passive: false },
+  );
+
+  viewport?.addEventListener("pointerdown", (event) => {
+    if (event.button !== 0) return;
+
+    const target = event.target as HTMLElement | null;
+
+    // Links and controls retain their ordinary click behavior.
+    if (target?.closest("a, button, input, select, textarea, label")) {
+      return;
+    }
+
+    isDragging = true;
+    dragStartX = event.clientX;
+    dragStartY = event.clientY;
+    dragStartScrollLeft = viewport.scrollLeft;
+    dragStartScrollTop = viewport.scrollTop;
+
+    viewport.setPointerCapture(event.pointerId);
+    viewport.classList.add("is-dragging");
+  });
+
+  viewport?.addEventListener("pointermove", (event) => {
+    if (!isDragging) return;
+
+    const deltaX = event.clientX - dragStartX;
+    const deltaY = event.clientY - dragStartY;
+
+    if (
+      Math.abs(deltaX) < DRAG_THRESHOLD &&
+      Math.abs(deltaY) < DRAG_THRESHOLD
+    ) {
+      return;
+    }
+
+    viewport.scrollLeft = dragStartScrollLeft - deltaX;
+    viewport.scrollTop = dragStartScrollTop - deltaY;
+  });
+
+  function stopDragging(event: PointerEvent) {
+    if (!viewport || !isDragging) return;
+
+    isDragging = false;
+    viewport.classList.remove("is-dragging");
+
+    if (viewport.hasPointerCapture(event.pointerId)) {
+      viewport.releasePointerCapture(event.pointerId);
+    }
+  }
+
+  viewport?.addEventListener("pointerup", stopDragging);
+  viewport?.addEventListener("pointercancel", stopDragging);
+
+  function applyFilters() {
+    const query = (search?.value ?? "").trim().toLowerCase();
+    const selectedGroup = groupFilter?.value ?? "all";
+    const visibleIds = new Set<string>();
+    let visibleTopicCount = 0;
+
+    for (const node of nodes) {
+      const id = node.dataset.nodeId ?? "";
+      const label = node.dataset.nodeLabel ?? "";
+      const group = node.dataset.nodeGroup ?? "";
+      const structural =
+        node.classList.contains("kind-root") ||
+        node.classList.contains("kind-hub");
+
+      const matchesQuery =
+        query.length === 0 ||
+        label.includes(query) ||
+        group.includes(query);
+
+      const matchesGroup =
+        selectedGroup === "all" ||
+        group === selectedGroup ||
+        structural;
+
+      const visible = matchesQuery && matchesGroup;
+
+      node.classList.toggle("is-muted", !visible);
+      node.classList.toggle("is-match", query.length > 0 && visible);
+
+      if (visible) {
+        visibleIds.add(id);
+        if (node.classList.contains("kind-topic")) visibleTopicCount += 1;
+      }
+    }
+
+    for (const edge of edges) {
+      const from = edge.dataset.from ?? "";
+      const to = edge.dataset.to ?? "";
+      const isBridge = edge.classList.contains("bridge");
+      const bridgeEnabled = bridgeToggle?.checked ?? true;
+      const filtered = query.length > 0 || selectedGroup !== "all";
+      const connected = visibleIds.has(from) || visibleIds.has(to);
+      const show = (!isBridge || bridgeEnabled) && (!filtered || connected);
+
+      edge.classList.toggle("is-muted", !show);
+      edge.classList.toggle("is-hidden", isBridge && !bridgeEnabled);
+    }
+
+    if (resultCount) {
+      resultCount.textContent = `${visibleTopicCount} ${
+        visibleTopicCount === 1 ? "subject" : "subjects"
+      } shown`;
+    }
+  }
+
+  search?.addEventListener("input", applyFilters);
+  groupFilter?.addEventListener("change", applyFilters);
+  bridgeToggle?.addEventListener("change", applyFilters);
+
+  resetButton?.addEventListener("click", () => {
+    if (search) search.value = "";
+    if (groupFilter) groupFilter.value = "all";
+    if (bridgeToggle) bridgeToggle.checked = true;
+    targetScale = 1;
+    applyScale(1);
+    applyFilters();
+    centerGraph();
+    search?.focus();
+  });
+
+  for (const button of groupButtons) {
+    button.addEventListener("click", () => {
+      const group = button.dataset.groupJump;
+      if (!group || !groupFilter) return;
+
+      groupFilter.value = group;
+      applyFilters();
+
+      const hub = document.querySelector<HTMLElement>(`#node-hub-${group}`);
+      if (hub && viewport) {
+        viewport.scrollTo({
+          left:
+            hub.offsetLeft * scale -
+            viewport.clientWidth / 2 +
+            (hub.offsetWidth * scale) / 2,
+          top: Math.max(0, hub.offsetTop * scale - 90),
+          behavior: "smooth",
+        });
+      }
+    });
+  }
+
+  requestAnimationFrame(() => {
+    targetScale = 1;
+    applyScale(1);
+    centerGraph();
+  });
+</script>
+
+<style>
+  .branches-page {
+    width: min(100% - 2rem, 1500px);
+    margin: 0 auto;
+    padding: clamp(2.5rem, 6vw, 6rem) 0 6rem;
+  }
+
+  .branches-hero {
+    max-width: 980px;
+    margin-bottom: 2.5rem;
+  }
+
+  .eyebrow,
+  .section-kicker {
+    margin: 0 0 0.7rem;
+    color: var(--accent, #71e6ff);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .branches-hero h1 {
+    margin: 0;
+    font-size: clamp(2.7rem, 7vw, 6rem);
+    line-height: 0.94;
+    letter-spacing: -0.055em;
+  }
+
+  .branches-intro {
+    max-width: 900px;
+    margin: 1.6rem 0 0;
+    color: var(--ink, #f4efff);
+    font-size: clamp(1.02rem, 1.7vw, 1.24rem);
+    line-height: 1.75;
+  }
+
+  .branches-note {
+    max-width: 850px;
+    margin: 1rem 0 0;
+    color: color-mix(in srgb, var(--ink, #f4efff) 68%, transparent);
+    line-height: 1.65;
+  }
+
+  .graph-panel {
+    border: 1px solid color-mix(in srgb, var(--accent, #71e6ff) 24%, transparent);
+    border-radius: 1.5rem;
+    background: linear-gradient(180deg, rgba(17, 10, 37, 0.91), rgba(9, 6, 23, 0.94));
+    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.32);
+    overflow: hidden;
+  }
+
+  .graph-panel-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 1.6rem 1.7rem 1.2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .graph-panel-heading h2 {
+    margin: 0;
+    font-size: clamp(1.45rem, 3vw, 2.4rem);
+    letter-spacing: -0.035em;
+  }
+
+  .graph-key {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.85rem 1.2rem;
+    color: rgba(241, 236, 255, 0.72);
+    font-size: 0.82rem;
+  }
+
+  .graph-key span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .key-line {
+    display: inline-block;
+    width: 2rem;
+    border-top: 2px solid rgba(206, 196, 255, 0.78);
+  }
+
+  .key-line.bridge {
+    border-top-style: dashed;
+    border-color: rgba(255, 135, 164, 0.88);
+  }
+
+  .graph-controls {
+    position: sticky;
+    top: 0;
+    z-index: 15;
+    display: grid;
+    grid-template-columns: minmax(230px, 1fr) minmax(190px, 0.55fr) auto auto auto;
+    gap: 0.85rem;
+    align-items: end;
+    padding: 1rem 1.2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    background: rgba(9, 6, 23, 0.92);
+    backdrop-filter: blur(16px);
+  }
+
+  .search-control,
+  .group-control {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .search-control span,
+  .group-control span {
+    color: rgba(241, 236, 255, 0.68);
+    font-size: 0.72rem;
+    font-weight: 750;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .search-control input,
+  .group-control select,
+  #graph-reset {
+    height: 2.7rem;
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    border-radius: 0.75rem;
+    padding: 0 0.85rem;
+    color: #f7f3ff;
+    background: rgba(255, 255, 255, 0.055);
+  }
+
+  .search-control input:focus,
+  .group-control select:focus {
+    border-color: var(--accent, #71e6ff);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(113, 230, 255, 0.12);
+  }
+
+  .group-control select option {
+    color: #171021;
+    background: white;
+  }
+
+  .toggle-control {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    min-height: 2.7rem;
+    white-space: nowrap;
+    color: rgba(241, 236, 255, 0.8);
+    font-size: 0.84rem;
+  }
+
+  .toggle-control input {
+    accent-color: var(--accent, #71e6ff);
+  }
+
+  #graph-reset {
+    padding-inline: 1rem;
+    cursor: pointer;
+  }
+
+  #graph-reset:hover {
+    border-color: var(--accent, #71e6ff);
+    background: rgba(113, 230, 255, 0.09);
+  }
+
+  #graph-result-count {
+    align-self: center;
+    justify-self: end;
+    color: rgba(241, 236, 255, 0.63);
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+
+  .group-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    padding: 0.9rem 1.2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  }
+
+  .group-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    border: 1px solid color-mix(in srgb, var(--group-color) 40%, transparent);
+    border-radius: 999px;
+    padding: 0.4rem 0.72rem;
+    color: color-mix(in srgb, var(--group-color) 78%, white);
+    background: color-mix(in srgb, var(--group-color) 8%, transparent);
+    font: inherit;
+    font-size: 0.77rem;
+    cursor: pointer;
+  }
+
+  .group-dot {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    background: var(--group-color);
+    box-shadow: 0 0 12px color-mix(in srgb, var(--group-color) 70%, transparent);
+  }
+
+  .graph-viewport {
+    position: relative;
+    height: min(78vh, 940px);
+    min-height: 620px;
+    margin-top: 1.25rem;
+    overflow: hidden;
+    border: 0;
+    overscroll-behavior: contain;
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+    background: transparent;
+  }
+
+  .graph-viewport.is-dragging {
+    cursor: grabbing;
+  }
+
+  .math-map-stage {
+    position: relative;
+  }
+
+  .math-map {
+    position: absolute;
+    inset: 0 auto auto 0;
+    isolation: isolate;
+    transform-origin: 0 0;
+    will-change: transform;
+  }
+
+  .math-node {
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+
+  .lane {
+    position: absolute;
+    z-index: -2;
+    top: 198px;
+    width: 436px;
+    height: calc(100% - 244px);
+    border-inline: 1px solid color-mix(in srgb, var(--group-color) 14%, transparent);
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--group-color) 8%, transparent),
+      transparent 14%,
+      transparent 92%,
+      color-mix(in srgb, var(--group-color) 4%, transparent)
+    );
+  }
+
+  .lane > span {
+    position: sticky;
+    top: 0.6rem;
+    display: inline-block;
+    margin: 0.65rem;
+    color: color-mix(in srgb, var(--group-color) 55%, transparent);
+    font-size: 0.66rem;
+    font-weight: 800;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+  }
+
+  .math-map-lines {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  .graph-edge {
+    stroke: rgba(185, 173, 223, 0.34);
+    stroke-width: 1.4;
+    vector-effect: non-scaling-stroke;
+    transition: opacity 180ms ease;
+  }
+
+  .graph-edge.bridge {
+    stroke: rgba(255, 113, 151, 0.34);
+    stroke-width: 1.2;
+    stroke-dasharray: 7 8;
+  }
+
+  .graph-edge.is-muted {
+    opacity: 0.055;
+  }
+
+  .graph-edge.is-hidden {
+    display: none;
+  }
+
+  #arrowhead path {
+    fill: rgba(202, 192, 235, 0.44);
+  }
+
+  .math-node {
+    position: absolute;
+    z-index: 3;
+    display: grid;
+    place-items: center;
+    width: 186px;
+    min-height: 58px;
+    transform: translate(-50%, -50%);
+    border: 1px solid color-mix(in srgb, var(--group-color) 48%, transparent);
+    border-radius: 0.85rem;
+    padding: 0.65rem 0.78rem;
+    color: #f7f3ff;
+    background: linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--group-color) 15%, rgba(22, 15, 45, 0.94)),
+      rgba(13, 9, 29, 0.96)
+    );
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+    text-align: center;
+    text-decoration: none;
+    transition: opacity 180ms ease, transform 180ms ease, border-color 180ms ease;
+  }
+
+  .math-node:hover,
+  .math-node:focus-visible {
+    z-index: 8;
+    transform: translate(-50%, -50%) translateY(-3px) scale(1.035);
+    border-color: color-mix(in srgb, var(--group-color) 86%, white);
+    outline: none;
+  }
+
+  .math-node.is-muted {
+    opacity: 0.14;
+  }
+
+  .math-node.is-match {
+    z-index: 9;
+    border-color: white;
+    box-shadow: 0 0 30px color-mix(in srgb, var(--group-color) 35%, transparent);
+  }
+
+  .node-label {
+    font-size: 0.82rem;
+    font-weight: 720;
+    line-height: 1.18;
+  }
+
+  .node-status {
+    margin-top: 0.28rem;
+    border-radius: 999px;
+    padding: 0.12rem 0.38rem;
+    color: #bff6ff;
+    background: rgba(113, 230, 255, 0.12);
+    font-size: 0.58rem;
+    font-weight: 850;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .kind-root {
+    width: 250px;
+    min-height: 76px;
+    border-width: 2px;
+    border-radius: 1.2rem;
+    background: radial-gradient(circle at top, rgba(113, 230, 255, 0.2), transparent 70%), rgba(21, 12, 48, 0.97);
+  }
+
+  .kind-root .node-label {
+    font-size: 1.35rem;
+  }
+
+  .kind-hub {
+    width: 270px;
+    min-height: 80px;
+    border-width: 2px;
+    border-radius: 1.05rem;
+  }
+
+  .kind-hub .node-label {
+    font-size: 1rem;
+  }
+
+  .is-live {
+    border-color: #71e6ff;
+    box-shadow: 0 0 26px rgba(113, 230, 255, 0.17);
+  }
+
+  .graph-help {
+    margin: 0;
+    padding: 0.95rem 1.2rem 1.15rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    color: rgba(241, 236, 255, 0.58);
+    font-size: 0.78rem;
+    line-height: 1.55;
+  }
+
+  .group-foundations { --group-color: #8e7dff; }
+  .group-algebra-number { --group-color: #ff7597; }
+  .group-geometry-topology { --group-color: #52ddc7; }
+  .group-analysis-probability { --group-color: #65b7ff; }
+  .group-discrete-computation { --group-color: #f4bd61; }
+  .group-physics-applied { --group-color: #d68cff; }
+  .group-root { --group-color: #71e6ff; }
+
+  @media (max-width: 1050px) {
+    .graph-controls {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    #graph-result-count {
+      justify-self: start;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .branches-page {
+      width: min(100% - 1rem, 1500px);
+      padding-top: 2rem;
+    }
+
+    .graph-panel {
+      border-radius: 1rem;
+    }
+
+    .graph-panel-heading {
+      display: grid;
+      align-items: start;
+      padding: 1.2rem;
+    }
+
+    .graph-key {
+      justify-content: flex-start;
+    }
+
+    .graph-controls {
+      position: static;
+      grid-template-columns: 1fr;
+    }
+
+    .toggle-control,
+    #graph-result-count {
+      justify-self: start;
+    }
+
+    .graph-viewport {
+      height: 72vh;
+      min-height: 520px;
+      margin-inline: -0.5rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .math-node,
+    .graph-edge {
+      transition: none;
+    }
+  }
+</style>

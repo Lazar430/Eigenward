@@ -1,0 +1,30 @@
+---
+import { withBase } from "@/utils/paths";
+
+const items = [
+  {
+    label: "Lessons",
+    href: withBase("branches/linear-algebra/")
+  },
+  {
+    label: "Problems",
+    href: withBase("branches/linear-algebra/")
+  },
+  {
+    label: "Theorems",
+    href: withBase("branches/linear-algebra/")
+  },
+  {
+    label: "Definitions",
+    href: withBase("branches/linear-algebra/")
+  }
+];
+---
+
+<aside class="hub-sidebar" aria-label="Linear algebra navigation">
+  <span class="hub-sidebar-title">Linear Algebra</span>
+
+  <nav>
+    {items.map((item) => <a href={item.href}>{item.label}</a>)}
+  </nav>
+</aside>

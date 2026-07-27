@@ -1,0 +1,264 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { withBase } from "@/utils/paths";
+import ArticlesSidebar from "../../components/ArticlesSidebar.astro";
+---
+
+<BaseLayout title="Articles">
+  <section class="hub-page">
+    <ArticlesSidebar />
+
+    <div class="hub-main">
+      <section class="hub-hero">
+        <span class="eyebrow">Articles prototype</span>
+
+        <h1>Articles</h1>
+
+        <p>
+          Here's an eclectic collection of subjects that may pique one's interest.
+        </p>
+      </section>
+
+      <section class="articles-list" aria-labelledby="featured-article-title">
+        <h2 id="featured-article-title" class="section-title">
+          Featured article
+        </h2>
+
+        <a
+          class="article-card"
+          href={withBase("articles/coupon-collector/")}
+          aria-label="Read The Coupon Collector's Problem"
+        >
+          <header class="article-card-header">
+            <span class="article-branch">
+              Probability · Discrete Mathematics
+            </span>
+
+            <h3>The Coupon Collector's Problem</h3>
+          </header>
+
+          <div
+            class="article-canvas"
+            role="img"
+            aria-label="An animated simulation of collecting eight different coupon types"
+          >
+            <canvas data-coupon-canvas aria-hidden="true"></canvas>
+          </div>
+
+          <p class="article-description">
+            How many random draws should we expect before every coupon type has
+            appeared at least once? This deceptively simple problem leads to
+            harmonic numbers, geometric waiting times, Markov chains, and the
+            surprisingly stubborn final missing coupon.
+          </p>
+
+          <span class="read-label" aria-hidden="true">
+            Read article <span>→</span>
+          </span>
+        </a>
+      </section>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import "../../scripts/animations/couponCollectorCard";
+</script>
+
+<style>
+  .hub-page {
+    display: grid;
+    grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+    gap: clamp(1.5rem, 4vw, 4rem);
+    width: min(100% - 2rem, 1500px);
+    margin: 0 auto;
+    padding: clamp(2.5rem, 6vw, 6rem) 0;
+  }
+
+  .hub-main {
+    min-width: 0;
+  }
+
+  .hub-hero,
+  .articles-list {
+    width: 100%;
+  }
+
+  .hub-hero {
+    padding: clamp(1.5rem, 4vw, 3rem);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 1.4rem;
+    background:
+      linear-gradient(
+        140deg,
+        rgba(122, 91, 207, 0.12),
+        rgba(17, 11, 37, 0.58)
+      );
+  }
+
+  .eyebrow,
+  .article-branch {
+    color: var(--accent, #71e6ff);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .hub-hero h1 {
+    margin: 0.65rem 0 0;
+    font-size: clamp(2.5rem, 7vw, 5.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.055em;
+  }
+
+  .hub-hero p {
+    max-width: 720px;
+    margin: 1.25rem 0 0;
+    color: rgba(239, 234, 255, 0.72);
+    font-size: clamp(1rem, 1.6vw, 1.18rem);
+    line-height: 1.7;
+  }
+
+  .articles-list {
+    margin-top: clamp(2rem, 5vw, 4rem);
+  }
+
+  .section-title {
+    margin: 0 0 1rem;
+    font-size: clamp(1.35rem, 3vw, 2rem);
+    letter-spacing: -0.035em;
+  }
+
+  .article-card {
+    display: grid;
+    gap: 1.25rem;
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.11);
+    border-radius: 1.4rem;
+    padding: clamp(1.15rem, 3vw, 2rem);
+    color: inherit;
+    background:
+      radial-gradient(
+        circle at 85% 0%,
+        rgba(113, 230, 255, 0.09),
+        transparent 30%
+      ),
+      linear-gradient(
+        145deg,
+        rgba(35, 23, 67, 0.86),
+        rgba(13, 9, 29, 0.91)
+      );
+    box-shadow:
+      0 24px 70px rgba(0, 0, 0, 0.27),
+      inset 0 1px 0 rgba(255, 255, 255, 0.045);
+    text-decoration: none;
+    overflow: hidden;
+    transition:
+      transform 180ms ease,
+      border-color 180ms ease,
+      box-shadow 180ms ease;
+  }
+
+  .article-card:hover,
+  .article-card:focus-visible {
+    transform: translateY(-4px);
+    border-color: rgba(113, 230, 255, 0.44);
+    box-shadow:
+      0 30px 85px rgba(0, 0, 0, 0.34),
+      0 0 28px rgba(113, 230, 255, 0.08);
+    outline: none;
+  }
+
+  .article-card-header {
+    display: grid;
+    gap: 0.65rem;
+  }
+
+  .article-card h3 {
+    max-width: 900px;
+    margin: 0;
+    font-size: clamp(1.8rem, 4.8vw, 4rem);
+    line-height: 1;
+    letter-spacing: -0.05em;
+  }
+
+  .article-canvas {
+    min-height: clamp(250px, 32vw, 390px);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 1rem;
+    background: rgba(4, 4, 13, 0.3);
+    overflow: hidden;
+  }
+
+  .article-canvas canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: inherit;
+  }
+
+  .article-description {
+    max-width: 850px;
+    margin: 0;
+    color: rgba(239, 234, 255, 0.72);
+    font-size: clamp(0.96rem, 1.4vw, 1.1rem);
+    line-height: 1.72;
+  }
+
+  .read-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    width: fit-content;
+    color: rgba(239, 248, 255, 0.9);
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  .read-label span {
+    color: var(--accent, #71e6ff);
+    font-size: 1.15rem;
+    transition: transform 180ms ease;
+  }
+
+  .article-card:hover .read-label span,
+  .article-card:focus-visible .read-label span {
+    transform: translateX(4px);
+  }
+
+  @media (max-width: 900px) {
+    .hub-page {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .hub-page {
+      width: min(100% - 1rem, 1500px);
+    }
+
+    .hub-hero,
+    .article-card {
+      border-radius: 1rem;
+    }
+
+    .article-canvas {
+      min-height: 235px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .article-card,
+    .read-label span {
+      transition: none;
+    }
+
+    .article-card:hover,
+    .article-card:focus-visible {
+      transform: none;
+    }
+  }
+</style>

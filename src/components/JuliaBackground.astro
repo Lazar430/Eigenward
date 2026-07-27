@@ -1,0 +1,15 @@
+<canvas
+  class="julia-background"
+  data-julia-background
+  aria-hidden="true"
+></canvas>
+
+<script>
+  import { startJuliaBackground } from "../scripts/juliaBackground";
+
+  startJuliaBackground();
+
+  document.addEventListener("astro:page-load", () => {
+    startJuliaBackground();
+  });
+</script>

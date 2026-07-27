@@ -1,0 +1,17 @@
+<figure class="hero-sketch">
+  <canvas data-home-sketch aria-label="Animated mathematical sketch"></canvas>
+
+  <figcaption>
+    A tiny custom canvas animation layer: coordinates, curves, moving points, and labels.
+  </figcaption>
+</figure>
+
+<script>
+  import { startHomeSketches } from "../scripts/homeSketch";
+
+  startHomeSketches();
+
+  document.addEventListener("astro:page-load", () => {
+    startHomeSketches();
+  });
+</script>

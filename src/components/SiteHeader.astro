@@ -1,0 +1,75 @@
+---
+import { withBase } from "@/utils/paths";
+
+const navItems = [
+  {
+    href: withBase(""),
+    label: "Home"
+  },
+  {
+    href: withBase("articles/"),
+    label: "Articles"
+  },
+  {
+    href: withBase("branches/"),
+    label: "Branches"
+  },
+  {
+    href: withBase("problems/"),
+    label: "Problems"
+  },
+  {
+    href: withBase("about/"),
+    label: "About"
+  }
+];
+
+const normalizePath = (path: string): string => {
+  if (path === "/") {
+    return "/";
+  }
+
+  return path.replace(/\/+$/, "");
+};
+
+const currentPath = normalizePath(Astro.url.pathname);
+---
+
+<header class="site-header">
+  <a
+    class="brand"
+    href={withBase("")}
+    aria-label="Eigenward home"
+  >
+    <span class="brand-text">Eigenward</span>
+  </a>
+
+  <nav
+    class="main-nav"
+    aria-label="Main navigation"
+  >
+    {
+      navItems.map((item) => {
+        const itemPath = normalizePath(item.href);
+        const isHome = itemPath === normalizePath(withBase(""));
+
+        const isActive = isHome
+          ? currentPath === itemPath
+          : currentPath === itemPath ||
+            currentPath.startsWith(`${itemPath}/`);
+
+        return (
+          <a
+            href={item.href}
+            class:list={[
+              "nav-link",
+              isActive && "active"
+            ]}
+          >
+            {item.label}
+          </a>
+        );
+      })
+    }
+  </nav>
+</header>
