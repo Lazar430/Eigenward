@@ -1,0 +1,320 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import LinearAlgebraSidebar from "../../../../components/LinearAlgebraSidebar.astro";
+
+const theorems = [
+  "Adjoint Existence Theorem",
+  "Basis Extension Theorem",
+  "Basis Reduction Theorem",
+  "Cauchy–Binet Formula",
+  "Cauchy–Schwarz Inequality",
+  "Cayley–Hamilton Theorem",
+  "Change-of-Basis Formula",
+  "Characteristic Polynomial Invariance Theorem",
+  "Cholesky Factorization Theorem",
+  "Courant–Fischer Min–Max Theorem",
+  "Cramer's Rule",
+  "Determinant Multiplicativity Theorem",
+  "Dimension Formula for Sums of Subspaces",
+  "Dimension Invariance Theorem",
+  "Dual Basis Theorem",
+  "Fitting Decomposition Lemma",
+  "Fundamental Theorem of Linear Algebra",
+  "Fundamental Theorem of Linear Maps",
+  "Gershgorin Circle Theorem",
+  "Gram–Schmidt Theorem",
+  "Hadamard Determinant Inequality",
+  "Invertible Matrix Theorem",
+  "Jordan Canonical Form Theorem",
+  "Lagrange Identity",
+  "Least-Squares Projection Theorem",
+  "LU Factorization Theorem",
+  "Minimal Polynomial Theorem",
+  "Orthogonal Decomposition Theorem",
+  "Parseval Identity",
+  "Perron–Frobenius Theorem",
+  "Polar Decomposition Theorem",
+  "Primary Decomposition Theorem",
+  "Projection Theorem",
+  "QR Factorization Theorem",
+  "Rank Equality Theorem",
+  "Rank Factorization Theorem",
+  "Rank–Nullity Theorem",
+  "Rational Canonical Form Theorem",
+  "Riesz Representation Theorem (Finite-Dimensional)",
+  "Rouché–Capelli Theorem",
+  "Schur Triangularization Theorem",
+  "Singular Value Decomposition Theorem",
+  "Spectral Theorem for Normal Operators",
+  "Spectral Theorem for Self-Adjoint Operators",
+  "Steinitz Exchange Lemma",
+  "Sylvester Rank Inequality",
+  "Sylvester's Criterion",
+  "Sylvester's Law of Inertia",
+  "Triangularization Theorem"
+];
+
+const letters = [
+  ...new Set(theorems.map((theorem) => theorem[0].toUpperCase()))
+];
+
+const slugify = (value: string) =>
+  value
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+---
+
+<BaseLayout
+  title="Linear Algebra Theorems"
+  description="An alphabetical index of major theorems and named results in linear algebra."
+>
+  <section class="hub-page">
+    <LinearAlgebraSidebar />
+
+    <div class="hub-main">
+      <section class="hub-hero">
+        <span class="eyebrow">Linear Algebra · Theorems</span>
+
+        <h1>Theorems</h1>
+
+        <p>
+          An alphabetical index of the principal theorems, identities, lemmas,
+          inequalities, decomposition results, and canonical-form results used
+          throughout the linear algebra section.
+        </p>
+      </section>
+
+      <section class="index-tools" aria-label="Theorem index controls">
+        <label class="search-control">
+          <span>Search theorems</span>
+          <input
+            id="theorem-search"
+            type="search"
+            placeholder="Try “spectral”, “rank”, “basis”…"
+            autocomplete="off"
+          />
+        </label>
+
+        <nav class="alphabet-nav" aria-label="Jump to letter">
+          {
+            letters.map((letter) => (
+              <a href={`#theorems-${letter}`}>{letter}</a>
+            ))
+          }
+        </nav>
+
+        <output id="theorem-result-count" aria-live="polite">
+          {theorems.length} theorems
+        </output>
+      </section>
+
+      <div class="alphabet-index" id="theorem-index">
+        {
+          letters.map((letter) => {
+            const entries = theorems.filter(
+              (theorem) => theorem[0].toUpperCase() === letter
+            );
+
+            return (
+              <section class="alphabet-group" data-alpha-group>
+                <h2 id={`theorems-${letter}`}>{letter}</h2>
+
+                <div class="alphabet-entry-list">
+                  {entries.map((theorem) => (
+                    <a
+                      id={slugify(theorem)}
+                      class="index-entry"
+                      href={`#${slugify(theorem)}`}
+                      data-index-entry
+                      data-search-term={theorem.toLowerCase()}
+                    >
+                      <span>{theorem}</span>
+                      <span class="index-arrow" aria-hidden="true">→</span>
+                    </a>
+                  ))}
+                </div>
+              </section>
+            );
+          })
+        }
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const search = document.querySelector<HTMLInputElement>("#theorem-search");
+  const entries = Array.from(
+    document.querySelectorAll<HTMLElement>("[data-index-entry]"),
+  );
+  const groups = Array.from(
+    document.querySelectorAll<HTMLElement>("[data-alpha-group]"),
+  );
+  const resultCount =
+    document.querySelector<HTMLOutputElement>("#theorem-result-count");
+
+  const updateIndex = () => {
+    const query = search?.value.trim().toLowerCase() ?? "";
+    let visible = 0;
+
+    entries.forEach((entry) => {
+      const matches = (entry.dataset.searchTerm ?? "").includes(query);
+      entry.hidden = !matches;
+      if (matches) visible += 1;
+    });
+
+    groups.forEach((group) => {
+      const hasVisibleEntries = Array.from(
+        group.querySelectorAll<HTMLElement>("[data-index-entry]"),
+      ).some((entry) => !entry.hidden);
+
+      group.hidden = !hasVisibleEntries;
+    });
+
+    if (resultCount) {
+      resultCount.textContent =
+        query.length === 0
+          ? `${visible} theorems`
+          : `${visible} matching theorem${visible === 1 ? "" : "s"}`;
+    }
+  };
+
+  search?.addEventListener("input", updateIndex);
+</script>
+
+<style>
+  .index-tools {
+    display: grid;
+    gap: 1rem;
+    margin-top: clamp(2rem, 5vw, 4rem);
+    padding: 1.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 1.2rem;
+    background: rgba(17, 11, 37, 0.55);
+  }
+
+  .search-control {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .search-control span {
+    color: var(--accent, #71e6ff);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+  }
+
+  .search-control input {
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.11);
+    border-radius: 0.8rem;
+    padding: 0.85rem 1rem;
+    color: inherit;
+    background: rgba(5, 5, 18, 0.42);
+    font: inherit;
+  }
+
+  .search-control input:focus {
+    border-color: rgba(113, 230, 255, 0.48);
+    outline: none;
+  }
+
+  .alphabet-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .alphabet-nav a {
+    display: grid;
+    place-items: center;
+    min-width: 2.1rem;
+    min-height: 2.1rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.55rem;
+    color: rgba(239, 234, 255, 0.76);
+    text-decoration: none;
+  }
+
+  .alphabet-nav a:hover,
+  .alphabet-nav a:focus-visible {
+    border-color: rgba(113, 230, 255, 0.42);
+    color: var(--accent, #71e6ff);
+    outline: none;
+  }
+
+  #theorem-result-count {
+    color: rgba(239, 234, 255, 0.62);
+    font-size: 0.9rem;
+  }
+
+  .alphabet-index {
+    display: grid;
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .alphabet-group {
+    display: grid;
+    grid-template-columns: 72px minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .alphabet-group h2 {
+    position: sticky;
+    top: 1rem;
+    align-self: start;
+    margin: 0;
+    color: var(--accent, #71e6ff);
+    font-size: clamp(2rem, 5vw, 3.8rem);
+    line-height: 1;
+  }
+
+  .alphabet-entry-list {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .index-entry {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 0.8rem;
+    padding: 0.85rem 1rem;
+    color: inherit;
+    background: rgba(255, 255, 255, 0.025);
+    text-decoration: none;
+  }
+
+  .index-entry:hover,
+  .index-entry:focus-visible {
+    border-color: rgba(113, 230, 255, 0.32);
+    background: rgba(113, 230, 255, 0.045);
+    outline: none;
+  }
+
+  .index-arrow {
+    color: var(--accent, #71e6ff);
+  }
+
+  [hidden] {
+    display: none !important;
+  }
+
+  @media (max-width: 600px) {
+    .alphabet-group {
+      grid-template-columns: 1fr;
+    }
+
+    .alphabet-group h2 {
+      position: static;
+    }
+  }
+</style>

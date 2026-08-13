@@ -1,0 +1,36 @@
+---
+import Math from "./Math.astro";
+
+interface Props {
+  tex: string;
+  number?: number | string;
+  id?: string;
+  class?: string;
+}
+
+const {
+  tex,
+  number,
+  id,
+  class: className
+} = Astro.props;
+---
+
+<div
+  id={id}
+  class:list={[
+    "topic-equation",
+    number === undefined && "unnumbered",
+    className
+  ]}
+>
+  <Math tex={tex} display class="equation-body" />
+
+  {
+    number !== undefined && (
+      <a class="equation-number" href={`#${id}`}>
+        ({number})
+      </a>
+    )
+  }
+</div>

@@ -1,0 +1,169 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import LinearAlgebraSidebar from "../../../../components/LinearAlgebraSidebar.astro";
+import { withBase } from "@/utils/paths";
+
+const lessons = [
+  {
+    number: "01",
+    title: "Vector Spaces",
+    href: withBase("branches/linear-algebra/lessons/"),
+    text: "Fields, vector-space axioms, elementary examples, linear combinations, and the basic language of linear structure."
+  },
+  {
+    number: "02",
+    title: "Subspaces, Sums, and Quotients",
+    href: withBase("branches/linear-algebra/lessons/"),
+    text: "Subspace tests, intersections, sums, direct sums, quotient spaces, and the way larger spaces are assembled from smaller ones."
+  },
+  {
+    number: "03",
+    title: "Span, Linear Independence, Bases, and Dimension",
+    href: withBase("branches/linear-algebra/lessons/"),
+    text: "Generating sets, dependence relations, basis extraction and extension, coordinates, finite dimension, and dimension arguments."
+  },
+  {
+    number: "04",
+    title: "Linear Maps",
+    href: withBase("branches/linear-algebra/lessons/"),
+    text: "Linearity, kernels, images, injectivity, surjectivity, isomorphisms, composition, inverses, and the rank\u2013nullity viewpoint."
+  },
+  {
+    number: "05",
+    title: "Matrices and Change of Basis",
+    href: withBase("branches/linear-algebra/lessons/"),
+    text: "Matrix representations of linear maps, coordinate vectors, change-of-basis matrices, similarity, and basis-dependent versus intrinsic data."
+  },
+  {
+    number: "06",
+    title: "Systems of Linear Equations",
+    href: withBase("branches/linear-algebra/lessons/"),
+    text: "Gaussian elimination, echelon forms, rank, consistency, homogeneous systems, solution spaces, and matrix factorizations arising from elimination."
+  },
+  {
+    number: "07",
+    title: "Determinants",
+    href: withBase("branches/linear-algebra/lessons/"),
+    text: "Alternating multilinearity, permutation formulas, cofactors, invertibility, determinant identities, orientation, and volume scaling."
+  },
+  {
+    number: "08",
+    title: "Eigenvalues and Eigenvectors",
+    href: withBase("branches/linear-algebra/lessons/"),
+    text: "Characteristic polynomials, eigenspaces, algebraic and geometric multiplicity, invariant directions, and first spectral ideas."
+  },
+  {
+    number: "09",
+    title: "Diagonalization and Polynomial Relations",
+    href: withBase("branches/linear-algebra/lessons/"),
+    text: "Diagonalizability criteria, minimal polynomials, annihilating polynomials, interpolation of operators, and powers or functions of matrices."
+  },
+  {
+    number: "10",
+    title: "Invariant Subspaces and Canonical Forms",
+    href: withBase("branches/linear-algebra/lessons/"),
+    text: "Invariant subspaces, cyclic subspaces, triangularization, Jordan form, rational canonical form, and decomposition into simpler operator pieces."
+  },
+  {
+    number: "11",
+    title: "Dual Spaces",
+    href: withBase("branches/linear-algebra/lessons/"),
+    text: "Linear functionals, dual bases, annihilators, transpose maps, double duals, evaluation, and the contravariant behavior of duality."
+  },
+  {
+    number: "12",
+    title: "Bilinear, Sesquilinear, and Quadratic Forms",
+    href: withBase("branches/linear-algebra/lessons/"),
+    text: "Bilinear forms, symmetric and alternating forms, quadratic forms, congruence, signatures, and sesquilinear forms over complex spaces."
+  },
+  {
+    number: "13",
+    title: "Inner Product Spaces",
+    href: withBase("branches/linear-algebra/lessons/"),
+    text: "Inner products, norms, angles, orthogonality, orthonormal bases, Gram matrices, Gram\u2013Schmidt, and geometric structure in finite dimensions."
+  },
+  {
+    number: "14",
+    title: "Orthogonal Projections and Least Squares",
+    href: withBase("branches/linear-algebra/lessons/"),
+    text: "Orthogonal complements, projection operators, normal equations, best approximation, least-squares problems, and QR factorization."
+  },
+  {
+    number: "15",
+    title: "Adjoints and Special Operators",
+    href: withBase("branches/linear-algebra/lessons/"),
+    text: "Adjoint maps, self-adjoint, skew-adjoint, normal, unitary and orthogonal operators, together with their geometric and algebraic properties."
+  },
+  {
+    number: "16",
+    title: "The Spectral Theorem",
+    href: withBase("branches/linear-algebra/lessons/"),
+    text: "Orthogonal or unitary diagonalization of normal operators, spectral decompositions, positive operators, and the finite-dimensional functional calculus."
+  },
+  {
+    number: "17",
+    title: "Multilinear Algebra and Tensor Products",
+    href: withBase("branches/linear-algebra/lessons/"),
+    text: "Multilinear maps, tensor products, universal properties, tensor powers, symmetric and exterior powers, and alternating forms."
+  },
+  {
+    number: "18",
+    title: "Affine Spaces",
+    href: withBase("branches/linear-algebra/lessons/"),
+    text: "Points versus vectors, affine combinations, affine subspaces, affine maps, barycentric coordinates, and the linear structure underlying affine geometry."
+  },
+];
+---
+
+<BaseLayout
+  title="Linear Algebra Lessons"
+  description="A sequential curriculum through the central ideas of linear algebra, from vector spaces and linear maps to canonical forms, spectral theory, tensors, and affine spaces."
+>
+  <section class="hub-page">
+    <LinearAlgebraSidebar />
+
+    <div class="hub-main">
+      <section class="hub-hero">
+        <span class="eyebrow">Linear Algebra · Lessons</span>
+        <h1>Lessons</h1>
+        <p>
+          A sequential route through the subject. The aim is to move from the
+          elementary language of vector spaces to the structural theory of
+          operators without splitting one idea into several artificial mini-lessons.
+        </p>
+      </section>
+
+      <section class="hub-section lesson-index-section">
+        <div class="section-header">
+          <h2>Full lesson path</h2>
+          <p>
+            The ordering is cumulative: later topics freely use the language,
+            constructions, and theorems developed earlier in the sequence.
+          </p>
+        </div>
+
+        <div class="lesson-timeline">
+          {lessons.map((lesson) => (
+            <a class="lesson-card" href={lesson.href}>
+              <span class="lesson-number">{lesson.number}</span>
+              <div>
+                <h3>{lesson.title}</h3>
+                <p>{lesson.text}</p>
+              </div>
+              <span class="lesson-arrow" aria-hidden="true">→</span>
+            </a>
+          ))}
+        </div>
+      </section>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .lesson-index-section { margin-top: clamp(2rem, 5vw, 4rem); }
+  .lesson-card { grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; }
+  .lesson-arrow { color: var(--accent, #71e6ff); font-size: 1.15rem; transition: transform 180ms ease; }
+  .lesson-card:hover .lesson-arrow, .lesson-card:focus-visible .lesson-arrow { transform: translateX(4px); }
+  @media (max-width: 640px) { .lesson-card { grid-template-columns: auto minmax(0, 1fr); } .lesson-arrow { display: none; } }
+  @media (prefers-reduced-motion: reduce) { .lesson-arrow { transition: none; } }
+</style>

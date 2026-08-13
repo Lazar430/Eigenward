@@ -1,0 +1,260 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import ComplexAnalysisSidebar from "../../../../components/ComplexAnalysisSidebar.astro";
+import { withBase } from "@/utils/paths";
+
+const lessons = [
+  {
+    number: "01",
+    title: "The Complex Number System",
+    href: withBase("branches/complex-analysis/lessons/"),
+    text: "Algebraic structure of C, conjugation, modulus, argument, polar and exponential forms, roots of complex numbers, and the geometry of multiplication."
+  },
+  {
+    number: "02",
+    title: "Topology and Geometry of the Complex Plane",
+    href: withBase("branches/complex-analysis/lessons/"),
+    text: "Open and closed sets, disks, connectedness, domains, compactness, paths, regions, and how real-plane topology is used in complex analysis."
+  },
+  {
+    number: "03",
+    title: "Limits and Continuity",
+    href: withBase("branches/complex-analysis/lessons/"),
+    text: "Complex limits, continuity, sequential criteria, limits at infinity, continuity of elementary functions, and the relation with two-dimensional real analysis."
+  },
+  {
+    number: "04",
+    title: "Complex Differentiation",
+    href: withBase("branches/complex-analysis/lessons/"),
+    text: "The complex derivative, directional consistency, holomorphic and entire functions, local linear approximation, and the exceptional rigidity of complex differentiability."
+  },
+  {
+    number: "05",
+    title: "Cauchy\u2013Riemann Equations",
+    href: withBase("branches/complex-analysis/lessons/"),
+    text: "Cartesian and polar forms of the Cauchy\u2013Riemann equations, sufficient conditions for differentiability, harmonic conjugates, and geometric interpretations."
+  },
+  {
+    number: "06",
+    title: "Harmonic Functions",
+    href: withBase("branches/complex-analysis/lessons/"),
+    text: "Harmonicity of real and imaginary parts, Laplace's equation, harmonic conjugates, mean-value behavior, and local construction of holomorphic functions."
+  },
+  {
+    number: "07",
+    title: "Elementary Holomorphic Functions",
+    href: withBase("branches/complex-analysis/lessons/"),
+    text: "Complex exponential, sine, cosine, hyperbolic functions, identities, periodicity, zeros, and mappings induced by the standard elementary functions."
+  },
+  {
+    number: "08",
+    title: "Logarithms, Powers, and Branches",
+    href: withBase("branches/complex-analysis/lessons/"),
+    text: "Multivalued logarithms, branches of argument, branch cuts, complex powers, roots, local inverses, and the obstruction produced by winding."
+  },
+  {
+    number: "09",
+    title: "Complex Curves and Contour Integrals",
+    href: withBase("branches/complex-analysis/lessons/"),
+    text: "Parameterized curves, piecewise smooth contours, orientation, line integrals, estimation lemmas, reversal and concatenation, and basic computational methods."
+  },
+  {
+    number: "10",
+    title: "Primitives and Path Independence",
+    href: withBase("branches/complex-analysis/lessons/"),
+    text: "Antiderivatives in complex domains, exactness, path independence, closed-contour integrals, simply connected domains, and the connection between topology and integration."
+  },
+  {
+    number: "11",
+    title: "Cauchy's Integral Theorem",
+    href: withBase("branches/complex-analysis/lessons/"),
+    text: "Cauchy\u2013Goursat theorem, triangular and rectangular versions, homotopy-based formulations, deformation of contours, and consequences for integrals over closed curves."
+  },
+  {
+    number: "12",
+    title: "Cauchy's Integral Formula",
+    href: withBase("branches/complex-analysis/lessons/"),
+    text: "Integral representation of holomorphic functions, formulas for derivatives, Cauchy estimates, mean-value formulas, and the local-to-global power of boundary data."
+  },
+  {
+    number: "13",
+    title: "Power Series",
+    href: withBase("branches/complex-analysis/lessons/"),
+    text: "Convergence disks, uniform convergence on compact subsets, termwise differentiation and integration, analytic functions, and algebra of power series."
+  },
+  {
+    number: "14",
+    title: "Taylor Series and Analyticity",
+    href: withBase("branches/complex-analysis/lessons/"),
+    text: "Taylor expansion of holomorphic functions, uniqueness of coefficients, analytic continuation, zeros of holomorphic functions, and the identity theorem."
+  },
+  {
+    number: "15",
+    title: "Liouville, Maximum Principles, and Fundamental Consequences",
+    href: withBase("branches/complex-analysis/lessons/"),
+    text: "Liouville's theorem, maximum modulus principle, minimum modulus principle, the fundamental theorem of algebra, and open mapping phenomena."
+  },
+  {
+    number: "16",
+    title: "Laurent Series",
+    href: withBase("branches/complex-analysis/lessons/"),
+    text: "Series on annuli, positive and negative powers, uniqueness, principal parts, annuli of convergence, and local representation around isolated singularities."
+  },
+  {
+    number: "17",
+    title: "Isolated Singularities",
+    href: withBase("branches/complex-analysis/lessons/"),
+    text: "Removable singularities, poles, essential singularities, orders of poles and zeros, classification criteria, and behavior near singular points."
+  },
+  {
+    number: "18",
+    title: "Residues",
+    href: withBase("branches/complex-analysis/lessons/"),
+    text: "Residues as Laurent coefficients, computational formulas, residues at simple and higher-order poles, residues at infinity, and local contributions to contour integrals."
+  },
+  {
+    number: "19",
+    title: "Residue Theorem",
+    href: withBase("branches/complex-analysis/lessons/"),
+    text: "Contour integration in multiply punctured regions, residue sums, deformation arguments, and systematic evaluation of contour integrals."
+  },
+  {
+    number: "20",
+    title: "Real Integrals by Complex Methods",
+    href: withBase("branches/complex-analysis/lessons/"),
+    text: "Rational integrals, trigonometric integrals, Fourier-type integrals, keyhole contours, semicircular contours, Jordan-type estimates, and careful treatment of branch points."
+  },
+  {
+    number: "21",
+    title: "Argument Principle and Rouch\u00e9's Theorem",
+    href: withBase("branches/complex-analysis/lessons/"),
+    text: "Winding numbers, change of argument, counting zeros and poles, logarithmic derivatives, Rouch\u00e9's theorem, and localization of zeros."
+  },
+  {
+    number: "22",
+    title: "Meromorphic Functions",
+    href: withBase("branches/complex-analysis/lessons/"),
+    text: "Meromorphicity, poles and principal parts, quotients of holomorphic functions, partial fraction phenomena, residues, and global behavior on domains."
+  },
+  {
+    number: "23",
+    title: "Conformal Maps",
+    href: withBase("branches/complex-analysis/lessons/"),
+    text: "Angle preservation, local conformality, biholomorphic maps, M\u00f6bius transformations, cross ratios, circles and lines, and standard conformal equivalences."
+  },
+  {
+    number: "24",
+    title: "Schwarz Lemma and Automorphisms of the Disk",
+    href: withBase("branches/complex-analysis/lessons/"),
+    text: "Schwarz lemma, Schwarz\u2013Pick theorem, automorphisms of the unit disk, rigidity of equality cases, and hyperbolic geometric consequences."
+  },
+  {
+    number: "25",
+    title: "Normal Families and Montel Theory",
+    href: withBase("branches/complex-analysis/lessons/"),
+    text: "Locally uniform convergence, normal families, Montel's theorem, Hurwitz's theorem, compactness principles, and convergence of holomorphic functions."
+  },
+  {
+    number: "26",
+    title: "Analytic Continuation",
+    href: withBase("branches/complex-analysis/lessons/"),
+    text: "Continuation along paths, uniqueness, monodromy, natural boundaries, branches revisited, and the way local germs assemble into larger analytic objects."
+  },
+  {
+    number: "27",
+    title: "The Riemann Mapping Theorem",
+    href: withBase("branches/complex-analysis/lessons/"),
+    text: "Simply connected planar domains, conformal equivalence with the disk, normalization, compactness ideas behind the theorem, and limitations of the classification."
+  },
+];
+---
+
+<BaseLayout
+  title="Complex Analysis Lessons"
+  description="A sequential curriculum through complex differentiation, contour integration, Cauchy theory, power series, singularities, residues, conformal maps, and analytic continuation."
+>
+  <section class="hub-page">
+    <ComplexAnalysisSidebar />
+
+    <div class="hub-main">
+      <section class="hub-hero">
+        <span class="eyebrow">Complex Analysis · Lessons</span>
+
+        <h1>Lessons</h1>
+
+        <p>
+          A sequential route from the geometry of complex numbers through
+          holomorphic functions, contour integration, singularities, residues,
+          conformal maps, normal families, and analytic continuation.
+        </p>
+      </section>
+
+      <section class="hub-section lesson-index-section">
+        <div class="section-header">
+          <h2>Full lesson path</h2>
+
+          <p>
+            Closely related techniques and theorems are grouped into substantial
+            units so the path can cover a broad portion of the subject without
+            fragmenting it into overlapping mini-lessons.
+          </p>
+        </div>
+
+        <div class="lesson-timeline">
+          {
+            lessons.map((lesson) => (
+              <a class="lesson-card" href={lesson.href}>
+                <span class="lesson-number">{lesson.number}</span>
+
+                <div>
+                  <h3>{lesson.title}</h3>
+                  <p>{lesson.text}</p>
+                </div>
+
+                <span class="lesson-arrow" aria-hidden="true">→</span>
+              </a>
+            ))
+          }
+        </div>
+      </section>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .lesson-index-section {
+    margin-top: clamp(2rem, 5vw, 4rem);
+  }
+
+  .lesson-card {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .lesson-arrow {
+    color: var(--accent, #71e6ff);
+    font-size: 1.15rem;
+    transition: transform 180ms ease;
+  }
+
+  .lesson-card:hover .lesson-arrow,
+  .lesson-card:focus-visible .lesson-arrow {
+    transform: translateX(4px);
+  }
+
+  @media (max-width: 640px) {
+    .lesson-card {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .lesson-arrow {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lesson-arrow {
+      transition: none;
+    }
+  }
+</style>

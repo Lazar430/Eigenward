@@ -1,0 +1,339 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import SetTheorySidebar from "../../../components/SetTheorySidebar.astro";
+import Math from "../../../components/Math.astro";
+import { withBase } from "@/utils/paths";
+
+const problemCards = [
+  {
+    branch: "Cardinality \u00b7 Diagonalization",
+    title: "No Set Surjects Onto Its Power Set",
+    href: withBase("problems/set-theory/cantor-diagonal/"),
+    ariaLabel: "Open No Set Surjects Onto Its Power Set",
+    formula: String.raw`f:X\to\mathcal P(X),\qquad
+D=\{x\in X:x\notin f(x)\}`,
+    text: "Use Cantor's diagonal construction to prove that no map from a set onto its power set can be surjective."
+  },
+  {
+    branch: "Cardinality \u00b7 Schr\u00f6der\u2013Bernstein",
+    title: "Two Injections, One Bijection",
+    href: withBase("problems/set-theory/cantor-bernstein/"),
+    ariaLabel: "Open Two Injections, One Bijection",
+    formula: String.raw`X\hookrightarrow Y,\qquad
+Y\hookrightarrow X
+\qquad\Longrightarrow\qquad
+X\cong Y`,
+    text: "Construct a bijection from injections in both directions and make the decomposition behind the Schr\u00f6der\u2013Bernstein theorem explicit."
+  },
+  {
+    branch: "Countability \u00b7 Products",
+    title: "How Large Is the Rational Plane?",
+    href: withBase("problems/set-theory/countable-product/"),
+    ariaLabel: "Open How Large Is the Rational Plane?",
+    formula: String.raw`|\mathbb Q\times\mathbb Q|
+\stackrel{?}{=}
+|\mathbb N|`,
+    text: "Build an explicit enumeration of a Cartesian product of countable sets and isolate the argument that generalizes."
+  },
+  {
+    branch: "Ordinals \u00b7 Arithmetic",
+    title: "Ordinal Addition Is Not Commutative",
+    href: withBase("problems/set-theory/ordinal-arithmetic/"),
+    ariaLabel: "Open Ordinal Addition Is Not Commutative",
+    formula: String.raw`1+\omega=\omega,
+\qquad
+\omega+1>\omega`,
+    text: "Compute simple ordinal sums from their order types and explain why ordinal arithmetic behaves differently from cardinal arithmetic."
+  },
+  {
+    branch: "Transfinite Recursion \u00b7 Construction",
+    title: "Build a Sequence Through All Countable Ordinals",
+    href: withBase("problems/set-theory/transfinite-recursion/"),
+    ariaLabel: "Open Build a Sequence Through All Countable Ordinals",
+    formula: String.raw`F(\alpha)=\Phi\!\left(F\!\upharpoonright\!\alpha\right),
+\qquad
+\alpha<\omega_1`,
+    text: "Set up a recursive definition along the countable ordinals and verify existence and uniqueness using the transfinite recursion theorem."
+  },
+  {
+    branch: "Choice \u00b7 Maximality",
+    title: "A Maximal Linearly Independent Set",
+    href: withBase("problems/set-theory/zorn-basis/"),
+    ariaLabel: "Open A Maximal Linearly Independent Set",
+    formula: String.raw`\mathcal P=
+\{S\subseteq V:S\text{ linearly independent}\}`,
+    text: "Order independent subsets by inclusion, verify the chain condition, and use Zorn's lemma to obtain a basis."
+  },
+  {
+    branch: "Well-Foundedness \u00b7 Collapse",
+    title: "Collapse a Well-Founded Structure",
+    href: withBase("problems/set-theory/mostowski-collapse/"),
+    ariaLabel: "Open Collapse a Well-Founded Structure",
+    formula: String.raw`x\,R\,y
+\qquad\leadsto\qquad
+\pi(y)=\{\pi(x):xRy\}`,
+    text: "Construct the Mostowski collapse of an extensional well-founded relation and prove that the resulting structure is transitive."
+  },
+  {
+    branch: "Cumulative Hierarchy \u00b7 Rank",
+    title: "Find the Rank of a Set",
+    href: withBase("problems/set-theory/rank-of-a-set/"),
+    ariaLabel: "Open Find the Rank of a Set",
+    formula: String.raw`\operatorname{rank}(x)
+=
+\sup\{\operatorname{rank}(y)+1:y\in x\}`,
+    text: "Compute ranks of nested finite sets and prove the recursive rank formula from the cumulative hierarchy."
+  },
+  {
+    branch: "Choice \u00b7 Cardinal Arithmetic",
+    title: "Why Infinite Addition Collapses",
+    href: withBase("problems/set-theory/infinite-cardinal-arithmetic/"),
+    ariaLabel: "Open Why Infinite Addition Collapses",
+    formula: String.raw`\kappa+\kappa=\kappa,
+\qquad
+\kappa\cdot\kappa=\kappa`,
+    text: "Prove the standard arithmetic identities for infinite cardinals under choice and identify exactly where well-orderability is used."
+  },
+  {
+    branch: "Models \u00b7 Independence",
+    title: "What Would Independence Mean?",
+    href: withBase("problems/set-theory/relative-consistency/"),
+    ariaLabel: "Open What Would Independence Mean?",
+    formula: String.raw`T\nvdash\varphi,
+\qquad
+T\nvdash\neg\varphi`,
+    text: "Translate independence into the existence of models and distinguish truth in a model, provability in a theory, and relative consistency."
+  },
+];
+---
+
+<BaseLayout
+  title="Set Theory Problems"
+  description="A collection of set theory problems on cardinality, ordinals, transfinite recursion, choice, well-foundedness, hierarchy, and models."
+>
+  <section class="hub-page">
+    <SetTheorySidebar />
+
+    <div class="hub-main">
+      <section class="hub-hero">
+        <span class="eyebrow">Set Theory · Problems</span>
+
+        <h1>Problems</h1>
+
+        <p>
+          A dedicated shelf of cardinality arguments, transfinite constructions,
+          choice-principle applications, ordinal computations, and foundational
+          problems from across the set theory section.
+        </p>
+      </section>
+
+      <section class="problems-list" aria-labelledby="set-theory-problems-title">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">Selected problems</span>
+
+            <h2 id="set-theory-problems-title" class="section-title">
+              Problem shelf
+            </h2>
+          </div>
+
+          <p>
+            The displayed formulas are representative snapshots rather than
+            complete problem statements.
+          </p>
+        </div>
+
+        <div class="problem-card-grid">
+          {
+            problemCards.map((problem) => (
+              <a
+                class="problem-card"
+                href={problem.href}
+                aria-label={problem.ariaLabel}
+              >
+                <header class="problem-card-header">
+                  <span class="problem-branch">{problem.branch}</span>
+                  <h3>{problem.title}</h3>
+                </header>
+
+                <div
+                  class="problem-formula"
+                  role="img"
+                  aria-label={`Representative formula for ${problem.title}`}
+                >
+                  <Math tex={problem.formula} display />
+                </div>
+
+                <p class="problem-description">{problem.text}</p>
+
+                <span class="read-label" aria-hidden="true">
+                  View problem <span>→</span>
+                </span>
+              </a>
+            ))
+          }
+        </div>
+      </section>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .problems-list {
+    width: 100%;
+    margin-top: clamp(2rem, 5vw, 4rem);
+  }
+
+  .section-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .section-heading p {
+    max-width: 520px;
+    margin: 0;
+    color: rgba(239, 234, 255, 0.62);
+    line-height: 1.65;
+  }
+
+  .section-title {
+    margin: 0.45rem 0 0;
+    font-size: clamp(1.7rem, 3.5vw, 2.7rem);
+    letter-spacing: -0.045em;
+  }
+
+  .problem-card-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .problem-card {
+    display: grid;
+    gap: 1.2rem;
+    min-width: 0;
+    border: 1px solid rgba(255, 255, 255, 0.11);
+    border-radius: 1.4rem;
+    padding: clamp(1.15rem, 2.5vw, 1.75rem);
+    color: inherit;
+    background:
+      radial-gradient(circle at 85% 0%, rgba(113, 230, 255, 0.09), transparent 30%),
+      linear-gradient(145deg, rgba(35, 23, 67, 0.86), rgba(13, 9, 29, 0.91));
+    box-shadow:
+      0 24px 70px rgba(0, 0, 0, 0.27),
+      inset 0 1px 0 rgba(255, 255, 255, 0.045);
+    text-decoration: none;
+    overflow: hidden;
+    transition:
+      transform 180ms ease,
+      border-color 180ms ease,
+      box-shadow 180ms ease;
+  }
+
+  .problem-card:hover,
+  .problem-card:focus-visible {
+    transform: translateY(-4px);
+    border-color: rgba(113, 230, 255, 0.44);
+    box-shadow:
+      0 30px 85px rgba(0, 0, 0, 0.34),
+      0 0 28px rgba(113, 230, 255, 0.08);
+    outline: none;
+  }
+
+  .problem-card-header {
+    display: grid;
+    gap: 0.65rem;
+  }
+
+  .problem-branch {
+    color: var(--accent, #71e6ff);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .problem-card h3 {
+    margin: 0;
+    font-size: clamp(1.65rem, 3.2vw, 2.9rem);
+    line-height: 1;
+    letter-spacing: -0.05em;
+  }
+
+  .problem-formula {
+    display: grid;
+    place-items: center;
+    min-width: 0;
+    padding: clamp(1rem, 3vw, 2rem) 0;
+    color: rgba(247, 244, 255, 0.94);
+    overflow: auto hidden;
+  }
+
+  .problem-formula :global(.katex-display) {
+    max-width: 100%;
+    margin: 0;
+  }
+
+  .problem-formula :global(.katex) {
+    font-size: clamp(0.92rem, 1.45vw, 1.22rem);
+  }
+
+  .problem-description {
+    max-width: 900px;
+    margin: 0;
+    color: rgba(239, 234, 255, 0.72);
+    font-size: clamp(0.96rem, 1.25vw, 1.06rem);
+    line-height: 1.72;
+  }
+
+  .read-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    width: fit-content;
+    color: rgba(239, 248, 255, 0.9);
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  .read-label span {
+    color: var(--accent, #71e6ff);
+    font-size: 1.15rem;
+    transition: transform 180ms ease;
+  }
+
+  .problem-card:hover .read-label span,
+  .problem-card:focus-visible .read-label span {
+    transform: translateX(4px);
+  }
+
+  @media (max-width: 900px) {
+    .section-heading {
+      display: grid;
+      align-items: initial;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .problem-card {
+      border-radius: 1rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .problem-card,
+    .read-label span {
+      transition: none;
+    }
+
+    .problem-card:hover,
+    .problem-card:focus-visible {
+      transform: none;
+    }
+  }
+</style>

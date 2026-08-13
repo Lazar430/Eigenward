@@ -1,0 +1,775 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import ComplexAnalysisSidebar from "../../../../components/ComplexAnalysisSidebar.astro";
+
+const items = [
+  "Analytic continuation",
+  "Analytic function",
+  "Argument",
+  "Argument principle",
+  "Branch",
+  "Branch cut",
+  "Branch point",
+  "Cauchy\u2013Riemann equations",
+  "Complex contour",
+  "Complex derivative",
+  "Complex logarithm",
+  "Complex power",
+  "Conformal map",
+  "Contour integral",
+  "Domain",
+  "Entire function",
+  "Essential singularity",
+  "Harmonic conjugate",
+  "Harmonic function",
+  "Holomorphic function",
+  "Identity theorem",
+  "Isolated singularity",
+  "Laurent series",
+  "Meromorphic function",
+  "M\u00f6bius transformation",
+  "Normal family",
+  "Order of a pole",
+  "Order of a zero",
+  "Pole",
+  "Primitive",
+  "Principal branch",
+  "Principal part",
+  "Removable singularity",
+  "Residue",
+  "Residue at infinity",
+  "Riemann sphere",
+  "Simple pole",
+  "Simply connected domain",
+  "Taylor series",
+  "Winding number",
+  "Zero of a holomorphic function"
+];
+
+const letters = [...new Set(items.map((item) => item[0].toUpperCase()))];
+---
+
+<BaseLayout
+  title="Complex Analysis Definitions"
+  description="An alphabetical index of complex analysis definitions."
+>
+  <section class="hub-page">
+    <ComplexAnalysisSidebar />
+
+    <div class="hub-main">
+      <section class="hub-hero">
+        <span class="eyebrow">Complex Analysis · Definitions</span>
+
+        <h1>Definitions</h1>
+
+        <p>
+          An alphabetical index of the principal functions, singularities, contour notions, series, mapping concepts, and local or global analytic structures used throughout complex analysis.
+        </p>
+      </section>
+
+      <section class="index-tools" aria-label="Definitions index controls">
+        <label class="search-control">
+          <span>Search definitions</span>
+
+          <input
+            id="definition-search"
+            type="search"
+            placeholder="Try “residue”, “branch”, “holomorphic”…"
+            autocomplete="off"
+          />
+        </label>
+
+        <nav class="alphabet-nav" aria-label="Jump to letter">
+          {
+            letters.map((letter) => (
+              <a href={`#definitions-${letter}`}>{letter}</a>
+            ))
+          }
+        </nav>
+
+        <output id="definition-result-count" aria-live="polite">
+          {items.length} definitions
+        </output>
+      </section>
+
+      <div class="alphabet-index" id="definition-index">
+        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-A">A</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="analytic-continuation"
+                class="index-entry"
+                href="#analytic-continuation"
+                data-index-entry
+                data-search-term="analytic continuation"
+              >
+                <span>Analytic continuation</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="analytic-function"
+                class="index-entry"
+                href="#analytic-function"
+                data-index-entry
+                data-search-term="analytic function"
+              >
+                <span>Analytic function</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="argument"
+                class="index-entry"
+                href="#argument"
+                data-index-entry
+                data-search-term="argument"
+              >
+                <span>Argument</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="argument-principle"
+                class="index-entry"
+                href="#argument-principle"
+                data-index-entry
+                data-search-term="argument principle"
+              >
+                <span>Argument principle</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-B">B</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="branch"
+                class="index-entry"
+                href="#branch"
+                data-index-entry
+                data-search-term="branch"
+              >
+                <span>Branch</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="branch-cut"
+                class="index-entry"
+                href="#branch-cut"
+                data-index-entry
+                data-search-term="branch cut"
+              >
+                <span>Branch cut</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="branch-point"
+                class="index-entry"
+                href="#branch-point"
+                data-index-entry
+                data-search-term="branch point"
+              >
+                <span>Branch point</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-C">C</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="cauchy-riemann-equations"
+                class="index-entry"
+                href="#cauchy-riemann-equations"
+                data-index-entry
+                data-search-term="cauchy\u2013riemann equations"
+              >
+                <span>Cauchy–Riemann equations</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="complex-contour"
+                class="index-entry"
+                href="#complex-contour"
+                data-index-entry
+                data-search-term="complex contour"
+              >
+                <span>Complex contour</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="complex-derivative"
+                class="index-entry"
+                href="#complex-derivative"
+                data-index-entry
+                data-search-term="complex derivative"
+              >
+                <span>Complex derivative</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="complex-logarithm"
+                class="index-entry"
+                href="#complex-logarithm"
+                data-index-entry
+                data-search-term="complex logarithm"
+              >
+                <span>Complex logarithm</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="complex-power"
+                class="index-entry"
+                href="#complex-power"
+                data-index-entry
+                data-search-term="complex power"
+              >
+                <span>Complex power</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="conformal-map"
+                class="index-entry"
+                href="#conformal-map"
+                data-index-entry
+                data-search-term="conformal map"
+              >
+                <span>Conformal map</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="contour-integral"
+                class="index-entry"
+                href="#contour-integral"
+                data-index-entry
+                data-search-term="contour integral"
+              >
+                <span>Contour integral</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-D">D</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="domain"
+                class="index-entry"
+                href="#domain"
+                data-index-entry
+                data-search-term="domain"
+              >
+                <span>Domain</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-E">E</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="entire-function"
+                class="index-entry"
+                href="#entire-function"
+                data-index-entry
+                data-search-term="entire function"
+              >
+                <span>Entire function</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="essential-singularity"
+                class="index-entry"
+                href="#essential-singularity"
+                data-index-entry
+                data-search-term="essential singularity"
+              >
+                <span>Essential singularity</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-H">H</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="harmonic-conjugate"
+                class="index-entry"
+                href="#harmonic-conjugate"
+                data-index-entry
+                data-search-term="harmonic conjugate"
+              >
+                <span>Harmonic conjugate</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="harmonic-function"
+                class="index-entry"
+                href="#harmonic-function"
+                data-index-entry
+                data-search-term="harmonic function"
+              >
+                <span>Harmonic function</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="holomorphic-function"
+                class="index-entry"
+                href="#holomorphic-function"
+                data-index-entry
+                data-search-term="holomorphic function"
+              >
+                <span>Holomorphic function</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-I">I</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="identity-theorem"
+                class="index-entry"
+                href="#identity-theorem"
+                data-index-entry
+                data-search-term="identity theorem"
+              >
+                <span>Identity theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="isolated-singularity"
+                class="index-entry"
+                href="#isolated-singularity"
+                data-index-entry
+                data-search-term="isolated singularity"
+              >
+                <span>Isolated singularity</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-L">L</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="laurent-series"
+                class="index-entry"
+                href="#laurent-series"
+                data-index-entry
+                data-search-term="laurent series"
+              >
+                <span>Laurent series</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-M">M</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="meromorphic-function"
+                class="index-entry"
+                href="#meromorphic-function"
+                data-index-entry
+                data-search-term="meromorphic function"
+              >
+                <span>Meromorphic function</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="m-bius-transformation"
+                class="index-entry"
+                href="#m-bius-transformation"
+                data-index-entry
+                data-search-term="m\u00f6bius transformation"
+              >
+                <span>Möbius transformation</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-N">N</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="normal-family"
+                class="index-entry"
+                href="#normal-family"
+                data-index-entry
+                data-search-term="normal family"
+              >
+                <span>Normal family</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-O">O</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="order-of-a-pole"
+                class="index-entry"
+                href="#order-of-a-pole"
+                data-index-entry
+                data-search-term="order of a pole"
+              >
+                <span>Order of a pole</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="order-of-a-zero"
+                class="index-entry"
+                href="#order-of-a-zero"
+                data-index-entry
+                data-search-term="order of a zero"
+              >
+                <span>Order of a zero</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-P">P</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="pole"
+                class="index-entry"
+                href="#pole"
+                data-index-entry
+                data-search-term="pole"
+              >
+                <span>Pole</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="primitive"
+                class="index-entry"
+                href="#primitive"
+                data-index-entry
+                data-search-term="primitive"
+              >
+                <span>Primitive</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="principal-branch"
+                class="index-entry"
+                href="#principal-branch"
+                data-index-entry
+                data-search-term="principal branch"
+              >
+                <span>Principal branch</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="principal-part"
+                class="index-entry"
+                href="#principal-part"
+                data-index-entry
+                data-search-term="principal part"
+              >
+                <span>Principal part</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-R">R</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="removable-singularity"
+                class="index-entry"
+                href="#removable-singularity"
+                data-index-entry
+                data-search-term="removable singularity"
+              >
+                <span>Removable singularity</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="residue"
+                class="index-entry"
+                href="#residue"
+                data-index-entry
+                data-search-term="residue"
+              >
+                <span>Residue</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="residue-at-infinity"
+                class="index-entry"
+                href="#residue-at-infinity"
+                data-index-entry
+                data-search-term="residue at infinity"
+              >
+                <span>Residue at infinity</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="riemann-sphere"
+                class="index-entry"
+                href="#riemann-sphere"
+                data-index-entry
+                data-search-term="riemann sphere"
+              >
+                <span>Riemann sphere</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-S">S</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="simple-pole"
+                class="index-entry"
+                href="#simple-pole"
+                data-index-entry
+                data-search-term="simple pole"
+              >
+                <span>Simple pole</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="simply-connected-domain"
+                class="index-entry"
+                href="#simply-connected-domain"
+                data-index-entry
+                data-search-term="simply connected domain"
+              >
+                <span>Simply connected domain</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-T">T</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="taylor-series"
+                class="index-entry"
+                href="#taylor-series"
+                data-index-entry
+                data-search-term="taylor series"
+              >
+                <span>Taylor series</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-W">W</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="winding-number"
+                class="index-entry"
+                href="#winding-number"
+                data-index-entry
+                data-search-term="winding number"
+              >
+                <span>Winding number</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-Z">Z</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="zero-of-a-holomorphic-function"
+                class="index-entry"
+                href="#zero-of-a-holomorphic-function"
+                data-index-entry
+                data-search-term="zero of a holomorphic function"
+              >
+                <span>Zero of a holomorphic function</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const search =
+    document.querySelector<HTMLInputElement>("#definition-search");
+
+  const entries = Array.from(
+    document.querySelectorAll<HTMLElement>("[data-index-entry]"),
+  );
+
+  const groups = Array.from(
+    document.querySelectorAll<HTMLElement>("[data-alpha-group]"),
+  );
+
+  const resultCount =
+    document.querySelector<HTMLOutputElement>("#definition-result-count");
+
+  const updateIndex = () => {
+    const query = search?.value.trim().toLowerCase() ?? "";
+    let visible = 0;
+
+    entries.forEach((entry) => {
+      const matches = (entry.dataset.searchTerm ?? "").includes(query);
+
+      entry.hidden = !matches;
+
+      if (matches) visible += 1;
+    });
+
+    groups.forEach((group) => {
+      const hasVisibleEntries = Array.from(
+        group.querySelectorAll<HTMLElement>("[data-index-entry]"),
+      ).some((entry) => !entry.hidden);
+
+      group.hidden = !hasVisibleEntries;
+    });
+
+    if (resultCount) {
+      resultCount.textContent =
+        query.length === 0
+          ? `${visible} definitions`
+          : `${visible} matching definition${visible === 1 ? "" : "s"}`;
+    }
+  };
+
+  search?.addEventListener("input", updateIndex);
+</script>
+
+<style>
+  .index-tools {
+    display: grid;
+    gap: 1rem;
+    margin-top: clamp(2rem, 5vw, 4rem);
+    padding: 1.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 1.2rem;
+    background: rgba(17, 11, 37, 0.55);
+  }
+
+  .search-control {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .search-control span {
+    color: var(--accent, #71e6ff);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+  }
+
+  .search-control input {
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.11);
+    border-radius: 0.8rem;
+    padding: 0.85rem 1rem;
+    color: inherit;
+    background: rgba(5, 5, 18, 0.42);
+    font: inherit;
+  }
+
+  .search-control input:focus {
+    border-color: rgba(113, 230, 255, 0.48);
+    outline: none;
+  }
+
+  .alphabet-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .alphabet-nav a {
+    display: grid;
+    place-items: center;
+    min-width: 2.1rem;
+    min-height: 2.1rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.55rem;
+    color: rgba(239, 234, 255, 0.76);
+    text-decoration: none;
+  }
+
+  .alphabet-nav a:hover,
+  .alphabet-nav a:focus-visible {
+    border-color: rgba(113, 230, 255, 0.42);
+    color: var(--accent, #71e6ff);
+    outline: none;
+  }
+
+  #definition-result-count {
+    color: rgba(239, 234, 255, 0.62);
+    font-size: 0.9rem;
+  }
+
+  .alphabet-index {
+    display: grid;
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .alphabet-group {
+    display: grid;
+    grid-template-columns: 72px minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .alphabet-group h2 {
+    position: sticky;
+    top: 1rem;
+    align-self: start;
+    margin: 0;
+    color: var(--accent, #71e6ff);
+    font-size: clamp(2rem, 5vw, 3.8rem);
+    line-height: 1;
+  }
+
+  .alphabet-entry-list {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .index-entry {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 0.8rem;
+    padding: 0.85rem 1rem;
+    color: inherit;
+    background: rgba(255, 255, 255, 0.025);
+    text-decoration: none;
+  }
+
+  .index-entry:hover,
+  .index-entry:focus-visible {
+    border-color: rgba(113, 230, 255, 0.32);
+    background: rgba(113, 230, 255, 0.045);
+    outline: none;
+  }
+
+  .index-arrow {
+    color: var(--accent, #71e6ff);
+  }
+
+  [hidden] {
+    display: none !important;
+  }
+
+  @media (max-width: 600px) {
+    .alphabet-group {
+      grid-template-columns: 1fr;
+    }
+
+    .alphabet-group h2 {
+      position: static;
+    }
+  }
+</style>

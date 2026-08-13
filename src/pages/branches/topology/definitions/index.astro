@@ -1,0 +1,1082 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import TopologySidebar from "../../../../components/TopologySidebar.astro";
+
+const items = [
+  "Accumulation point",
+  "Alexandroff compactification",
+  "Basis",
+  "Boundary",
+  "Box topology",
+  "Clopen set",
+  "Closed map",
+  "Closed set",
+  "Closure",
+  "Compact space",
+  "Compact-open topology",
+  "Completely regular space",
+  "Component",
+  "Connected space",
+  "Continuous map",
+  "Countability axiom",
+  "Dense subset",
+  "Discrete topology",
+  "Embedding",
+  "Filter",
+  "First-countable space",
+  "Hausdorff space",
+  "Homeomorphism",
+  "Interior",
+  "Interior point",
+  "Isolated point",
+  "Limit point",
+  "Lindel\u00f6f space",
+  "Local base",
+  "Locally compact space",
+  "Locally connected space",
+  "Locally finite family",
+  "Locally path-connected space",
+  "Metric topology",
+  "Metrizable space",
+  "Neighborhood",
+  "Net",
+  "Normal space",
+  "Open cover",
+  "Open map",
+  "Open set",
+  "Paracompact space",
+  "Partition of unity",
+  "Path",
+  "Path component",
+  "Path-connected space",
+  "Product topology",
+  "Proper map",
+  "Pseudometric",
+  "Quotient map",
+  "Quotient space",
+  "Regular space",
+  "Retraction",
+  "Second-countable space",
+  "Separable space",
+  "Separation",
+  "Sequentially compact space",
+  "Subbase",
+  "Subspace topology",
+  "T0 space",
+  "T1 space",
+  "Topological embedding",
+  "Topological invariant",
+  "Topological manifold",
+  "Topological space",
+  "Topology",
+  "Tychonoff space",
+  "Ultrafilter",
+  "Uniform topology"
+];
+
+const letters = [...new Set(items.map((item) => item[0].toUpperCase()))];
+---
+
+<BaseLayout
+  title="Topology Definitions"
+  description="An alphabetical index of topology definitions."
+>
+  <section class="hub-page">
+    <TopologySidebar />
+
+    <div class="hub-main">
+      <section class="hub-hero">
+        <span class="eyebrow">Topology · Definitions</span>
+
+        <h1>Definitions</h1>
+
+        <p>
+          An alphabetical index of the principal spaces, maps, local and global properties, separation conditions, and constructions used throughout the topology section.
+        </p>
+      </section>
+
+      <section class="index-tools" aria-label="Definitions index controls">
+        <label class="search-control">
+          <span>Search definitions</span>
+          <input
+            id="definition-search"
+            type="search"
+            placeholder="Try “compact”, “quotient”, “Hausdorff”…"
+            autocomplete="off"
+          />
+        </label>
+
+        <nav class="alphabet-nav" aria-label="Jump to letter">
+          {
+            letters.map((letter) => (
+              <a href={`#definitions-${letter}`}>{letter}</a>
+            ))
+          }
+        </nav>
+
+        <output id="definition-result-count" aria-live="polite">
+          {items.length} definitions
+        </output>
+      </section>
+
+      <div class="alphabet-index" id="definition-index">
+        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-A">A</h2>
+
+          <div class="alphabet-entry-list">
+            <a
+              id="accumulation-point"
+              class="index-entry"
+              href="#accumulation-point"
+              data-index-entry
+              data-search-term="accumulation point"
+            >
+              <span>Accumulation point</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="alexandroff-compactification"
+              class="index-entry"
+              href="#alexandroff-compactification"
+              data-index-entry
+              data-search-term="alexandroff compactification"
+            >
+              <span>Alexandroff compactification</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-B">B</h2>
+
+          <div class="alphabet-entry-list">
+            <a
+              id="basis"
+              class="index-entry"
+              href="#basis"
+              data-index-entry
+              data-search-term="basis"
+            >
+              <span>Basis</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="boundary"
+              class="index-entry"
+              href="#boundary"
+              data-index-entry
+              data-search-term="boundary"
+            >
+              <span>Boundary</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="box-topology"
+              class="index-entry"
+              href="#box-topology"
+              data-index-entry
+              data-search-term="box topology"
+            >
+              <span>Box topology</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-C">C</h2>
+
+          <div class="alphabet-entry-list">
+            <a
+              id="clopen-set"
+              class="index-entry"
+              href="#clopen-set"
+              data-index-entry
+              data-search-term="clopen set"
+            >
+              <span>Clopen set</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="closed-map"
+              class="index-entry"
+              href="#closed-map"
+              data-index-entry
+              data-search-term="closed map"
+            >
+              <span>Closed map</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="closed-set"
+              class="index-entry"
+              href="#closed-set"
+              data-index-entry
+              data-search-term="closed set"
+            >
+              <span>Closed set</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="closure"
+              class="index-entry"
+              href="#closure"
+              data-index-entry
+              data-search-term="closure"
+            >
+              <span>Closure</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="compact-space"
+              class="index-entry"
+              href="#compact-space"
+              data-index-entry
+              data-search-term="compact space"
+            >
+              <span>Compact space</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="compact-open-topology"
+              class="index-entry"
+              href="#compact-open-topology"
+              data-index-entry
+              data-search-term="compact-open topology"
+            >
+              <span>Compact-open topology</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="completely-regular-space"
+              class="index-entry"
+              href="#completely-regular-space"
+              data-index-entry
+              data-search-term="completely regular space"
+            >
+              <span>Completely regular space</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="component"
+              class="index-entry"
+              href="#component"
+              data-index-entry
+              data-search-term="component"
+            >
+              <span>Component</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="connected-space"
+              class="index-entry"
+              href="#connected-space"
+              data-index-entry
+              data-search-term="connected space"
+            >
+              <span>Connected space</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="continuous-map"
+              class="index-entry"
+              href="#continuous-map"
+              data-index-entry
+              data-search-term="continuous map"
+            >
+              <span>Continuous map</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="countability-axiom"
+              class="index-entry"
+              href="#countability-axiom"
+              data-index-entry
+              data-search-term="countability axiom"
+            >
+              <span>Countability axiom</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-D">D</h2>
+
+          <div class="alphabet-entry-list">
+            <a
+              id="dense-subset"
+              class="index-entry"
+              href="#dense-subset"
+              data-index-entry
+              data-search-term="dense subset"
+            >
+              <span>Dense subset</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="discrete-topology"
+              class="index-entry"
+              href="#discrete-topology"
+              data-index-entry
+              data-search-term="discrete topology"
+            >
+              <span>Discrete topology</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-E">E</h2>
+
+          <div class="alphabet-entry-list">
+            <a
+              id="embedding"
+              class="index-entry"
+              href="#embedding"
+              data-index-entry
+              data-search-term="embedding"
+            >
+              <span>Embedding</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-F">F</h2>
+
+          <div class="alphabet-entry-list">
+            <a
+              id="filter"
+              class="index-entry"
+              href="#filter"
+              data-index-entry
+              data-search-term="filter"
+            >
+              <span>Filter</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="first-countable-space"
+              class="index-entry"
+              href="#first-countable-space"
+              data-index-entry
+              data-search-term="first-countable space"
+            >
+              <span>First-countable space</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-H">H</h2>
+
+          <div class="alphabet-entry-list">
+            <a
+              id="hausdorff-space"
+              class="index-entry"
+              href="#hausdorff-space"
+              data-index-entry
+              data-search-term="hausdorff space"
+            >
+              <span>Hausdorff space</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="homeomorphism"
+              class="index-entry"
+              href="#homeomorphism"
+              data-index-entry
+              data-search-term="homeomorphism"
+            >
+              <span>Homeomorphism</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-I">I</h2>
+
+          <div class="alphabet-entry-list">
+            <a
+              id="interior"
+              class="index-entry"
+              href="#interior"
+              data-index-entry
+              data-search-term="interior"
+            >
+              <span>Interior</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="interior-point"
+              class="index-entry"
+              href="#interior-point"
+              data-index-entry
+              data-search-term="interior point"
+            >
+              <span>Interior point</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="isolated-point"
+              class="index-entry"
+              href="#isolated-point"
+              data-index-entry
+              data-search-term="isolated point"
+            >
+              <span>Isolated point</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-L">L</h2>
+
+          <div class="alphabet-entry-list">
+            <a
+              id="limit-point"
+              class="index-entry"
+              href="#limit-point"
+              data-index-entry
+              data-search-term="limit point"
+            >
+              <span>Limit point</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="lindel-f-space"
+              class="index-entry"
+              href="#lindel-f-space"
+              data-index-entry
+              data-search-term="lindel\u00f6f space"
+            >
+              <span>Lindelöf space</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="local-base"
+              class="index-entry"
+              href="#local-base"
+              data-index-entry
+              data-search-term="local base"
+            >
+              <span>Local base</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="locally-compact-space"
+              class="index-entry"
+              href="#locally-compact-space"
+              data-index-entry
+              data-search-term="locally compact space"
+            >
+              <span>Locally compact space</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="locally-connected-space"
+              class="index-entry"
+              href="#locally-connected-space"
+              data-index-entry
+              data-search-term="locally connected space"
+            >
+              <span>Locally connected space</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="locally-finite-family"
+              class="index-entry"
+              href="#locally-finite-family"
+              data-index-entry
+              data-search-term="locally finite family"
+            >
+              <span>Locally finite family</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="locally-path-connected-space"
+              class="index-entry"
+              href="#locally-path-connected-space"
+              data-index-entry
+              data-search-term="locally path-connected space"
+            >
+              <span>Locally path-connected space</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-M">M</h2>
+
+          <div class="alphabet-entry-list">
+            <a
+              id="metric-topology"
+              class="index-entry"
+              href="#metric-topology"
+              data-index-entry
+              data-search-term="metric topology"
+            >
+              <span>Metric topology</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="metrizable-space"
+              class="index-entry"
+              href="#metrizable-space"
+              data-index-entry
+              data-search-term="metrizable space"
+            >
+              <span>Metrizable space</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-N">N</h2>
+
+          <div class="alphabet-entry-list">
+            <a
+              id="neighborhood"
+              class="index-entry"
+              href="#neighborhood"
+              data-index-entry
+              data-search-term="neighborhood"
+            >
+              <span>Neighborhood</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="net"
+              class="index-entry"
+              href="#net"
+              data-index-entry
+              data-search-term="net"
+            >
+              <span>Net</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="normal-space"
+              class="index-entry"
+              href="#normal-space"
+              data-index-entry
+              data-search-term="normal space"
+            >
+              <span>Normal space</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-O">O</h2>
+
+          <div class="alphabet-entry-list">
+            <a
+              id="open-cover"
+              class="index-entry"
+              href="#open-cover"
+              data-index-entry
+              data-search-term="open cover"
+            >
+              <span>Open cover</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="open-map"
+              class="index-entry"
+              href="#open-map"
+              data-index-entry
+              data-search-term="open map"
+            >
+              <span>Open map</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="open-set"
+              class="index-entry"
+              href="#open-set"
+              data-index-entry
+              data-search-term="open set"
+            >
+              <span>Open set</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-P">P</h2>
+
+          <div class="alphabet-entry-list">
+            <a
+              id="paracompact-space"
+              class="index-entry"
+              href="#paracompact-space"
+              data-index-entry
+              data-search-term="paracompact space"
+            >
+              <span>Paracompact space</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="partition-of-unity"
+              class="index-entry"
+              href="#partition-of-unity"
+              data-index-entry
+              data-search-term="partition of unity"
+            >
+              <span>Partition of unity</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="path"
+              class="index-entry"
+              href="#path"
+              data-index-entry
+              data-search-term="path"
+            >
+              <span>Path</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="path-component"
+              class="index-entry"
+              href="#path-component"
+              data-index-entry
+              data-search-term="path component"
+            >
+              <span>Path component</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="path-connected-space"
+              class="index-entry"
+              href="#path-connected-space"
+              data-index-entry
+              data-search-term="path-connected space"
+            >
+              <span>Path-connected space</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="product-topology"
+              class="index-entry"
+              href="#product-topology"
+              data-index-entry
+              data-search-term="product topology"
+            >
+              <span>Product topology</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="proper-map"
+              class="index-entry"
+              href="#proper-map"
+              data-index-entry
+              data-search-term="proper map"
+            >
+              <span>Proper map</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="pseudometric"
+              class="index-entry"
+              href="#pseudometric"
+              data-index-entry
+              data-search-term="pseudometric"
+            >
+              <span>Pseudometric</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-Q">Q</h2>
+
+          <div class="alphabet-entry-list">
+            <a
+              id="quotient-map"
+              class="index-entry"
+              href="#quotient-map"
+              data-index-entry
+              data-search-term="quotient map"
+            >
+              <span>Quotient map</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="quotient-space"
+              class="index-entry"
+              href="#quotient-space"
+              data-index-entry
+              data-search-term="quotient space"
+            >
+              <span>Quotient space</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-R">R</h2>
+
+          <div class="alphabet-entry-list">
+            <a
+              id="regular-space"
+              class="index-entry"
+              href="#regular-space"
+              data-index-entry
+              data-search-term="regular space"
+            >
+              <span>Regular space</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="retraction"
+              class="index-entry"
+              href="#retraction"
+              data-index-entry
+              data-search-term="retraction"
+            >
+              <span>Retraction</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-S">S</h2>
+
+          <div class="alphabet-entry-list">
+            <a
+              id="second-countable-space"
+              class="index-entry"
+              href="#second-countable-space"
+              data-index-entry
+              data-search-term="second-countable space"
+            >
+              <span>Second-countable space</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="separable-space"
+              class="index-entry"
+              href="#separable-space"
+              data-index-entry
+              data-search-term="separable space"
+            >
+              <span>Separable space</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="separation"
+              class="index-entry"
+              href="#separation"
+              data-index-entry
+              data-search-term="separation"
+            >
+              <span>Separation</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="sequentially-compact-space"
+              class="index-entry"
+              href="#sequentially-compact-space"
+              data-index-entry
+              data-search-term="sequentially compact space"
+            >
+              <span>Sequentially compact space</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="subbase"
+              class="index-entry"
+              href="#subbase"
+              data-index-entry
+              data-search-term="subbase"
+            >
+              <span>Subbase</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="subspace-topology"
+              class="index-entry"
+              href="#subspace-topology"
+              data-index-entry
+              data-search-term="subspace topology"
+            >
+              <span>Subspace topology</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-T">T</h2>
+
+          <div class="alphabet-entry-list">
+            <a
+              id="t0-space"
+              class="index-entry"
+              href="#t0-space"
+              data-index-entry
+              data-search-term="t0 space"
+            >
+              <span>T0 space</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="t1-space"
+              class="index-entry"
+              href="#t1-space"
+              data-index-entry
+              data-search-term="t1 space"
+            >
+              <span>T1 space</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="topological-embedding"
+              class="index-entry"
+              href="#topological-embedding"
+              data-index-entry
+              data-search-term="topological embedding"
+            >
+              <span>Topological embedding</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="topological-invariant"
+              class="index-entry"
+              href="#topological-invariant"
+              data-index-entry
+              data-search-term="topological invariant"
+            >
+              <span>Topological invariant</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="topological-manifold"
+              class="index-entry"
+              href="#topological-manifold"
+              data-index-entry
+              data-search-term="topological manifold"
+            >
+              <span>Topological manifold</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="topological-space"
+              class="index-entry"
+              href="#topological-space"
+              data-index-entry
+              data-search-term="topological space"
+            >
+              <span>Topological space</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="topology"
+              class="index-entry"
+              href="#topology"
+              data-index-entry
+              data-search-term="topology"
+            >
+              <span>Topology</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="tychonoff-space"
+              class="index-entry"
+              href="#tychonoff-space"
+              data-index-entry
+              data-search-term="tychonoff space"
+            >
+              <span>Tychonoff space</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-U">U</h2>
+
+          <div class="alphabet-entry-list">
+            <a
+              id="ultrafilter"
+              class="index-entry"
+              href="#ultrafilter"
+              data-index-entry
+              data-search-term="ultrafilter"
+            >
+              <span>Ultrafilter</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              id="uniform-topology"
+              class="index-entry"
+              href="#uniform-topology"
+              data-index-entry
+              data-search-term="uniform topology"
+            >
+              <span>Uniform topology</span>
+              <span class="index-arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+        </section>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const search = document.querySelector<HTMLInputElement>("#definition-search");
+  const entries = Array.from(
+  document.querySelectorAll<HTMLElement>("[data-index-entry]"),
+  );
+  const groups = Array.from(
+  document.querySelectorAll<HTMLElement>("[data-alpha-group]"),
+  );
+  const resultCount =
+  document.querySelector<HTMLOutputElement>("#definition-result-count");
+
+  const updateIndex = () => {
+  const query = search?.value.trim().toLowerCase() ?? "";
+  let visible = 0;
+
+  entries.forEach((entry) => {
+  const matches = (entry.dataset.searchTerm ?? "").includes(query);
+  entry.hidden = !matches;
+
+  if (matches) visible += 1;
+  });
+
+  groups.forEach((group) => {
+  const hasVisibleEntries = Array.from(
+  group.querySelectorAll<HTMLElement>("[data-index-entry]"),
+  ).some((entry) => !entry.hidden);
+
+  group.hidden = !hasVisibleEntries;
+  });
+
+  if (resultCount) {
+  resultCount.textContent =
+  query.length === 0
+  ? `${visible} definitions`
+  : `${visible} matching definition${visible === 1 ? "" : "s"}`;
+  }
+  };
+
+  search?.addEventListener("input", updateIndex);
+</script>
+
+<style>
+  .index-tools {
+  display: grid;
+  gap: 1rem;
+  margin-top: clamp(2rem, 5vw, 4rem);
+  padding: 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 1.2rem;
+  background: rgba(17, 11, 37, 0.55);
+  }
+
+  .search-control {
+  display: grid;
+  gap: 0.55rem;
+  }
+
+  .search-control span {
+  color: var(--accent, #71e6ff);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  }
+
+  .search-control input {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 0.8rem;
+  padding: 0.85rem 1rem;
+  color: inherit;
+  background: rgba(5, 5, 18, 0.42);
+  font: inherit;
+  }
+
+  .search-control input:focus {
+  border-color: rgba(113, 230, 255, 0.48);
+  outline: none;
+  }
+
+  .alphabet-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  }
+
+  .alphabet-nav a {
+  display: grid;
+  place-items: center;
+  min-width: 2.1rem;
+  min-height: 2.1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.55rem;
+  color: rgba(239, 234, 255, 0.76);
+  text-decoration: none;
+  }
+
+  .alphabet-nav a:hover,
+  .alphabet-nav a:focus-visible {
+    border-color: rgba(113, 230, 255, 0.42);
+    color: var(--accent, #71e6ff);
+    outline: none;
+  }
+
+  #definition-result-count {
+    color: rgba(239, 234, 255, 0.62);
+    font-size: 0.9rem;
+  }
+
+  .alphabet-index {
+    display: grid;
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .alphabet-group {
+    display: grid;
+    grid-template-columns: 72px minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .alphabet-group h2 {
+    position: sticky;
+    top: 1rem;
+    align-self: start;
+    margin: 0;
+    color: var(--accent, #71e6ff);
+    font-size: clamp(2rem, 5vw, 3.8rem);
+    line-height: 1;
+  }
+
+  .alphabet-entry-list {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .index-entry {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 0.8rem;
+    padding: 0.85rem 1rem;
+    color: inherit;
+    background: rgba(255, 255, 255, 0.025);
+    text-decoration: none;
+  }
+
+  .index-entry:hover,
+  .index-entry:focus-visible {
+    border-color: rgba(113, 230, 255, 0.32);
+    background: rgba(113, 230, 255, 0.045);
+    outline: none;
+  }
+
+  .index-arrow {
+    color: var(--accent, #71e6ff);
+  }
+
+  [hidden] {
+    display: none !important;
+  }
+
+  @media (max-width: 600px) {
+    .alphabet-group {
+      grid-template-columns: 1fr;
+    }
+
+    .alphabet-group h2 {
+      position: static;
+    }
+  }
+</style>

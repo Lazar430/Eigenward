@@ -1,0 +1,1169 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import SetTheorySidebar from "../../../../components/SetTheorySidebar.astro";
+
+const items = [
+  "Aleph number",
+  "Axiom of choice",
+  "Axiom of extensionality",
+  "Axiom of foundation",
+  "Axiom of infinity",
+  "Axiom of pairing",
+  "Axiom of power set",
+  "Axiom of replacement",
+  "Axiom of separation",
+  "Axiom of union",
+  "Beth number",
+  "Bijection",
+  "Cardinal",
+  "Cardinal arithmetic",
+  "Cardinality",
+  "Cartesian product",
+  "Chain",
+  "Choice function",
+  "Class",
+  "Club set",
+  "Cofinality",
+  "Complement",
+  "Constructible set",
+  "Countable set",
+  "Cumulative hierarchy",
+  "Dense order",
+  "Domain",
+  "Element",
+  "Empty set",
+  "Equinumerous sets",
+  "Equivalence class",
+  "Equivalence relation",
+  "Filter",
+  "Finite set",
+  "Forcing condition",
+  "Function",
+  "Generic filter",
+  "Hereditary set",
+  "Image",
+  "Initial ordinal",
+  "Injection",
+  "Inner model",
+  "Intersection",
+  "Limit ordinal",
+  "Membership relation",
+  "Model of set theory",
+  "Ordered pair",
+  "Ordinal",
+  "Ordinal addition",
+  "Ordinal arithmetic",
+  "Ordinal exponentiation",
+  "Ordinal multiplication",
+  "Partial order",
+  "Power set",
+  "Preimage",
+  "Proper class",
+  "Range",
+  "Rank of a set",
+  "Relation",
+  "Restriction of a function",
+  "Set",
+  "Stationary set",
+  "Subset",
+  "Successor ordinal",
+  "Surjection",
+  "Symmetric difference",
+  "Transitive closure",
+  "Transitive set",
+  "Ultrafilter",
+  "Uncountable set",
+  "Union",
+  "Von Neumann ordinal",
+  "Well-founded relation",
+  "Well-order",
+  "Well-ordering",
+  "Zermelo\u2013Fraenkel set theory"
+];
+
+const letters = [...new Set(items.map((item) => item[0].toUpperCase()))];
+---
+
+<BaseLayout
+  title="Set Theory Definitions"
+  description="An alphabetical index of set theory definitions."
+>
+  <section class="hub-page">
+    <SetTheorySidebar />
+
+    <div class="hub-main">
+      <section class="hub-hero">
+        <span class="eyebrow">Set Theory · Definitions</span>
+
+        <h1>Definitions</h1>
+
+        <p>
+          An alphabetical index of the principal objects, axioms, order-theoretic notions, ordinal and cardinal constructions, and model-theoretic vocabulary used throughout the set theory section.
+        </p>
+      </section>
+
+      <section class="index-tools" aria-label="Definitions index controls">
+        <label class="search-control">
+          <span>Search definitions</span>
+          <input
+            id="definition-search"
+            type="search"
+            placeholder="Try “ordinal”, “cardinal”, “choice”…"
+            autocomplete="off"
+          />
+        </label>
+
+        <nav class="alphabet-nav" aria-label="Jump to letter">
+          {
+            letters.map((letter) => (
+              <a href={`#definitions-${letter}`}>{letter}</a>
+            ))
+          }
+        </nav>
+
+        <output id="definition-result-count" aria-live="polite">
+          {items.length} definitions
+        </output>
+      </section>
+
+      <div class="alphabet-index" id="definition-index">
+        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-A">A</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="aleph-number"
+                class="index-entry"
+                href="#aleph-number"
+                data-index-entry
+                data-search-term="aleph number"
+              >
+                <span>Aleph number</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="axiom-of-choice"
+                class="index-entry"
+                href="#axiom-of-choice"
+                data-index-entry
+                data-search-term="axiom of choice"
+              >
+                <span>Axiom of choice</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="axiom-of-extensionality"
+                class="index-entry"
+                href="#axiom-of-extensionality"
+                data-index-entry
+                data-search-term="axiom of extensionality"
+              >
+                <span>Axiom of extensionality</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="axiom-of-foundation"
+                class="index-entry"
+                href="#axiom-of-foundation"
+                data-index-entry
+                data-search-term="axiom of foundation"
+              >
+                <span>Axiom of foundation</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="axiom-of-infinity"
+                class="index-entry"
+                href="#axiom-of-infinity"
+                data-index-entry
+                data-search-term="axiom of infinity"
+              >
+                <span>Axiom of infinity</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="axiom-of-pairing"
+                class="index-entry"
+                href="#axiom-of-pairing"
+                data-index-entry
+                data-search-term="axiom of pairing"
+              >
+                <span>Axiom of pairing</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="axiom-of-power-set"
+                class="index-entry"
+                href="#axiom-of-power-set"
+                data-index-entry
+                data-search-term="axiom of power set"
+              >
+                <span>Axiom of power set</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="axiom-of-replacement"
+                class="index-entry"
+                href="#axiom-of-replacement"
+                data-index-entry
+                data-search-term="axiom of replacement"
+              >
+                <span>Axiom of replacement</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="axiom-of-separation"
+                class="index-entry"
+                href="#axiom-of-separation"
+                data-index-entry
+                data-search-term="axiom of separation"
+              >
+                <span>Axiom of separation</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="axiom-of-union"
+                class="index-entry"
+                href="#axiom-of-union"
+                data-index-entry
+                data-search-term="axiom of union"
+              >
+                <span>Axiom of union</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-B">B</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="beth-number"
+                class="index-entry"
+                href="#beth-number"
+                data-index-entry
+                data-search-term="beth number"
+              >
+                <span>Beth number</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="bijection"
+                class="index-entry"
+                href="#bijection"
+                data-index-entry
+                data-search-term="bijection"
+              >
+                <span>Bijection</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-C">C</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="cardinal"
+                class="index-entry"
+                href="#cardinal"
+                data-index-entry
+                data-search-term="cardinal"
+              >
+                <span>Cardinal</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="cardinal-arithmetic"
+                class="index-entry"
+                href="#cardinal-arithmetic"
+                data-index-entry
+                data-search-term="cardinal arithmetic"
+              >
+                <span>Cardinal arithmetic</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="cardinality"
+                class="index-entry"
+                href="#cardinality"
+                data-index-entry
+                data-search-term="cardinality"
+              >
+                <span>Cardinality</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="cartesian-product"
+                class="index-entry"
+                href="#cartesian-product"
+                data-index-entry
+                data-search-term="cartesian product"
+              >
+                <span>Cartesian product</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="chain"
+                class="index-entry"
+                href="#chain"
+                data-index-entry
+                data-search-term="chain"
+              >
+                <span>Chain</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="choice-function"
+                class="index-entry"
+                href="#choice-function"
+                data-index-entry
+                data-search-term="choice function"
+              >
+                <span>Choice function</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="class"
+                class="index-entry"
+                href="#class"
+                data-index-entry
+                data-search-term="class"
+              >
+                <span>Class</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="club-set"
+                class="index-entry"
+                href="#club-set"
+                data-index-entry
+                data-search-term="club set"
+              >
+                <span>Club set</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="cofinality"
+                class="index-entry"
+                href="#cofinality"
+                data-index-entry
+                data-search-term="cofinality"
+              >
+                <span>Cofinality</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="complement"
+                class="index-entry"
+                href="#complement"
+                data-index-entry
+                data-search-term="complement"
+              >
+                <span>Complement</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="constructible-set"
+                class="index-entry"
+                href="#constructible-set"
+                data-index-entry
+                data-search-term="constructible set"
+              >
+                <span>Constructible set</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="countable-set"
+                class="index-entry"
+                href="#countable-set"
+                data-index-entry
+                data-search-term="countable set"
+              >
+                <span>Countable set</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="cumulative-hierarchy"
+                class="index-entry"
+                href="#cumulative-hierarchy"
+                data-index-entry
+                data-search-term="cumulative hierarchy"
+              >
+                <span>Cumulative hierarchy</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-D">D</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="dense-order"
+                class="index-entry"
+                href="#dense-order"
+                data-index-entry
+                data-search-term="dense order"
+              >
+                <span>Dense order</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="domain"
+                class="index-entry"
+                href="#domain"
+                data-index-entry
+                data-search-term="domain"
+              >
+                <span>Domain</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-E">E</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="element"
+                class="index-entry"
+                href="#element"
+                data-index-entry
+                data-search-term="element"
+              >
+                <span>Element</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="empty-set"
+                class="index-entry"
+                href="#empty-set"
+                data-index-entry
+                data-search-term="empty set"
+              >
+                <span>Empty set</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="equinumerous-sets"
+                class="index-entry"
+                href="#equinumerous-sets"
+                data-index-entry
+                data-search-term="equinumerous sets"
+              >
+                <span>Equinumerous sets</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="equivalence-class"
+                class="index-entry"
+                href="#equivalence-class"
+                data-index-entry
+                data-search-term="equivalence class"
+              >
+                <span>Equivalence class</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="equivalence-relation"
+                class="index-entry"
+                href="#equivalence-relation"
+                data-index-entry
+                data-search-term="equivalence relation"
+              >
+                <span>Equivalence relation</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-F">F</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="filter"
+                class="index-entry"
+                href="#filter"
+                data-index-entry
+                data-search-term="filter"
+              >
+                <span>Filter</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="finite-set"
+                class="index-entry"
+                href="#finite-set"
+                data-index-entry
+                data-search-term="finite set"
+              >
+                <span>Finite set</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="forcing-condition"
+                class="index-entry"
+                href="#forcing-condition"
+                data-index-entry
+                data-search-term="forcing condition"
+              >
+                <span>Forcing condition</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="function"
+                class="index-entry"
+                href="#function"
+                data-index-entry
+                data-search-term="function"
+              >
+                <span>Function</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-G">G</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="generic-filter"
+                class="index-entry"
+                href="#generic-filter"
+                data-index-entry
+                data-search-term="generic filter"
+              >
+                <span>Generic filter</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-H">H</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="hereditary-set"
+                class="index-entry"
+                href="#hereditary-set"
+                data-index-entry
+                data-search-term="hereditary set"
+              >
+                <span>Hereditary set</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-I">I</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="image"
+                class="index-entry"
+                href="#image"
+                data-index-entry
+                data-search-term="image"
+              >
+                <span>Image</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="initial-ordinal"
+                class="index-entry"
+                href="#initial-ordinal"
+                data-index-entry
+                data-search-term="initial ordinal"
+              >
+                <span>Initial ordinal</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="injection"
+                class="index-entry"
+                href="#injection"
+                data-index-entry
+                data-search-term="injection"
+              >
+                <span>Injection</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="inner-model"
+                class="index-entry"
+                href="#inner-model"
+                data-index-entry
+                data-search-term="inner model"
+              >
+                <span>Inner model</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="intersection"
+                class="index-entry"
+                href="#intersection"
+                data-index-entry
+                data-search-term="intersection"
+              >
+                <span>Intersection</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-L">L</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="limit-ordinal"
+                class="index-entry"
+                href="#limit-ordinal"
+                data-index-entry
+                data-search-term="limit ordinal"
+              >
+                <span>Limit ordinal</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-M">M</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="membership-relation"
+                class="index-entry"
+                href="#membership-relation"
+                data-index-entry
+                data-search-term="membership relation"
+              >
+                <span>Membership relation</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="model-of-set-theory"
+                class="index-entry"
+                href="#model-of-set-theory"
+                data-index-entry
+                data-search-term="model of set theory"
+              >
+                <span>Model of set theory</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-O">O</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="ordered-pair"
+                class="index-entry"
+                href="#ordered-pair"
+                data-index-entry
+                data-search-term="ordered pair"
+              >
+                <span>Ordered pair</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="ordinal"
+                class="index-entry"
+                href="#ordinal"
+                data-index-entry
+                data-search-term="ordinal"
+              >
+                <span>Ordinal</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="ordinal-addition"
+                class="index-entry"
+                href="#ordinal-addition"
+                data-index-entry
+                data-search-term="ordinal addition"
+              >
+                <span>Ordinal addition</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="ordinal-arithmetic"
+                class="index-entry"
+                href="#ordinal-arithmetic"
+                data-index-entry
+                data-search-term="ordinal arithmetic"
+              >
+                <span>Ordinal arithmetic</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="ordinal-exponentiation"
+                class="index-entry"
+                href="#ordinal-exponentiation"
+                data-index-entry
+                data-search-term="ordinal exponentiation"
+              >
+                <span>Ordinal exponentiation</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="ordinal-multiplication"
+                class="index-entry"
+                href="#ordinal-multiplication"
+                data-index-entry
+                data-search-term="ordinal multiplication"
+              >
+                <span>Ordinal multiplication</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-P">P</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="partial-order"
+                class="index-entry"
+                href="#partial-order"
+                data-index-entry
+                data-search-term="partial order"
+              >
+                <span>Partial order</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="power-set"
+                class="index-entry"
+                href="#power-set"
+                data-index-entry
+                data-search-term="power set"
+              >
+                <span>Power set</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="preimage"
+                class="index-entry"
+                href="#preimage"
+                data-index-entry
+                data-search-term="preimage"
+              >
+                <span>Preimage</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="proper-class"
+                class="index-entry"
+                href="#proper-class"
+                data-index-entry
+                data-search-term="proper class"
+              >
+                <span>Proper class</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-R">R</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="range"
+                class="index-entry"
+                href="#range"
+                data-index-entry
+                data-search-term="range"
+              >
+                <span>Range</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="rank-of-a-set"
+                class="index-entry"
+                href="#rank-of-a-set"
+                data-index-entry
+                data-search-term="rank of a set"
+              >
+                <span>Rank of a set</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="relation"
+                class="index-entry"
+                href="#relation"
+                data-index-entry
+                data-search-term="relation"
+              >
+                <span>Relation</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="restriction-of-a-function"
+                class="index-entry"
+                href="#restriction-of-a-function"
+                data-index-entry
+                data-search-term="restriction of a function"
+              >
+                <span>Restriction of a function</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-S">S</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="set"
+                class="index-entry"
+                href="#set"
+                data-index-entry
+                data-search-term="set"
+              >
+                <span>Set</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="stationary-set"
+                class="index-entry"
+                href="#stationary-set"
+                data-index-entry
+                data-search-term="stationary set"
+              >
+                <span>Stationary set</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="subset"
+                class="index-entry"
+                href="#subset"
+                data-index-entry
+                data-search-term="subset"
+              >
+                <span>Subset</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="successor-ordinal"
+                class="index-entry"
+                href="#successor-ordinal"
+                data-index-entry
+                data-search-term="successor ordinal"
+              >
+                <span>Successor ordinal</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="surjection"
+                class="index-entry"
+                href="#surjection"
+                data-index-entry
+                data-search-term="surjection"
+              >
+                <span>Surjection</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="symmetric-difference"
+                class="index-entry"
+                href="#symmetric-difference"
+                data-index-entry
+                data-search-term="symmetric difference"
+              >
+                <span>Symmetric difference</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-T">T</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="transitive-closure"
+                class="index-entry"
+                href="#transitive-closure"
+                data-index-entry
+                data-search-term="transitive closure"
+              >
+                <span>Transitive closure</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="transitive-set"
+                class="index-entry"
+                href="#transitive-set"
+                data-index-entry
+                data-search-term="transitive set"
+              >
+                <span>Transitive set</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-U">U</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="ultrafilter"
+                class="index-entry"
+                href="#ultrafilter"
+                data-index-entry
+                data-search-term="ultrafilter"
+              >
+                <span>Ultrafilter</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="uncountable-set"
+                class="index-entry"
+                href="#uncountable-set"
+                data-index-entry
+                data-search-term="uncountable set"
+              >
+                <span>Uncountable set</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="union"
+                class="index-entry"
+                href="#union"
+                data-index-entry
+                data-search-term="union"
+              >
+                <span>Union</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-V">V</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="von-neumann-ordinal"
+                class="index-entry"
+                href="#von-neumann-ordinal"
+                data-index-entry
+                data-search-term="von neumann ordinal"
+              >
+                <span>Von Neumann ordinal</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-W">W</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="well-founded-relation"
+                class="index-entry"
+                href="#well-founded-relation"
+                data-index-entry
+                data-search-term="well-founded relation"
+              >
+                <span>Well-founded relation</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="well-order"
+                class="index-entry"
+                href="#well-order"
+                data-index-entry
+                data-search-term="well-order"
+              >
+                <span>Well-order</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="well-ordering"
+                class="index-entry"
+                href="#well-ordering"
+                data-index-entry
+                data-search-term="well-ordering"
+              >
+                <span>Well-ordering</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-Z">Z</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="zermelo-fraenkel-set-theory"
+                class="index-entry"
+                href="#zermelo-fraenkel-set-theory"
+                data-index-entry
+                data-search-term="zermelo\u2013fraenkel set theory"
+              >
+                <span>Zermelo–Fraenkel set theory</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const search = document.querySelector<HTMLInputElement>("#definition-search");
+  const entries = Array.from(
+    document.querySelectorAll<HTMLElement>("[data-index-entry]"),
+  );
+  const groups = Array.from(
+    document.querySelectorAll<HTMLElement>("[data-alpha-group]"),
+  );
+  const resultCount =
+    document.querySelector<HTMLOutputElement>("#definition-result-count");
+
+  const updateIndex = () => {
+    const query = search?.value.trim().toLowerCase() ?? "";
+    let visible = 0;
+
+    entries.forEach((entry) => {
+      const matches = (entry.dataset.searchTerm ?? "").includes(query);
+      entry.hidden = !matches;
+
+      if (matches) visible += 1;
+    });
+
+    groups.forEach((group) => {
+      const hasVisibleEntries = Array.from(
+        group.querySelectorAll<HTMLElement>("[data-index-entry]"),
+      ).some((entry) => !entry.hidden);
+
+      group.hidden = !hasVisibleEntries;
+    });
+
+    if (resultCount) {
+      resultCount.textContent =
+        query.length === 0
+          ? `${visible} definitions`
+          : `${visible} matching definition${visible === 1 ? "" : "s"}`;
+    }
+  };
+
+  search?.addEventListener("input", updateIndex);
+</script>
+
+<style>
+  .index-tools {
+    display: grid;
+    gap: 1rem;
+    margin-top: clamp(2rem, 5vw, 4rem);
+    padding: 1.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 1.2rem;
+    background: rgba(17, 11, 37, 0.55);
+  }
+
+  .search-control {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .search-control span {
+    color: var(--accent, #71e6ff);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+  }
+
+  .search-control input {
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.11);
+    border-radius: 0.8rem;
+    padding: 0.85rem 1rem;
+    color: inherit;
+    background: rgba(5, 5, 18, 0.42);
+    font: inherit;
+  }
+
+  .search-control input:focus {
+    border-color: rgba(113, 230, 255, 0.48);
+    outline: none;
+  }
+
+  .alphabet-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .alphabet-nav a {
+    display: grid;
+    place-items: center;
+    min-width: 2.1rem;
+    min-height: 2.1rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.55rem;
+    color: rgba(239, 234, 255, 0.76);
+    text-decoration: none;
+  }
+
+  .alphabet-nav a:hover,
+  .alphabet-nav a:focus-visible {
+    border-color: rgba(113, 230, 255, 0.42);
+    color: var(--accent, #71e6ff);
+    outline: none;
+  }
+
+  #definition-result-count {
+    color: rgba(239, 234, 255, 0.62);
+    font-size: 0.9rem;
+  }
+
+  .alphabet-index {
+    display: grid;
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .alphabet-group {
+    display: grid;
+    grid-template-columns: 72px minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .alphabet-group h2 {
+    position: sticky;
+    top: 1rem;
+    align-self: start;
+    margin: 0;
+    color: var(--accent, #71e6ff);
+    font-size: clamp(2rem, 5vw, 3.8rem);
+    line-height: 1;
+  }
+
+  .alphabet-entry-list {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .index-entry {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 0.8rem;
+    padding: 0.85rem 1rem;
+    color: inherit;
+    background: rgba(255, 255, 255, 0.025);
+    text-decoration: none;
+  }
+
+  .index-entry:hover,
+  .index-entry:focus-visible {
+    border-color: rgba(113, 230, 255, 0.32);
+    background: rgba(113, 230, 255, 0.045);
+    outline: none;
+  }
+
+  .index-arrow {
+    color: var(--accent, #71e6ff);
+  }
+
+  [hidden] {
+    display: none !important;
+  }
+
+  @media (max-width: 600px) {
+    .alphabet-group {
+      grid-template-columns: 1fr;
+    }
+
+    .alphabet-group h2 {
+      position: static;
+    }
+  }
+</style>

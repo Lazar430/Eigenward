@@ -1,0 +1,215 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import ProblemsSidebar from "../../../../components/ProblemsSidebar.astro";
+import Math from "../../../../components/Math.astro";
+import Equation from "../../../../components/Equation.astro";
+---
+
+<BaseLayout
+  title="Shorthand Identities"
+  description="Some cool factorizations to check out."
+>
+  <section class="la-page">
+    <ProblemsSidebar />
+
+    <article class="topic-article">
+      <header class="topic-hero">
+        <span class="eyebrow">Algebra · Identities</span>
+        <h1>Shorthand Identities</h1>
+
+        <p>
+	  A plethora of factorizations to check out.
+        </p>
+      </header>
+
+      <nav class="topic-toc" aria-label="Page sections">
+        <a href="#broad-stroke">Broad Stroke</a>
+        <a href="#quick-examples">Quick Examples</a>
+        <a href="#a-deeper-look">A Deeper Look</a>
+      </nav>
+
+      <section class="topic-section" id="round-i">
+        <h2>Round I</h2>
+	<p> Let there be <Math tex={String.raw`a, b, c \in \mathbb{R}`} />. Prove that </p>
+
+	<Equation
+	  tex={String.raw`a^2 + b^2 + c^2 + ab + bc + ca = \frac{1}{2}[(a + b)^2 + (b + c)^2 + (c + a)^2].`}
+	/>
+
+	<details class = "drop-example">
+	  <summary>Proof</summary>
+	  
+	  <div class = "drop-content">
+	    <p> The <span class="emph">LHS</span> is of course reminiscent of the 
+	      <span class = "emph"> square identity</span>:
+	    </p>
+
+	    <Equation tex = {String.raw`(a + b)^2 = a^2 + 2ab + b^2.`} />
+
+	    <p> There are three squares we have to <span class = "emph"> complete </span> here, and hopefully the residue we're left
+	    with will be something useful: </p>
+
+	    <Equation tex = {String.raw`
+	    \text{LHS} =
+	    (a^2 + 2ab + b^2) + (b^2 + 2bc + c^2) + (c^2 + 2ca + a^2) - \underbrace{(a^2 + b^2 + c^2 + ab + bc + ca)}_{\text{LHS}}.`}
+	    />
+	  </div>
+
+	  <p> Notice that the leftover pieces we're subtracting form exactly the <span class = "emph"> LHS </span> again.
+              Bringing it over to the other side and then dividing to remove the duplicate yields exactly: </p>
+
+	  <Equation
+	    tex={String.raw`a^2 + b^2 + c^2 + ab + bc + ca = \frac{1}{2}[(a + b)^2 + (b + c)^2 + (c + a)^2].`}
+	  />
+	  
+	</details>
+
+	<p> One can easily derive the similar result: </p>
+
+	<Equation
+	  tex={String.raw`a^2 + b^2 + c^2 - ab - bc - ca = \frac{1}{2}[(a - b)^2 + (b - c)^2 + (c - a)^2].`}
+	/>
+	
+      </section>
+
+      <section class="topic-section" id="round-ii">
+        <h2>Round II</h2>
+
+	<p> We turn our attention to some <span class = "emph"> cubic </span> action. Let there be <Math tex={String.raw`a, b, c \in \mathbb{R}`} />. Prove that </p>
+
+	<Equation
+	  tex={String.raw`(a + b + c)^3 = a^3 + b^3 + c^3 + 3(a + b)(b + c)(c + a).`}
+	/>
+
+	<details class="drop-example">
+	  <summary>Proof</summary>
+
+	  <div class="drop-content">
+	    
+	    <p> This is of course a continuation of the binomial version of this statement: </p>
+
+	    <Equation
+	      tex={String.raw`(a + b)^3 = a^3 + b^3 + 3ab(a + b).`}
+	    />
+
+	    We can treat <span class="emph"> LHS </span> as a binomial: <Math tex="a + b + c = (a + b) + c"/>. By applying the above equation, this gives:
+
+	    <Equation
+	      tex={String.raw`(a + b + c)^3 = (a + b)^3 + c^3 +  3(a + b)(a + b + c)c.`}
+	    />
+
+	    We'll expand the cubic part in the <span class="emph"> RHS </span> and factor out the <Math tex="3(a + b)"/> term:
+
+	    <Equation
+	      tex={String.raw`(a + b)^3 = a^3 + b^3 + c^3 + 3(a + b)(ab + bc + ca + c^2).`}
+	    />
+
+	    Now <Math tex="ab + bc + ca + c^2"/> can be easily modified by just taking pairs and factoring out a repeating term:
+	    <Equation tex="ab + bc + ca + c^2 = b(c + a) + c(c + a) = (b + c)(c + a)."/> Substituting back yileds the final result:
+
+	    <Equation
+	      tex={String.raw`(a + b + c)^3 = a^3 + b^3 + c^3 + 3(a + b)(b + c)(c + a).`}
+	    />
+	    
+	  </div>
+	  
+	</details>
+
+	<p> A rather common, but remarkable identity that has to do with cubes, one that shows up in diverse problems, is the following: </p>
+
+	<Equation
+	  tex={String.raw`a^3 + b^3 + c^3 = (a + b + c)(a^2 + b^2 + c^2 - ab - bc - ca) + 3abc.`}
+	/>
+
+	<details class="drop-example">
+	  <summary>Proof</summary>
+
+	  <div class="drop-content">
+
+	    <details class="drop-example">
+	      <summary>Raw Variant</summary>
+
+	      <div class="drop-content">
+
+		We see how the <Math tex="a^3 + b^3 + c^3"/> and <Math tex="a + b + c"/> components in the <span class="emph"> LHS </span>  and <span class="emph"> RHS </span>
+		respectively sort of parallel each other in a similar fashion to how <Math tex="a^3 + b^3"/> parallels <Math tex="a + b"/> in the formula
+
+		<Equation id="a-eq1" number={1}
+		  tex={String.raw`a^3 + b^3 = (a + b)(a^2 - 2ab + b^2),`}
+		/>
+
+		which might indicate the two results are related somehow, or more precisely that what we're trying to prove is a mere consequence of formula
+                (<a class="eq-ref" href="#a-eq1">1</a>).
+                Let's
+		try using it, again, by looking at <Math tex="a + b + c"/> as the binomial <Math tex="(a + b) + c"/>. This means we have to highlight a
+		<Math tex="\text{ }(a + b)^3 + c^3"/> component and then deal with the subtracted residue:
+
+		<Equation id="a-eq2" number={2}
+		  tex={String.raw`a^3 + b^3 + c^3 = (a + b)^3 + c^3 - 3ab(a + b).`}
+		/>
+
+		Applying formula (<a class="eq-ref" href="#a-eq1">1</a>) to <Math tex="(a + b)^3 + c^3"/> gives us:
+
+		<Equation
+		  tex={String.raw`(a + b)^3 + c^3 = (a + b + c)[(a + b)^2 - (a + b)c + c^2],`}
+		/>
+
+		or the expanded version,
+
+		<Equation
+		  tex={String.raw`(a + b)^3 + c^3 = (a + b + c)(a^2 + b^2 + c^2 + 2ab - bc - ca).`}
+		/>
+
+		Obviously, we'll want to assure simmetry so we'll write <Math tex="2ab - bc - ca"/> as <Math tex="3ab - ab - bc - ca"/> and then get rid of <Math tex="3ab"/>
+		through expansion:
+
+		<Equation id="a-eq3" number={3}
+		  tex={String.raw`(a + b)^3 + c^3 = (a + b + c)(a^2 + b^2 + c^2 - ab - bc - ca) + 3ab(a + b + c).`}
+		/>
+
+		By distributing <Math tex="3ab(a + b + c)"/> we obtain <Math tex="3ab(a + b) + 3abc"/>. Substituting equation (<a class="eq-ref" href="#a-eq3">3</a>)
+		back into equation (<a class="eq-ref" href="#a-eq2">2</a>) will yield the cancelation of the <Math tex="3ab(a + b)"/> and <Math tex="-3ab(a + b)"/> parts,
+		leaving us with:
+
+		<Equation
+		  tex={String.raw`a^3 + b^3 + c^3 = (a + b + c)(a^2 + b^2 + c^2 - ab - bc - ca) + 3abc.`}
+		/>
+	    	    
+	      </div>
+	  
+	    </details>
+
+	    <details class="drop-example">
+	      <summary>More Sophisticated Variant</summary>
+
+	      <div class="drop-content">
+
+		A cooler yet perhaps more suprising option is to use the canonical form of a 3rd degree <span class="emph">polynomial</span>:
+
+		<Equation tex="P(X) = X^3 - (a + b + c)X^2 + (ab + bc + ca)X - abc," />
+
+		where <Math tex="a, b, c"/> are the roots of <Math tex="P" />. We have the three equations:
+
+		<Equation tex="P(a) = a^3 - (a + b + c)a^2 + (ab + bc + ca)a - abc = 0," />
+		<Equation tex="P(b) = b^3 - (a + b + c)b^2 + (ab + bc + ca)b - abc = 0," />
+		<Equation tex="P(c) = c^3 - (a + b + c)c^2 + (ab + bc + ca)c - abc = 0." />
+
+		Adding them together and factoring out plus moving terms around give us
+
+		<Equation
+		  tex={String.raw`a^3 + b^3 + c^3 = (a + b + c)(a^2 + b^2 + c^2 - ab - bc - ca) + 3abc.`}
+		/>
+	    
+	      </div>
+	  
+	    </details>
+	    
+	  </div>
+	  
+	</details>
+
+	
+      </section>
+    </article>
+  </section>
+</BaseLayout>

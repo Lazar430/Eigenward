@@ -1,0 +1,224 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import SetTheorySidebar from "../../../../components/SetTheorySidebar.astro";
+import { withBase } from "@/utils/paths";
+
+const lessons = [
+  {
+    number: "01",
+    title: "Naive Set Theory and the Need for Axioms",
+    href: withBase("branches/set-theory/lessons/"),
+    text: "Sets, membership, subsets, unions, intersections, complements, set-builder notation, unrestricted comprehension, Russell's paradox, and the motivation for axiomatic foundations."
+  },
+  {
+    number: "02",
+    title: "The Zermelo\u2013Fraenkel Axioms",
+    href: withBase("branches/set-theory/lessons/"),
+    text: "Extensionality, empty set, pairing, union, power set, infinity, separation, replacement, foundation, and the basic architecture of ZF."
+  },
+  {
+    number: "03",
+    title: "Relations and Ordered Pairs",
+    href: withBase("branches/set-theory/lessons/"),
+    text: "Ordered pairs, Cartesian products, binary relations, domains and ranges, inverse relations, equivalence relations, equivalence classes, and quotient sets."
+  },
+  {
+    number: "04",
+    title: "Functions",
+    href: withBase("branches/set-theory/lessons/"),
+    text: "Functions as sets of ordered pairs, injective, surjective and bijective maps, images, preimages, restrictions, compositions, inverses, and families indexed by sets."
+  },
+  {
+    number: "05",
+    title: "Finite Sets and Countability",
+    href: withBase("branches/set-theory/lessons/"),
+    text: "Finite sets, Dedekind finiteness, countable and countably infinite sets, enumerations, closure properties of countability, and basic diagonal arguments."
+  },
+  {
+    number: "06",
+    title: "Well-Orders and Order Types",
+    href: withBase("branches/set-theory/lessons/"),
+    text: "Linear orders, well-orders, initial segments, order isomorphisms, order types, and the role of well-ordering in transfinite mathematics."
+  },
+  {
+    number: "07",
+    title: "Ordinals",
+    href: withBase("branches/set-theory/lessons/"),
+    text: "Transitive sets, von Neumann ordinals, successor and limit ordinals, comparison of ordinals, ordinal induction, and the class of all ordinals."
+  },
+  {
+    number: "08",
+    title: "Ordinal Arithmetic",
+    href: withBase("branches/set-theory/lessons/"),
+    text: "Ordinal addition, multiplication, exponentiation, recursive definitions, noncommutativity, fixed points, and structural properties of ordinal operations."
+  },
+  {
+    number: "09",
+    title: "Transfinite Induction and Recursion",
+    href: withBase("branches/set-theory/lessons/"),
+    text: "Proofs and recursive constructions over ordinals, uniqueness arguments, recursion on well-founded relations, and applications to hierarchy-building."
+  },
+  {
+    number: "10",
+    title: "Cardinality and Equinumerosity",
+    href: withBase("branches/set-theory/lessons/"),
+    text: "Cardinal comparison, injections and surjections, Schr\u00f6der\u2013Bernstein, finite versus infinite cardinality, and cardinal representatives."
+  },
+  {
+    number: "11",
+    title: "Cardinal Arithmetic",
+    href: withBase("branches/set-theory/lessons/"),
+    text: "Addition, multiplication, exponentiation of cardinals, arithmetic of infinite cardinals, power sets, and basic consequences of the axiom of choice."
+  },
+  {
+    number: "12",
+    title: "Alephs and the Continuum",
+    href: withBase("branches/set-theory/lessons/"),
+    text: "Initial ordinals, aleph numbers, the continuum, cardinal exponentiation, Cantor's theorem, the continuum hypothesis, and the generalized continuum hypothesis."
+  },
+  {
+    number: "13",
+    title: "The Axiom of Choice",
+    href: withBase("branches/set-theory/lessons/"),
+    text: "Choice functions, products of nonempty sets, equivalent forms of choice, dependence on choice, and examples where choice enters ordinary mathematics."
+  },
+  {
+    number: "14",
+    title: "Zorn's Lemma and Maximality Principles",
+    href: withBase("branches/set-theory/lessons/"),
+    text: "Partially ordered sets, chains, upper bounds, maximal elements, Zorn's lemma, the Hausdorff maximal principle, and applications to algebra and analysis."
+  },
+  {
+    number: "15",
+    title: "Well-Founded Relations and Foundation",
+    href: withBase("branches/set-theory/lessons/"),
+    text: "Well-foundedness, minimal elements, transitive closure, Mostowski collapse, the axiom of foundation, and structural recursion beyond ordinals."
+  },
+  {
+    number: "16",
+    title: "The Cumulative Hierarchy",
+    href: withBase("branches/set-theory/lessons/"),
+    text: "The stages V_alpha, rank of a set, hereditary construction, transitivity of the universe, and how ordinary mathematical objects appear inside the hierarchy."
+  },
+  {
+    number: "17",
+    title: "Classes and Definability",
+    href: withBase("branches/set-theory/lessons/"),
+    text: "Proper classes, class functions, definable classes, NBG-style language, replacement as a class principle, and the distinction between sets and classes."
+  },
+  {
+    number: "18",
+    title: "Models of Set Theory",
+    href: withBase("branches/set-theory/lessons/"),
+    text: "Structures for the language of membership, transitive models, absoluteness, inner models, relativization, and the idea of reasoning about universes of sets."
+  },
+  {
+    number: "19",
+    title: "Constructible Sets",
+    href: withBase("branches/set-theory/lessons/"),
+    text: "The constructible hierarchy L, definability stage by stage, inner models, relative consistency ideas, and the role of constructibility in independence arguments."
+  },
+  {
+    number: "20",
+    title: "Forcing and Independence",
+    href: withBase("branches/set-theory/lessons/"),
+    text: "Generic extensions, forcing conditions, names, forcing relations, preservation issues, and the independence of statements such as CH from standard axioms."
+  },
+  {
+    number: "21",
+    title: "Large Cardinals and Stronger Set Theories",
+    href: withBase("branches/set-theory/lessons/"),
+    text: "Inaccessible, measurable, and stronger large-cardinal notions, consistency strength, reflection phenomena, and the hierarchy of stronger axiomatic systems."
+  },
+];
+---
+
+<BaseLayout
+  title="Set Theory Lessons"
+  description="A sequential curriculum through axiomatic set theory, functions and relations, ordinals, cardinals, choice, transfinite methods, models, constructibility, and forcing."
+>
+  <section class="hub-page">
+    <SetTheorySidebar />
+
+    <div class="hub-main">
+      <section class="hub-hero">
+        <span class="eyebrow">Set Theory · Lessons</span>
+
+        <h1>Lessons</h1>
+
+        <p>
+          A sequential route from basic membership and axioms to transfinite
+          methods, cardinal arithmetic, choice principles, models of set theory,
+          constructibility, and the first ideas behind independence proofs.
+        </p>
+      </section>
+
+      <section class="hub-section lesson-index-section">
+        <div class="section-header">
+          <h2>Full lesson path</h2>
+
+          <p>
+            Closely related material is grouped into substantial lessons so the
+            sequence covers a wide portion of the subject without splitting one
+            idea into overlapping fragments.
+          </p>
+        </div>
+
+        <div class="lesson-timeline">
+          {
+            lessons.map((lesson) => (
+              <a class="lesson-card" href={lesson.href}>
+                <span class="lesson-number">{lesson.number}</span>
+
+                <div>
+                  <h3>{lesson.title}</h3>
+                  <p>{lesson.text}</p>
+                </div>
+
+                <span class="lesson-arrow" aria-hidden="true">→</span>
+              </a>
+            ))
+          }
+        </div>
+      </section>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .lesson-index-section {
+    margin-top: clamp(2rem, 5vw, 4rem);
+  }
+
+  .lesson-card {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .lesson-arrow {
+    color: var(--accent, #71e6ff);
+    font-size: 1.15rem;
+    transition: transform 180ms ease;
+  }
+
+  .lesson-card:hover .lesson-arrow,
+  .lesson-card:focus-visible .lesson-arrow {
+    transform: translateX(4px);
+  }
+
+  @media (max-width: 640px) {
+    .lesson-card {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .lesson-arrow {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lesson-arrow {
+      transition: none;
+    }
+  }
+</style>

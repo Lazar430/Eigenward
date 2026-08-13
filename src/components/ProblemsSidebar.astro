@@ -1,0 +1,18 @@
+---
+import { withBase } from "@/utils/paths";
+
+const items = [
+  { label: "Algebra", href: withBase("problems/") },
+  { label: "Analysis", href: withBase("problems/") },
+  { label: "Number Theory", href: withBase("problems/") },
+  { label: "Probability", href: withBase("problems/") }
+];
+---
+
+<aside class="hub-sidebar" aria-label="Problems navigation">
+  <span class="hub-sidebar-title">Problems</span>
+
+  <nav>
+    {items.map((item) => <a href={item.href}>{item.label}</a>)}
+  </nav>
+</aside>

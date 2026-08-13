@@ -1,0 +1,19 @@
+---
+import { withBase } from "@/utils/paths";
+
+const items = [
+  { label: "Home", href: withBase("branches/logic/") },
+  { label: "Lessons", href: withBase("branches/logic/lessons/") },
+  { label: "Problems", href: withBase("problems/logic/") },
+  { label: "Theorems", href: withBase("branches/logic/theorems/") },
+  { label: "Definitions", href: withBase("branches/logic/definitions/") }
+];
+---
+
+<aside class="hub-sidebar" aria-label="Mathematical Logic navigation">
+  <span class="hub-sidebar-title">Mathematical Logic</span>
+
+  <nav>
+    {items.map((item) => <a href={item.href}>{item.label}</a>)}
+  </nav>
+</aside>

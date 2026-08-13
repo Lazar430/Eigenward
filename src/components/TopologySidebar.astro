@@ -1,0 +1,19 @@
+---
+import { withBase } from "@/utils/paths";
+
+const items = [
+  { label: "Home", href: withBase("branches/topology/") },
+  { label: "Lessons", href: withBase("branches/topology/lessons/") },
+  { label: "Problems", href: withBase("problems/topology/") },
+  { label: "Theorems", href: withBase("branches/topology/theorems/") },
+  { label: "Definitions", href: withBase("branches/topology/definitions/") }
+];
+---
+
+<aside class="hub-sidebar" aria-label="Topology navigation">
+  <span class="hub-sidebar-title">Topology</span>
+
+  <nav>
+    {items.map((item) => <a href={item.href}>{item.label}</a>)}
+  </nav>
+</aside>

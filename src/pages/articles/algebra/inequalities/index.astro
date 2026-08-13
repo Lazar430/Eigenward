@@ -1,0 +1,55 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import katex from "katex";
+
+const displayMath = (tex: string) =>
+  katex.renderToString(tex, {
+    displayMode: true,
+    throwOnError: false
+  });
+
+const inlineMath = (tex: string) =>
+  katex.renderToString(tex, {
+    displayMode: false,
+    throwOnError: false
+  });
+---
+
+<BaseLayout
+  title="Inequalities: The Ins and Outs"
+  description="An exploration of the fundamental and also just mental mathematical inequalities out there."
+>
+  
+    
+    <article class="topic-article">
+      <header class="topic-hero">
+        <span class="eyebrow">Algebra · Mathematical Thechniques</span>
+        <h1>Inequalities: The Ins And Outs</h1>
+
+        <p>
+          A comprehensive overview of the dirty tricks galore subject of mathematical inequalities.
+        </p>
+      </header>
+
+      <nav class="topic-toc" aria-label="Page sections">
+        <a href="#broad-stroke">Broad Stroke</a>
+        <a href="#quick-examples">Quick Examples</a>
+        <a href="#a-deeper-look">A Deeper Look</a>
+      </nav>
+
+      <section class="topic-section" id="broad-stroke">
+        <h2>Broad Stroke</h2>
+	Mathematics, just like today's society, is full of inequalites.
+      </section>
+
+      <section class="topic-section" id="a-deeper-look">
+        <h2>Cauchy, Schwarz And All That</h2>
+
+	<p>
+	  
+	</p>
+	
+      </section>
+    </article>
+
+</BaseLayout>

@@ -1,0 +1,146 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import LinearAlgebraSidebar from "../../../components/LinearAlgebraSidebar.astro";
+import Math from "../../../components/Math.astro";
+import { withBase } from "@/utils/paths";
+
+const problemCards = [
+  {
+    branch: "Bases \u00b7 Dimension",
+    title: "A Basis Hidden in Generators",
+    href: withBase("problems/linear-algebra/basis-from-generators/"),
+    ariaLabel: "Open A Basis Hidden in Generators",
+    formula: String.raw`\operatorname{span}\left\{
+\begin{pmatrix}1\\0\\1\\2\end{pmatrix},
+\begin{pmatrix}2\\1\\3\\5\end{pmatrix},
+\begin{pmatrix}3\\1\\4\\7\end{pmatrix},
+\begin{pmatrix}0\\1\\1\\1\end{pmatrix}
+\right\}`,
+    text: "Extract a basis from a redundant generating family, determine the dimension of the span, and express the discarded vectors in the chosen basis."
+  },
+  {
+    branch: "Linear Maps \u00b7 Parameters",
+    title: "Rank Under a Parameter",
+    href: withBase("problems/linear-algebra/rank-under-a-parameter/"),
+    ariaLabel: "Open Rank Under a Parameter",
+    formula: String.raw`A_t=\begin{pmatrix}1&t&1\\t&1&t\\1&t&1\end{pmatrix},\qquad \operatorname{rank}(A_t)=?`,
+    text: "Determine every parameter value at which the rank changes, then describe the kernel and image in each case."
+  },
+  {
+    branch: "Determinants \u00b7 Structure",
+    title: "A Determinant Without Expansion",
+    href: withBase("problems/linear-algebra/determinant-without-expansion/"),
+    ariaLabel: "Open A Determinant Without Expansion",
+    formula: String.raw`\det\begin{pmatrix}a&b&b&b\\b&a&b&b\\b&b&a&b\\b&b&b&a\end{pmatrix}`,
+    text: "Evaluate a highly symmetric determinant without cofactor expansion, using invariant subspaces or elementary row and column operations."
+  },
+  {
+    branch: "Eigenvalues \u00b7 Diagonalization",
+    title: "Diagonalizable or Not?",
+    href: withBase("problems/linear-algebra/diagonalizable-or-not/"),
+    ariaLabel: "Open Diagonalizable or Not?",
+    formula: String.raw`A=\begin{pmatrix}2&1&0\\0&2&1\\0&0&2\end{pmatrix},\qquad A\stackrel{?}{=}PDP^{-1}`,
+    text: "Decide whether the operator is diagonalizable, compare algebraic and geometric multiplicities, and identify the obstruction."
+  },
+  {
+    branch: "Inner Products \u00b7 Projection",
+    title: "Projection Without Guesswork",
+    href: withBase("problems/linear-algebra/projection-without-guesswork/"),
+    ariaLabel: "Open Projection Without Guesswork",
+    formula: String.raw`\operatorname{proj}_W(v),\qquad W=\operatorname{span}\{(1,1,0),(1,0,1)\},\quad v=(2,-1,3)`,
+    text: "Find the orthogonal projection onto a non-orthonormal spanning set and compare Gram\u2013Schmidt with the normal-equation method."
+  },
+  {
+    branch: "Duality \u00b7 Linear Functionals",
+    title: "Reconstructing a Dual Basis",
+    href: withBase("problems/linear-algebra/reconstructing-a-dual-basis/"),
+    ariaLabel: "Open Reconstructing a Dual Basis",
+    formula: String.raw`\phi_i(v_j)=\delta_{ij},\qquad \{\phi_1,\phi_2,\phi_3\}\subset V^\ast`,
+    text: "Given a basis in coordinates, recover its dual basis explicitly and use the functionals to reconstruct arbitrary vectors."
+  },
+  {
+    branch: "Operators \u00b7 Nilpotence",
+    title: "Nilpotent but Not Zero",
+    href: withBase("problems/linear-algebra/nilpotent-but-not-zero/"),
+    ariaLabel: "Open Nilpotent but Not Zero",
+    formula: String.raw`T^4=0,\qquad T^3\neq0,\qquad \dim V=7`,
+    text: "Determine what can be said about ranks, nullities, Jordan blocks, and the possible dimensions of successive kernels."
+  },
+  {
+    branch: "Spectral Theory \u00b7 Commuting Maps",
+    title: "Commuting Operators",
+    href: withBase("problems/linear-algebra/commuting-operators/"),
+    ariaLabel: "Open Commuting Operators",
+    formula: String.raw`ST=TS,\qquad S=S^\ast,\qquad T=T^\ast`,
+    text: "Show how commutation interacts with eigenspaces and determine when two self-adjoint operators admit a common orthonormal eigenbasis."
+  },
+];
+---
+
+<BaseLayout title="Linear Algebra Problems" description="A collection of linear algebra problems on bases, rank, determinants, eigenvalues, duality, inner products, canonical forms, and spectral theory.">
+  <section class="hub-page">
+    <LinearAlgebraSidebar />
+    <div class="hub-main">
+      <section class="hub-hero">
+        <span class="eyebrow">Linear Algebra · Problems</span>
+        <h1>Problems</h1>
+        <p>
+          A dedicated shelf of linear-algebra problems, ranging from structural
+          exercises to computational puzzles and proof problems. The finished
+          archive can later be filtered by topic, method, difficulty, and prerequisite.
+        </p>
+      </section>
+
+      <section class="problems-list" aria-labelledby="linear-algebra-problems-title">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">Selected problems</span>
+            <h2 id="linear-algebra-problems-title" class="section-title">Problem shelf</h2>
+          </div>
+          <p>The equations are representative snapshots of each problem rather than full statements.</p>
+        </div>
+
+        <div class="problem-card-grid">
+          {problemCards.map((problem) => (
+            <a class="problem-card" href={problem.href} aria-label={problem.ariaLabel}>
+              <header class="problem-card-header">
+                <span class="problem-branch">{problem.branch}</span>
+                <h3>{problem.title}</h3>
+              </header>
+
+              <div class="problem-formula" role="img" aria-label={`Representative equation for ${problem.title}`}>
+                <Math tex={problem.formula} display />
+              </div>
+
+              <p class="problem-description">{problem.text}</p>
+              <span class="read-label" aria-hidden="true">View problem <span>→</span></span>
+            </a>
+          ))}
+        </div>
+      </section>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .problems-list { width: 100%; margin-top: clamp(2rem, 5vw, 4rem); }
+  .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 2rem; margin-bottom: 1.25rem; }
+  .section-heading p { max-width: 520px; margin: 0; color: rgba(239, 234, 255, 0.62); line-height: 1.65; }
+  .section-title { margin: 0.45rem 0 0; font-size: clamp(1.7rem, 3.5vw, 2.7rem); letter-spacing: -0.045em; }
+  .problem-card-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+  .problem-card { display: grid; gap: 1.2rem; min-width: 0; border: 1px solid rgba(255,255,255,.11); border-radius: 1.4rem; padding: clamp(1.15rem,2.5vw,1.75rem); color: inherit; background: radial-gradient(circle at 85% 0%, rgba(113,230,255,.09), transparent 30%), linear-gradient(145deg, rgba(35,23,67,.86), rgba(13,9,29,.91)); box-shadow: 0 24px 70px rgba(0,0,0,.27), inset 0 1px 0 rgba(255,255,255,.045); text-decoration: none; overflow: hidden; transition: transform 180ms ease,border-color 180ms ease,box-shadow 180ms ease; }
+  .problem-card:hover, .problem-card:focus-visible { transform: translateY(-4px); border-color: rgba(113,230,255,.44); box-shadow: 0 30px 85px rgba(0,0,0,.34),0 0 28px rgba(113,230,255,.08); outline: none; }
+  .problem-card-header { display: grid; gap: .65rem; }
+  .problem-branch { color: var(--accent,#71e6ff); font-size: .75rem; font-weight: 800; letter-spacing: .15em; text-transform: uppercase; }
+  .problem-card h3 { margin: 0; font-size: clamp(1.65rem,3.2vw,2.9rem); line-height: 1; letter-spacing: -.05em; }
+  .problem-formula { display: grid; place-items: center; min-width: 0; padding: clamp(1rem,3vw,2rem) 0; color: rgba(247,244,255,.94); overflow: auto hidden; }
+  .problem-formula :global(.katex-display) { max-width: 100%; margin: 0; }
+  .problem-formula :global(.katex) { font-size: clamp(.92rem,1.45vw,1.22rem); }
+  .problem-description { max-width: 900px; margin: 0; color: rgba(239,234,255,.72); font-size: clamp(.96rem,1.25vw,1.06rem); line-height: 1.72; }
+  .read-label { display: inline-flex; align-items: center; gap: .55rem; width: fit-content; color: rgba(239,248,255,.9); font-size: .82rem; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; }
+  .read-label span { color: var(--accent,#71e6ff); font-size: 1.15rem; transition: transform 180ms ease; }
+  .problem-card:hover .read-label span, .problem-card:focus-visible .read-label span { transform: translateX(4px); }
+  @media (max-width:900px) { .section-heading { display:grid; align-items:initial; } }
+  @media (max-width:600px) { .problem-card { border-radius:1rem; } }
+  @media (prefers-reduced-motion:reduce) { .problem-card,.read-label span { transition:none; } .problem-card:hover,.problem-card:focus-visible { transform:none; } }
+</style>

@@ -1,0 +1,568 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import ComplexAnalysisSidebar from "../../../../components/ComplexAnalysisSidebar.astro";
+
+const items = [
+  "Argument Principle",
+  "Casorati\u2013Weierstrass Theorem",
+  "Cauchy Estimates",
+  "Cauchy's Integral Formula",
+  "Cauchy's Integral Theorem",
+  "Cauchy\u2013Goursat Theorem",
+  "Fundamental Theorem of Algebra",
+  "Great Picard Theorem",
+  "Hurwitz's Theorem",
+  "Identity Theorem",
+  "Jordan's Lemma",
+  "Liouville's Theorem",
+  "Maximum Modulus Principle",
+  "Minimum Modulus Principle",
+  "Montel's Theorem",
+  "Morera's Theorem",
+  "Open Mapping Theorem",
+  "Residue Theorem",
+  "Riemann Mapping Theorem",
+  "Rouch\u00e9's Theorem",
+  "Schwarz Lemma",
+  "Schwarz Reflection Principle",
+  "Schwarz\u2013Pick Theorem",
+  "Weierstrass Theorem on Locally Uniform Limits"
+];
+
+const letters = [...new Set(items.map((item) => item[0].toUpperCase()))];
+---
+
+<BaseLayout
+  title="Complex Analysis Theorems"
+  description="An alphabetical index of complex analysis theorems."
+>
+  <section class="hub-page">
+    <ComplexAnalysisSidebar />
+
+    <div class="hub-main">
+      <section class="hub-hero">
+        <span class="eyebrow">Complex Analysis · Theorems</span>
+
+        <h1>Theorems</h1>
+
+        <p>
+          An alphabetical index of the principal integral, uniqueness, singularity, zero-counting, mapping, compactness, and rigidity theorems used throughout complex analysis.
+        </p>
+      </section>
+
+      <section class="index-tools" aria-label="Theorems index controls">
+        <label class="search-control">
+          <span>Search theorems</span>
+
+          <input
+            id="theorem-search"
+            type="search"
+            placeholder="Try “Cauchy”, “Schwarz”, “Rouché”…"
+            autocomplete="off"
+          />
+        </label>
+
+        <nav class="alphabet-nav" aria-label="Jump to letter">
+          {
+            letters.map((letter) => (
+              <a href={`#theorems-${letter}`}>{letter}</a>
+            ))
+          }
+        </nav>
+
+        <output id="theorem-result-count" aria-live="polite">
+          {items.length} theorems
+        </output>
+      </section>
+
+      <div class="alphabet-index" id="theorem-index">
+        <section class="alphabet-group" data-alpha-group>
+          <h2 id="theorems-A">A</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="argument-principle"
+                class="index-entry"
+                href="#argument-principle"
+                data-index-entry
+                data-search-term="argument principle"
+              >
+                <span>Argument Principle</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="theorems-C">C</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="casorati-weierstrass-theorem"
+                class="index-entry"
+                href="#casorati-weierstrass-theorem"
+                data-index-entry
+                data-search-term="casorati\u2013weierstrass theorem"
+              >
+                <span>Casorati–Weierstrass Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="cauchy-estimates"
+                class="index-entry"
+                href="#cauchy-estimates"
+                data-index-entry
+                data-search-term="cauchy estimates"
+              >
+                <span>Cauchy Estimates</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="cauchy-s-integral-formula"
+                class="index-entry"
+                href="#cauchy-s-integral-formula"
+                data-index-entry
+                data-search-term="cauchy's integral formula"
+              >
+                <span>Cauchy's Integral Formula</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="cauchy-s-integral-theorem"
+                class="index-entry"
+                href="#cauchy-s-integral-theorem"
+                data-index-entry
+                data-search-term="cauchy's integral theorem"
+              >
+                <span>Cauchy's Integral Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="cauchy-goursat-theorem"
+                class="index-entry"
+                href="#cauchy-goursat-theorem"
+                data-index-entry
+                data-search-term="cauchy\u2013goursat theorem"
+              >
+                <span>Cauchy–Goursat Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="theorems-F">F</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="fundamental-theorem-of-algebra"
+                class="index-entry"
+                href="#fundamental-theorem-of-algebra"
+                data-index-entry
+                data-search-term="fundamental theorem of algebra"
+              >
+                <span>Fundamental Theorem of Algebra</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="theorems-G">G</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="great-picard-theorem"
+                class="index-entry"
+                href="#great-picard-theorem"
+                data-index-entry
+                data-search-term="great picard theorem"
+              >
+                <span>Great Picard Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="theorems-H">H</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="hurwitz-s-theorem"
+                class="index-entry"
+                href="#hurwitz-s-theorem"
+                data-index-entry
+                data-search-term="hurwitz's theorem"
+              >
+                <span>Hurwitz's Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="theorems-I">I</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="identity-theorem"
+                class="index-entry"
+                href="#identity-theorem"
+                data-index-entry
+                data-search-term="identity theorem"
+              >
+                <span>Identity Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="theorems-J">J</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="jordan-s-lemma"
+                class="index-entry"
+                href="#jordan-s-lemma"
+                data-index-entry
+                data-search-term="jordan's lemma"
+              >
+                <span>Jordan's Lemma</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="theorems-L">L</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="liouville-s-theorem"
+                class="index-entry"
+                href="#liouville-s-theorem"
+                data-index-entry
+                data-search-term="liouville's theorem"
+              >
+                <span>Liouville's Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="theorems-M">M</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="maximum-modulus-principle"
+                class="index-entry"
+                href="#maximum-modulus-principle"
+                data-index-entry
+                data-search-term="maximum modulus principle"
+              >
+                <span>Maximum Modulus Principle</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="minimum-modulus-principle"
+                class="index-entry"
+                href="#minimum-modulus-principle"
+                data-index-entry
+                data-search-term="minimum modulus principle"
+              >
+                <span>Minimum Modulus Principle</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="montel-s-theorem"
+                class="index-entry"
+                href="#montel-s-theorem"
+                data-index-entry
+                data-search-term="montel's theorem"
+              >
+                <span>Montel's Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="morera-s-theorem"
+                class="index-entry"
+                href="#morera-s-theorem"
+                data-index-entry
+                data-search-term="morera's theorem"
+              >
+                <span>Morera's Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="theorems-O">O</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="open-mapping-theorem"
+                class="index-entry"
+                href="#open-mapping-theorem"
+                data-index-entry
+                data-search-term="open mapping theorem"
+              >
+                <span>Open Mapping Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="theorems-R">R</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="residue-theorem"
+                class="index-entry"
+                href="#residue-theorem"
+                data-index-entry
+                data-search-term="residue theorem"
+              >
+                <span>Residue Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="riemann-mapping-theorem"
+                class="index-entry"
+                href="#riemann-mapping-theorem"
+                data-index-entry
+                data-search-term="riemann mapping theorem"
+              >
+                <span>Riemann Mapping Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="rouch-s-theorem"
+                class="index-entry"
+                href="#rouch-s-theorem"
+                data-index-entry
+                data-search-term="rouch\u00e9's theorem"
+              >
+                <span>Rouché's Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="theorems-S">S</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="schwarz-lemma"
+                class="index-entry"
+                href="#schwarz-lemma"
+                data-index-entry
+                data-search-term="schwarz lemma"
+              >
+                <span>Schwarz Lemma</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="schwarz-reflection-principle"
+                class="index-entry"
+                href="#schwarz-reflection-principle"
+                data-index-entry
+                data-search-term="schwarz reflection principle"
+              >
+                <span>Schwarz Reflection Principle</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="schwarz-pick-theorem"
+                class="index-entry"
+                href="#schwarz-pick-theorem"
+                data-index-entry
+                data-search-term="schwarz\u2013pick theorem"
+              >
+                <span>Schwarz–Pick Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="theorems-W">W</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="weierstrass-theorem-on-locally-uniform-limits"
+                class="index-entry"
+                href="#weierstrass-theorem-on-locally-uniform-limits"
+                data-index-entry
+                data-search-term="weierstrass theorem on locally uniform limits"
+              >
+                <span>Weierstrass Theorem on Locally Uniform Limits</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const search =
+    document.querySelector<HTMLInputElement>("#theorem-search");
+
+  const entries = Array.from(
+    document.querySelectorAll<HTMLElement>("[data-index-entry]"),
+  );
+
+  const groups = Array.from(
+    document.querySelectorAll<HTMLElement>("[data-alpha-group]"),
+  );
+
+  const resultCount =
+    document.querySelector<HTMLOutputElement>("#theorem-result-count");
+
+  const updateIndex = () => {
+    const query = search?.value.trim().toLowerCase() ?? "";
+    let visible = 0;
+
+    entries.forEach((entry) => {
+      const matches = (entry.dataset.searchTerm ?? "").includes(query);
+
+      entry.hidden = !matches;
+
+      if (matches) visible += 1;
+    });
+
+    groups.forEach((group) => {
+      const hasVisibleEntries = Array.from(
+        group.querySelectorAll<HTMLElement>("[data-index-entry]"),
+      ).some((entry) => !entry.hidden);
+
+      group.hidden = !hasVisibleEntries;
+    });
+
+    if (resultCount) {
+      resultCount.textContent =
+        query.length === 0
+          ? `${visible} theorems`
+          : `${visible} matching theorem${visible === 1 ? "" : "s"}`;
+    }
+  };
+
+  search?.addEventListener("input", updateIndex);
+</script>
+
+<style>
+  .index-tools {
+    display: grid;
+    gap: 1rem;
+    margin-top: clamp(2rem, 5vw, 4rem);
+    padding: 1.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 1.2rem;
+    background: rgba(17, 11, 37, 0.55);
+  }
+
+  .search-control {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .search-control span {
+    color: var(--accent, #71e6ff);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+  }
+
+  .search-control input {
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.11);
+    border-radius: 0.8rem;
+    padding: 0.85rem 1rem;
+    color: inherit;
+    background: rgba(5, 5, 18, 0.42);
+    font: inherit;
+  }
+
+  .search-control input:focus {
+    border-color: rgba(113, 230, 255, 0.48);
+    outline: none;
+  }
+
+  .alphabet-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .alphabet-nav a {
+    display: grid;
+    place-items: center;
+    min-width: 2.1rem;
+    min-height: 2.1rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.55rem;
+    color: rgba(239, 234, 255, 0.76);
+    text-decoration: none;
+  }
+
+  .alphabet-nav a:hover,
+  .alphabet-nav a:focus-visible {
+    border-color: rgba(113, 230, 255, 0.42);
+    color: var(--accent, #71e6ff);
+    outline: none;
+  }
+
+  #theorem-result-count {
+    color: rgba(239, 234, 255, 0.62);
+    font-size: 0.9rem;
+  }
+
+  .alphabet-index {
+    display: grid;
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .alphabet-group {
+    display: grid;
+    grid-template-columns: 72px minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .alphabet-group h2 {
+    position: sticky;
+    top: 1rem;
+    align-self: start;
+    margin: 0;
+    color: var(--accent, #71e6ff);
+    font-size: clamp(2rem, 5vw, 3.8rem);
+    line-height: 1;
+  }
+
+  .alphabet-entry-list {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .index-entry {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 0.8rem;
+    padding: 0.85rem 1rem;
+    color: inherit;
+    background: rgba(255, 255, 255, 0.025);
+    text-decoration: none;
+  }
+
+  .index-entry:hover,
+  .index-entry:focus-visible {
+    border-color: rgba(113, 230, 255, 0.32);
+    background: rgba(113, 230, 255, 0.045);
+    outline: none;
+  }
+
+  .index-arrow {
+    color: var(--accent, #71e6ff);
+  }
+
+  [hidden] {
+    display: none !important;
+  }
+
+  @media (max-width: 600px) {
+    .alphabet-group {
+      grid-template-columns: 1fr;
+    }
+
+    .alphabet-group h2 {
+      position: static;
+    }
+  }
+</style>

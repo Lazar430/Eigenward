@@ -1,0 +1,350 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import RealAnalysisSidebar from "../../../components/RealAnalysisSidebar.astro";
+import Math from "../../../components/Math.astro";
+import { withBase } from "@/utils/paths";
+
+const problemCards = [
+  {
+    branch: "Completeness \u00b7 Suprema",
+    title: "A Supremum Becomes a Limit",
+    href: withBase("problems/real-analysis/supremum-becomes-a-limit/"),
+    ariaLabel: "Open A Supremum Becomes a Limit",
+    formula: String.raw`a_n\uparrow,\qquad a_n\le M,
+\qquad
+\lim_{n\to\infty}a_n=\sup\{a_n:n\in\mathbb N\}`,
+    text: "Prove the monotone convergence principle directly from the least-upper-bound property and identify exactly where completeness enters."
+  },
+  {
+    branch: "Sequences \u00b7 Oscillation",
+    title: "Finding limsup and liminf",
+    href: withBase("problems/real-analysis/limsup-liminf/"),
+    ariaLabel: "Open Finding limsup and liminf",
+    formula: String.raw`a_n=(-1)^n+\frac{\sin n}{n},
+\qquad
+\limsup_{n\to\infty}a_n\;?,\quad
+\liminf_{n\to\infty}a_n\;?`,
+    text: "Separate persistent oscillation from a vanishing perturbation and compute the upper and lower limiting behavior."
+  },
+  {
+    branch: "Continuity \u00b7 Compactness",
+    title: "Uniform Continuity from Compactness",
+    href: withBase("problems/real-analysis/uniform-continuity-from-compactness/"),
+    ariaLabel: "Open Uniform Continuity from Compactness",
+    formula: String.raw`f:[a,b]\to\mathbb R\text{ continuous}
+\quad\Longrightarrow\quad
+\forall\varepsilon>0\ \exists\delta>0\ 
+\forall x,y\in[a,b]`,
+    text: "Prove the Heine-Cantor theorem from first principles and compare a compactness proof with a contradiction-by-sequences proof."
+  },
+  {
+    branch: "Differentiation \u00b7 Pathology",
+    title: "A Derivative Need Not Be Continuous",
+    href: withBase("problems/real-analysis/discontinuous-derivative/"),
+    ariaLabel: "Open A Derivative Need Not Be Continuous",
+    formula: String.raw`f(x)=
+\begin{cases}
+x^2\sin(1/x),&x\neq0,\\
+0,&x=0,
+\end{cases}
+\qquad
+f'(0)\;?`,
+    text: "Determine differentiability at the origin, compute the derivative away from zero, and analyze the failure of continuity of the derivative."
+  },
+  {
+    branch: "Riemann Integration \u00b7 Discontinuities",
+    title: "When Is a Wild Function Integrable?",
+    href: withBase("problems/real-analysis/riemann-integrability/"),
+    ariaLabel: "Open When Is a Wild Function Integrable?",
+    formula: String.raw`f(x)=
+\begin{cases}
+1/q,&x=p/q\in[0,1]\text{ in lowest terms},\\
+0,&x\notin\mathbb Q,
+\end{cases}
+\qquad
+\int_0^1 f(x)\,dx\;?`,
+    text: "Study a Thomae-type function, locate its discontinuities, and prove Riemann integrability without trying to integrate pointwise."
+  },
+  {
+    branch: "Series \u00b7 Rearrangement",
+    title: "Conditional Convergence Has Teeth",
+    href: withBase("problems/real-analysis/conditional-rearrangement/"),
+    ariaLabel: "Open Conditional Convergence Has Teeth",
+    formula: String.raw`\sum_{n=1}^{\infty}\frac{(-1)^{n-1}}{n},
+\qquad
+\sum_{k=1}^{\infty}a_{\pi(k)}`,
+    text: "Investigate what survives under rearrangement of a conditionally convergent series and contrast it with absolute convergence."
+  },
+  {
+    branch: "Functional Sequences \u00b7 Uniform Convergence",
+    title: "Pointwise but Not Uniform",
+    href: withBase("problems/real-analysis/pointwise-not-uniform/"),
+    ariaLabel: "Open Pointwise but Not Uniform",
+    formula: String.raw`f_n(x)=x^n,\qquad x\in[0,1],
+\qquad
+f_n(x)\longrightarrow f(x)`,
+    text: "Find the pointwise limit, prove that convergence is not uniform, and identify intervals on which uniform convergence is restored."
+  },
+  {
+    branch: "Interchanging Limits \u00b7 Integration",
+    title: "Can the Limit Enter the Integral?",
+    href: withBase("problems/real-analysis/limit-under-integral/"),
+    ariaLabel: "Open Can the Limit Enter the Integral?",
+    formula: String.raw`\lim_{n\to\infty}\int_0^1 f_n(x)\,dx
+\stackrel{?}{=}
+\int_0^1\lim_{n\to\infty}f_n(x)\,dx`,
+    text: "Determine useful hypotheses that justify the interchange and construct a counterexample showing why pointwise convergence alone is insufficient."
+  },
+  {
+    branch: "Power Series \u00b7 Radius of Convergence",
+    title: "A Radius Hidden in the Coefficients",
+    href: withBase("problems/real-analysis/radius-of-convergence/"),
+    ariaLabel: "Open A Radius Hidden in the Coefficients",
+    formula: String.raw`\sum_{n=1}^{\infty}
+\frac{n!}{n^n}(x-2)^n,
+\qquad
+R\;?`,
+    text: "Find the radius of convergence and analyze the endpoints separately using asymptotics and standard convergence tests."
+  },
+  {
+    branch: "Metric Spaces \u00b7 Fixed Points",
+    title: "Iteration Finds the Solution",
+    href: withBase("problems/real-analysis/contraction-fixed-point/"),
+    ariaLabel: "Open Iteration Finds the Solution",
+    formula: String.raw`x_{n+1}=T(x_n),\qquad
+d(Tx,Ty)\le q\,d(x,y),\quad 0<q<1`,
+    text: "Use contraction estimates to prove convergence of the iteration, identify its limit, and obtain an explicit error bound."
+  },
+];
+---
+
+<BaseLayout
+  title="Real Analysis Problems"
+  description="A collection of real analysis problems on completeness, limits, continuity, differentiation, integration, series, uniform convergence, power series, and metric spaces."
+>
+  <section class="hub-page">
+    <RealAnalysisSidebar />
+
+    <div class="hub-main">
+      <section class="hub-hero">
+        <span class="eyebrow">Real Analysis · Problems</span>
+
+        <h1>Problems</h1>
+
+        <p>
+          A dedicated archive of proof problems, counterexamples, convergence
+          questions, and calculations whose main difficulty is analytical rather
+          than merely computational.
+        </p>
+      </section>
+
+      <section class="problems-list" aria-labelledby="real-analysis-problems-title">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">Selected problems</span>
+
+            <h2 id="real-analysis-problems-title" class="section-title">
+              Problem shelf
+            </h2>
+          </div>
+
+          <p>
+            The displayed formulas are representative snapshots rather than
+            complete problem statements.
+          </p>
+        </div>
+
+        <div class="problem-card-grid">
+          {
+            problemCards.map((problem) => (
+              <a
+                class="problem-card"
+                href={problem.href}
+                aria-label={problem.ariaLabel}
+              >
+                <header class="problem-card-header">
+                  <span class="problem-branch">{problem.branch}</span>
+                  <h3>{problem.title}</h3>
+                </header>
+
+                <div
+                  class="problem-formula"
+                  role="img"
+                  aria-label={`Representative equation for ${problem.title}`}
+                >
+                  <Math tex={problem.formula} display />
+                </div>
+
+                <p class="problem-description">{problem.text}</p>
+
+                <span class="read-label" aria-hidden="true">
+                  View problem <span>→</span>
+                </span>
+              </a>
+            ))
+          }
+        </div>
+      </section>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .problems-list {
+    width: 100%;
+    margin-top: clamp(2rem, 5vw, 4rem);
+  }
+
+  .section-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .section-heading p {
+    max-width: 520px;
+    margin: 0;
+    color: rgba(239, 234, 255, 0.62);
+    line-height: 1.65;
+  }
+
+  .section-title {
+    margin: 0.45rem 0 0;
+    font-size: clamp(1.7rem, 3.5vw, 2.7rem);
+    letter-spacing: -0.045em;
+  }
+
+  .problem-card-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .problem-card {
+    display: grid;
+    gap: 1.2rem;
+    min-width: 0;
+    border: 1px solid rgba(255, 255, 255, 0.11);
+    border-radius: 1.4rem;
+    padding: clamp(1.15rem, 2.5vw, 1.75rem);
+    color: inherit;
+    background:
+      radial-gradient(circle at 85% 0%, rgba(113, 230, 255, 0.09), transparent 30%),
+      linear-gradient(145deg, rgba(35, 23, 67, 0.86), rgba(13, 9, 29, 0.91));
+    box-shadow:
+      0 24px 70px rgba(0, 0, 0, 0.27),
+      inset 0 1px 0 rgba(255, 255, 255, 0.045);
+    text-decoration: none;
+    overflow: hidden;
+    transition:
+      transform 180ms ease,
+      border-color 180ms ease,
+      box-shadow 180ms ease;
+  }
+
+  .problem-card:hover,
+  .problem-card:focus-visible {
+    transform: translateY(-4px);
+    border-color: rgba(113, 230, 255, 0.44);
+    box-shadow:
+      0 30px 85px rgba(0, 0, 0, 0.34),
+      0 0 28px rgba(113, 230, 255, 0.08);
+    outline: none;
+  }
+
+  .problem-card-header {
+    display: grid;
+    gap: 0.65rem;
+  }
+
+  .problem-branch {
+    color: var(--accent, #71e6ff);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .problem-card h3 {
+    margin: 0;
+    font-size: clamp(1.65rem, 3.2vw, 2.9rem);
+    line-height: 1;
+    letter-spacing: -0.05em;
+  }
+
+  .problem-formula {
+    display: grid;
+    place-items: center;
+    min-width: 0;
+    padding: clamp(1rem, 3vw, 2rem) 0;
+    color: rgba(247, 244, 255, 0.94);
+    overflow: auto hidden;
+  }
+
+  .problem-formula :global(.katex-display) {
+    max-width: 100%;
+    margin: 0;
+  }
+
+  .problem-formula :global(.katex) {
+    font-size: clamp(0.92rem, 1.45vw, 1.22rem);
+  }
+
+  .problem-description {
+    max-width: 900px;
+    margin: 0;
+    color: rgba(239, 234, 255, 0.72);
+    font-size: clamp(0.96rem, 1.25vw, 1.06rem);
+    line-height: 1.72;
+  }
+
+  .read-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    width: fit-content;
+    color: rgba(239, 248, 255, 0.9);
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  .read-label span {
+    color: var(--accent, #71e6ff);
+    font-size: 1.15rem;
+    transition: transform 180ms ease;
+  }
+
+  .problem-card:hover .read-label span,
+  .problem-card:focus-visible .read-label span {
+    transform: translateX(4px);
+  }
+
+  @media (max-width: 900px) {
+    .section-heading {
+      display: grid;
+      align-items: initial;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .problem-card {
+      border-radius: 1rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .problem-card,
+    .read-label span {
+      transition: none;
+    }
+
+    .problem-card:hover,
+    .problem-card:focus-visible {
+      transform: none;
+    }
+  }
+</style>

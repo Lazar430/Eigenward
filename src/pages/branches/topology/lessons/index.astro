@@ -1,0 +1,219 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import TopologySidebar from "../../../../components/TopologySidebar.astro";
+import { withBase } from "@/utils/paths";
+
+const lessons = [
+  {
+    number: "01",
+    title: "Topological Spaces",
+    href: withBase("branches/topology/lessons/"),
+    text: "Topology axioms, open and closed sets, trivial and discrete topologies, neighborhoods, interior, closure, boundary, accumulation points, and comparison of topologies."
+  },
+  {
+    number: "02",
+    title: "Bases and Subbases",
+    href: withBase("branches/topology/lessons/"),
+    text: "Bases, local bases, subbases, generated topologies, basis criteria, second-countable examples, and efficient descriptions of standard topological spaces."
+  },
+  {
+    number: "03",
+    title: "Subspaces",
+    href: withBase("branches/topology/lessons/"),
+    text: "Subspace topology, inherited open and closed sets, closure and interior relative to a subspace, embeddings, and the behavior of topological properties under restriction."
+  },
+  {
+    number: "04",
+    title: "Continuous Maps and Homeomorphisms",
+    href: withBase("branches/topology/lessons/"),
+    text: "Continuity through inverse images, equivalent continuity criteria, homeomorphisms, embeddings, open and closed maps, and topological invariants."
+  },
+  {
+    number: "05",
+    title: "Convergence, Nets, and Filters",
+    href: withBase("branches/topology/lessons/"),
+    text: "Convergence of sequences, first-countability issues, nets, subnets, filters, ultrafilters, and characterizations of closure, compactness, and continuity beyond metric spaces."
+  },
+  {
+    number: "06",
+    title: "Product Spaces",
+    href: withBase("branches/topology/lessons/"),
+    text: "Finite and arbitrary products, product topology, projections, basis elements, universal properties, continuity into products, and the distinction between product and box topologies."
+  },
+  {
+    number: "07",
+    title: "Quotient Spaces and Identification Maps",
+    href: withBase("branches/topology/lessons/"),
+    text: "Quotient topologies, quotient maps, saturation, identifications, gluing constructions, cones, suspensions, and testing continuity out of quotient spaces."
+  },
+  {
+    number: "08",
+    title: "Connectedness",
+    href: withBase("branches/topology/lessons/"),
+    text: "Connected spaces, separations, clopen sets, continuous images, connected subsets of the real line, components, and maximal connected subspaces."
+  },
+  {
+    number: "09",
+    title: "Path Connectedness and Local Connectedness",
+    href: withBase("branches/topology/lessons/"),
+    text: "Paths, path components, local connectedness, local path connectedness, relations among the various notions of connectedness, and standard counterexamples."
+  },
+  {
+    number: "10",
+    title: "Compactness",
+    href: withBase("branches/topology/lessons/"),
+    text: "Open-cover compactness, finite intersection property, compact subsets, compact images, closed subsets of compact spaces, and compactness in Hausdorff spaces."
+  },
+  {
+    number: "11",
+    title: "Compactness in Metric and Ordered Spaces",
+    href: withBase("branches/topology/lessons/"),
+    text: "Sequential compactness, total boundedness, completeness, Bolzano\u2013Weierstrass properties, Heine\u2013Borel phenomena, and compactness criteria in metric spaces."
+  },
+  {
+    number: "12",
+    title: "Local Compactness and Compactifications",
+    href: withBase("branches/topology/lessons/"),
+    text: "Locally compact spaces, one-point compactification, compact Hausdorff extensions, proper maps, and the relation between local and global compactness."
+  },
+  {
+    number: "13",
+    title: "Separation Axioms",
+    href: withBase("branches/topology/lessons/"),
+    text: "T0, T1, Hausdorff, regular, completely regular, and normal spaces; implications among them; uniqueness of limits; and separation by neighborhoods."
+  },
+  {
+    number: "14",
+    title: "Countability and Covering Properties",
+    href: withBase("branches/topology/lessons/"),
+    text: "First and second countability, separability, Lindel\u00f6f spaces, hereditary behavior, countable bases, and the interaction between countability and metrization."
+  },
+  {
+    number: "15",
+    title: "Urysohn Lemma and Tietze Extension",
+    href: withBase("branches/topology/lessons/"),
+    text: "Normality, separation of closed sets by continuous functions, Urysohn's lemma, extension of continuous real-valued functions, and the role of partitions of neighborhoods."
+  },
+  {
+    number: "16",
+    title: "Metrization",
+    href: withBase("branches/topology/lessons/"),
+    text: "Metrizable spaces, pseudometrics, Urysohn metrization, metrization criteria, second countability, regularity, and examples of nonmetrizable spaces."
+  },
+  {
+    number: "17",
+    title: "Paracompactness and Partitions of Unity",
+    href: withBase("branches/topology/lessons/"),
+    text: "Locally finite covers, refinements, paracompact spaces, partitions of unity, metric-space paracompactness, and why these tools matter in geometry and analysis."
+  },
+  {
+    number: "18",
+    title: "Function Spaces and Compact-Open Topology",
+    href: withBase("branches/topology/lessons/"),
+    text: "Spaces of continuous maps, pointwise and uniform convergence topologies, compact-open topology, evaluation maps, and the topology of families of functions."
+  },
+  {
+    number: "19",
+    title: "Topological Manifolds",
+    href: withBase("branches/topology/lessons/"),
+    text: "Local Euclidean structure, charts and atlases at the purely topological level, second countability, Hausdorff conditions, boundary, and examples of low-dimensional manifolds."
+  },
+  {
+    number: "20",
+    title: "Advanced Compactness and Product Theorems",
+    href: withBase("branches/topology/lessons/"),
+    text: "Alexander's subbase theorem, ultrafilter characterizations, Tychonoff's theorem, product compactness, and the role of choice principles in general topology."
+  },
+];
+---
+
+<BaseLayout
+  title="Topology Lessons"
+  description="A sequential curriculum through general topology, from open sets and continuity to products, quotients, compactness, separation, metrization, and paracompactness."
+>
+  <section class="hub-page">
+    <TopologySidebar />
+
+    <div class="hub-main">
+      <section class="hub-hero">
+        <span class="eyebrow">Topology · Lessons</span>
+
+        <h1>Lessons</h1>
+
+        <p>
+          A sequential route through general topology. The progression begins
+          with open sets and continuity, then develops the main constructions
+          and global properties of spaces before moving into metrization,
+          compactification, and other structural results.
+        </p>
+      </section>
+
+      <section class="hub-section lesson-index-section">
+        <div class="section-header">
+          <h2>Full lesson path</h2>
+
+          <p>
+            The list is intentionally organized into substantial non-overlapping
+            units, with later lessons relying freely on the constructions and
+            separation properties introduced earlier.
+          </p>
+        </div>
+
+        <div class="lesson-timeline">
+          {
+            lessons.map((lesson) => (
+              <a class="lesson-card" href={lesson.href}>
+                <span class="lesson-number">{lesson.number}</span>
+
+                <div>
+                  <h3>{lesson.title}</h3>
+                  <p>{lesson.text}</p>
+                </div>
+
+                <span class="lesson-arrow" aria-hidden="true">→</span>
+              </a>
+            ))
+          }
+        </div>
+      </section>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .lesson-index-section {
+    margin-top: clamp(2rem, 5vw, 4rem);
+  }
+
+  .lesson-card {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .lesson-arrow {
+    color: var(--accent, #71e6ff);
+    font-size: 1.15rem;
+    transition: transform 180ms ease;
+  }
+
+  .lesson-card:hover .lesson-arrow,
+  .lesson-card:focus-visible .lesson-arrow {
+    transform: translateX(4px);
+  }
+
+  @media (max-width: 640px) {
+    .lesson-card {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .lesson-arrow {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lesson-arrow {
+      transition: none;
+    }
+  }
+</style>

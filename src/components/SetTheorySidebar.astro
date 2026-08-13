@@ -1,0 +1,19 @@
+---
+import { withBase } from "@/utils/paths";
+
+const items = [
+  { label: "Home", href: withBase("branches/set-theory/") },
+  { label: "Lessons", href: withBase("branches/set-theory/lessons/") },
+  { label: "Problems", href: withBase("problems/set-theory/") },
+  { label: "Theorems", href: withBase("branches/set-theory/theorems/") },
+  { label: "Definitions", href: withBase("branches/set-theory/definitions/") }
+];
+---
+
+<aside class="hub-sidebar" aria-label="Set Theory navigation">
+  <span class="hub-sidebar-title">Set Theory</span>
+
+  <nav>
+    {items.map((item) => <a href={item.href}>{item.label}</a>)}
+  </nav>
+</aside>

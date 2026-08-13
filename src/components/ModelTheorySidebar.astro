@@ -1,0 +1,16 @@
+---
+const items = [
+  { label: "Lessons", href: "#lessons" },
+  { label: "Problems", href: "#problems" },
+  { label: "Theorems", href: "#theorems" },
+  { label: "Definitions", href: "#definitions" }
+];
+---
+
+<aside class="hub-sidebar" aria-label="Model Theory navigation">
+  <span class="hub-sidebar-title">Model Theory</span>
+
+  <nav>
+    {items.map((item) => <a href={item.href}>{item.label}</a>)}
+  </nav>
+</aside>

@@ -1,0 +1,607 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import MathematicalLogicSidebar from "../../../../components/MathematicalLogicSidebar.astro";
+
+const items = [
+  "Church's Theorem",
+  "Church\u2013Turing Thesis",
+  "Compactness Theorem for First-Order Logic",
+  "Cook\u2013Levin Theorem",
+  "Craig Interpolation Theorem",
+  "Cut-Elimination Theorem",
+  "Deduction Theorem",
+  "Diagonal Lemma",
+  "Downward L\u00f6wenheim\u2013Skolem Theorem",
+  "G\u00f6del Completeness Theorem",
+  "G\u00f6del's First Incompleteness Theorem",
+  "G\u00f6del's Second Incompleteness Theorem",
+  "Herbrand's Theorem",
+  "Kleene Normal Form Theorem",
+  "Kleene Recursion Theorem",
+  "Lindenbaum Lemma",
+  "L\u00f6b's Theorem",
+  "L\u00f6wenheim\u2013Skolem Theorem",
+  "Post's Theorem",
+  "Propositional Compactness Theorem",
+  "Propositional Completeness Theorem",
+  "Rice's Theorem",
+  "Rosser's Theorem",
+  "Soundness Theorem",
+  "Strong Completeness Theorem",
+  "Tarski's Undefinability Theorem",
+  "Trakhtenbrot's Theorem",
+  "Undecidability of the Halting Problem",
+  "Upward L\u00f6wenheim\u2013Skolem Theorem"
+];
+
+const letters = [...new Set(items.map((item) => item[0].toUpperCase()))];
+---
+
+<BaseLayout
+  title="Mathematical Logic Theorems"
+  description="An alphabetical index of mathematical logic theorems."
+>
+  <section class="hub-page">
+    <MathematicalLogicSidebar />
+
+    <div class="hub-main">
+      <section class="hub-hero">
+        <span class="eyebrow">Mathematical Logic · Theorems</span>
+
+        <h1>Theorems</h1>
+
+        <p>
+          An alphabetical index of the principal soundness, completeness, compactness, computability, undecidability, and incompleteness results used throughout the mathematical logic section.
+        </p>
+      </section>
+
+      <section class="index-tools" aria-label="Theorems index controls">
+        <label class="search-control">
+          <span>Search theorems</span>
+          <input
+            id="theorem-search"
+            type="search"
+            placeholder="Try “completeness”, “Gödel”, “undecidability”…"
+            autocomplete="off"
+          />
+        </label>
+
+        <nav class="alphabet-nav" aria-label="Jump to letter">
+          {
+            letters.map((letter) => (
+              <a href={`#theorems-${letter}`}>{letter}</a>
+            ))
+          }
+        </nav>
+
+        <output id="theorem-result-count" aria-live="polite">
+          {items.length} theorems
+        </output>
+      </section>
+
+      <div class="alphabet-index" id="theorem-index">
+        <section class="alphabet-group" data-alpha-group>
+          <h2 id="theorems-C">C</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="church-s-theorem"
+                class="index-entry"
+                href="#church-s-theorem"
+                data-index-entry
+                data-search-term="church's theorem"
+              >
+                <span>Church's Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="church-turing-thesis"
+                class="index-entry"
+                href="#church-turing-thesis"
+                data-index-entry
+                data-search-term="church\u2013turing thesis"
+              >
+                <span>Church–Turing Thesis</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="compactness-theorem-for-first-order-logic"
+                class="index-entry"
+                href="#compactness-theorem-for-first-order-logic"
+                data-index-entry
+                data-search-term="compactness theorem for first-order logic"
+              >
+                <span>Compactness Theorem for First-Order Logic</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="cook-levin-theorem"
+                class="index-entry"
+                href="#cook-levin-theorem"
+                data-index-entry
+                data-search-term="cook\u2013levin theorem"
+              >
+                <span>Cook–Levin Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="craig-interpolation-theorem"
+                class="index-entry"
+                href="#craig-interpolation-theorem"
+                data-index-entry
+                data-search-term="craig interpolation theorem"
+              >
+                <span>Craig Interpolation Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="cut-elimination-theorem"
+                class="index-entry"
+                href="#cut-elimination-theorem"
+                data-index-entry
+                data-search-term="cut-elimination theorem"
+              >
+                <span>Cut-Elimination Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="theorems-D">D</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="deduction-theorem"
+                class="index-entry"
+                href="#deduction-theorem"
+                data-index-entry
+                data-search-term="deduction theorem"
+              >
+                <span>Deduction Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="diagonal-lemma"
+                class="index-entry"
+                href="#diagonal-lemma"
+                data-index-entry
+                data-search-term="diagonal lemma"
+              >
+                <span>Diagonal Lemma</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="downward-l-wenheim-skolem-theorem"
+                class="index-entry"
+                href="#downward-l-wenheim-skolem-theorem"
+                data-index-entry
+                data-search-term="downward l\u00f6wenheim\u2013skolem theorem"
+              >
+                <span>Downward Löwenheim–Skolem Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="theorems-G">G</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="g-del-completeness-theorem"
+                class="index-entry"
+                href="#g-del-completeness-theorem"
+                data-index-entry
+                data-search-term="g\u00f6del completeness theorem"
+              >
+                <span>Gödel Completeness Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="g-del-s-first-incompleteness-theorem"
+                class="index-entry"
+                href="#g-del-s-first-incompleteness-theorem"
+                data-index-entry
+                data-search-term="g\u00f6del's first incompleteness theorem"
+              >
+                <span>Gödel's First Incompleteness Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="g-del-s-second-incompleteness-theorem"
+                class="index-entry"
+                href="#g-del-s-second-incompleteness-theorem"
+                data-index-entry
+                data-search-term="g\u00f6del's second incompleteness theorem"
+              >
+                <span>Gödel's Second Incompleteness Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="theorems-H">H</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="herbrand-s-theorem"
+                class="index-entry"
+                href="#herbrand-s-theorem"
+                data-index-entry
+                data-search-term="herbrand's theorem"
+              >
+                <span>Herbrand's Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="theorems-K">K</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="kleene-normal-form-theorem"
+                class="index-entry"
+                href="#kleene-normal-form-theorem"
+                data-index-entry
+                data-search-term="kleene normal form theorem"
+              >
+                <span>Kleene Normal Form Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="kleene-recursion-theorem"
+                class="index-entry"
+                href="#kleene-recursion-theorem"
+                data-index-entry
+                data-search-term="kleene recursion theorem"
+              >
+                <span>Kleene Recursion Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="theorems-L">L</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="lindenbaum-lemma"
+                class="index-entry"
+                href="#lindenbaum-lemma"
+                data-index-entry
+                data-search-term="lindenbaum lemma"
+              >
+                <span>Lindenbaum Lemma</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="l-b-s-theorem"
+                class="index-entry"
+                href="#l-b-s-theorem"
+                data-index-entry
+                data-search-term="l\u00f6b's theorem"
+              >
+                <span>Löb's Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="l-wenheim-skolem-theorem"
+                class="index-entry"
+                href="#l-wenheim-skolem-theorem"
+                data-index-entry
+                data-search-term="l\u00f6wenheim\u2013skolem theorem"
+              >
+                <span>Löwenheim–Skolem Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="theorems-P">P</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="post-s-theorem"
+                class="index-entry"
+                href="#post-s-theorem"
+                data-index-entry
+                data-search-term="post's theorem"
+              >
+                <span>Post's Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="propositional-compactness-theorem"
+                class="index-entry"
+                href="#propositional-compactness-theorem"
+                data-index-entry
+                data-search-term="propositional compactness theorem"
+              >
+                <span>Propositional Compactness Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="propositional-completeness-theorem"
+                class="index-entry"
+                href="#propositional-completeness-theorem"
+                data-index-entry
+                data-search-term="propositional completeness theorem"
+              >
+                <span>Propositional Completeness Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="theorems-R">R</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="rice-s-theorem"
+                class="index-entry"
+                href="#rice-s-theorem"
+                data-index-entry
+                data-search-term="rice's theorem"
+              >
+                <span>Rice's Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="rosser-s-theorem"
+                class="index-entry"
+                href="#rosser-s-theorem"
+                data-index-entry
+                data-search-term="rosser's theorem"
+              >
+                <span>Rosser's Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="theorems-S">S</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="soundness-theorem"
+                class="index-entry"
+                href="#soundness-theorem"
+                data-index-entry
+                data-search-term="soundness theorem"
+              >
+                <span>Soundness Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="strong-completeness-theorem"
+                class="index-entry"
+                href="#strong-completeness-theorem"
+                data-index-entry
+                data-search-term="strong completeness theorem"
+              >
+                <span>Strong Completeness Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="theorems-T">T</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="tarski-s-undefinability-theorem"
+                class="index-entry"
+                href="#tarski-s-undefinability-theorem"
+                data-index-entry
+                data-search-term="tarski's undefinability theorem"
+              >
+                <span>Tarski's Undefinability Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="trakhtenbrot-s-theorem"
+                class="index-entry"
+                href="#trakhtenbrot-s-theorem"
+                data-index-entry
+                data-search-term="trakhtenbrot's theorem"
+              >
+                <span>Trakhtenbrot's Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="theorems-U">U</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="undecidability-of-the-halting-problem"
+                class="index-entry"
+                href="#undecidability-of-the-halting-problem"
+                data-index-entry
+                data-search-term="undecidability of the halting problem"
+              >
+                <span>Undecidability of the Halting Problem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="upward-l-wenheim-skolem-theorem"
+                class="index-entry"
+                href="#upward-l-wenheim-skolem-theorem"
+                data-index-entry
+                data-search-term="upward l\u00f6wenheim\u2013skolem theorem"
+              >
+                <span>Upward Löwenheim–Skolem Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const search = document.querySelector<HTMLInputElement>("#theorem-search");
+  const entries = Array.from(
+    document.querySelectorAll<HTMLElement>("[data-index-entry]"),
+  );
+  const groups = Array.from(
+    document.querySelectorAll<HTMLElement>("[data-alpha-group]"),
+  );
+  const resultCount =
+    document.querySelector<HTMLOutputElement>("#theorem-result-count");
+
+  const updateIndex = () => {
+    const query = search?.value.trim().toLowerCase() ?? "";
+    let visible = 0;
+
+    entries.forEach((entry) => {
+      const matches = (entry.dataset.searchTerm ?? "").includes(query);
+      entry.hidden = !matches;
+
+      if (matches) visible += 1;
+    });
+
+    groups.forEach((group) => {
+      const hasVisibleEntries = Array.from(
+        group.querySelectorAll<HTMLElement>("[data-index-entry]"),
+      ).some((entry) => !entry.hidden);
+
+      group.hidden = !hasVisibleEntries;
+    });
+
+    if (resultCount) {
+      resultCount.textContent =
+        query.length === 0
+          ? `${visible} theorems`
+          : `${visible} matching theorem${visible === 1 ? "" : "s"}`;
+    }
+  };
+
+  search?.addEventListener("input", updateIndex);
+</script>
+
+<style>
+  .index-tools {
+    display: grid;
+    gap: 1rem;
+    margin-top: clamp(2rem, 5vw, 4rem);
+    padding: 1.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 1.2rem;
+    background: rgba(17, 11, 37, 0.55);
+  }
+
+  .search-control {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .search-control span {
+    color: var(--accent, #71e6ff);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+  }
+
+  .search-control input {
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.11);
+    border-radius: 0.8rem;
+    padding: 0.85rem 1rem;
+    color: inherit;
+    background: rgba(5, 5, 18, 0.42);
+    font: inherit;
+  }
+
+  .search-control input:focus {
+    border-color: rgba(113, 230, 255, 0.48);
+    outline: none;
+  }
+
+  .alphabet-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .alphabet-nav a {
+    display: grid;
+    place-items: center;
+    min-width: 2.1rem;
+    min-height: 2.1rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.55rem;
+    color: rgba(239, 234, 255, 0.76);
+    text-decoration: none;
+  }
+
+  .alphabet-nav a:hover,
+  .alphabet-nav a:focus-visible {
+    border-color: rgba(113, 230, 255, 0.42);
+    color: var(--accent, #71e6ff);
+    outline: none;
+  }
+
+  #theorem-result-count {
+    color: rgba(239, 234, 255, 0.62);
+    font-size: 0.9rem;
+  }
+
+  .alphabet-index {
+    display: grid;
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .alphabet-group {
+    display: grid;
+    grid-template-columns: 72px minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .alphabet-group h2 {
+    position: sticky;
+    top: 1rem;
+    align-self: start;
+    margin: 0;
+    color: var(--accent, #71e6ff);
+    font-size: clamp(2rem, 5vw, 3.8rem);
+    line-height: 1;
+  }
+
+  .alphabet-entry-list {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .index-entry {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 0.8rem;
+    padding: 0.85rem 1rem;
+    color: inherit;
+    background: rgba(255, 255, 255, 0.025);
+    text-decoration: none;
+  }
+
+  .index-entry:hover,
+  .index-entry:focus-visible {
+    border-color: rgba(113, 230, 255, 0.32);
+    background: rgba(113, 230, 255, 0.045);
+    outline: none;
+  }
+
+  .index-arrow {
+    color: var(--accent, #71e6ff);
+  }
+
+  [hidden] {
+    display: none !important;
+  }
+
+  @media (max-width: 600px) {
+    .alphabet-group {
+      grid-template-columns: 1fr;
+    }
+
+    .alphabet-group h2 {
+      position: static;
+    }
+  }
+</style>

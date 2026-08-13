@@ -1,0 +1,35 @@
+---
+import katex from "katex";
+import { MATH_MACROS } from "@/utils/mathMacros";
+
+interface Props {
+  tex: string;
+  display?: boolean;
+  class?: string;
+  ariaLabel?: string;
+}
+
+const {
+  tex,
+  display = false,
+  class: className,
+  ariaLabel
+} = Astro.props;
+
+const html = katex.renderToString(tex, {
+  displayMode: display,
+  throwOnError: false,
+  macros: MATH_MACROS
+});
+
+const Tag = display ? "div" : "span";
+---
+
+<Tag
+  class:list={[
+    display ? "display-math" : "inline-math",
+    className
+  ]}
+  aria-label={ariaLabel}
+  set:html={html}
+/>

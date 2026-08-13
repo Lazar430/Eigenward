@@ -1,0 +1,475 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import SetTheorySidebar from "../../../../components/SetTheorySidebar.astro";
+
+const items = [
+  "Burali-Forti Theorem",
+  "Cantor Normal Form Theorem",
+  "Cantor's Theorem",
+  "Cantor\u2013Bernstein Theorem",
+  "Comparison Theorem for Ordinals",
+  "Continuum Hypothesis Independence Theorem",
+  "Downward L\u00f6wenheim\u2013Skolem Theorem",
+  "Hartogs' Theorem",
+  "Hausdorff Maximal Principle",
+  "K\u00f6nig's Theorem",
+  "Mostowski Collapse Theorem",
+  "Ordinal Recursion Theorem",
+  "Schr\u00f6der\u2013Bernstein Theorem",
+  "Transfinite Induction Theorem",
+  "Transfinite Recursion Theorem",
+  "Well-Ordering Theorem",
+  "Zorn's Lemma"
+];
+
+const letters = [...new Set(items.map((item) => item[0].toUpperCase()))];
+---
+
+<BaseLayout
+  title="Set Theory Theorems"
+  description="An alphabetical index of set theory theorems."
+>
+  <section class="hub-page">
+    <SetTheorySidebar />
+
+    <div class="hub-main">
+      <section class="hub-hero">
+        <span class="eyebrow">Set Theory · Theorems</span>
+
+        <h1>Theorems</h1>
+
+        <p>
+          An alphabetical index of the principal cardinality, ordinal, choice, recursion, well-ordering, and structural results used throughout the set theory section.
+        </p>
+      </section>
+
+      <section class="index-tools" aria-label="Theorems index controls">
+        <label class="search-control">
+          <span>Search theorems</span>
+          <input
+            id="theorem-search"
+            type="search"
+            placeholder="Try “Cantor”, “recursion”, “Zorn”…"
+            autocomplete="off"
+          />
+        </label>
+
+        <nav class="alphabet-nav" aria-label="Jump to letter">
+          {
+            letters.map((letter) => (
+              <a href={`#theorems-${letter}`}>{letter}</a>
+            ))
+          }
+        </nav>
+
+        <output id="theorem-result-count" aria-live="polite">
+          {items.length} theorems
+        </output>
+      </section>
+
+      <div class="alphabet-index" id="theorem-index">
+        <section class="alphabet-group" data-alpha-group>
+          <h2 id="theorems-B">B</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="burali-forti-theorem"
+                class="index-entry"
+                href="#burali-forti-theorem"
+                data-index-entry
+                data-search-term="burali-forti theorem"
+              >
+                <span>Burali-Forti Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="theorems-C">C</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="cantor-normal-form-theorem"
+                class="index-entry"
+                href="#cantor-normal-form-theorem"
+                data-index-entry
+                data-search-term="cantor normal form theorem"
+              >
+                <span>Cantor Normal Form Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="cantor-s-theorem"
+                class="index-entry"
+                href="#cantor-s-theorem"
+                data-index-entry
+                data-search-term="cantor's theorem"
+              >
+                <span>Cantor's Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="cantor-bernstein-theorem"
+                class="index-entry"
+                href="#cantor-bernstein-theorem"
+                data-index-entry
+                data-search-term="cantor\u2013bernstein theorem"
+              >
+                <span>Cantor–Bernstein Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="comparison-theorem-for-ordinals"
+                class="index-entry"
+                href="#comparison-theorem-for-ordinals"
+                data-index-entry
+                data-search-term="comparison theorem for ordinals"
+              >
+                <span>Comparison Theorem for Ordinals</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="continuum-hypothesis-independence-theorem"
+                class="index-entry"
+                href="#continuum-hypothesis-independence-theorem"
+                data-index-entry
+                data-search-term="continuum hypothesis independence theorem"
+              >
+                <span>Continuum Hypothesis Independence Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="theorems-D">D</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="downward-l-wenheim-skolem-theorem"
+                class="index-entry"
+                href="#downward-l-wenheim-skolem-theorem"
+                data-index-entry
+                data-search-term="downward l\u00f6wenheim\u2013skolem theorem"
+              >
+                <span>Downward Löwenheim–Skolem Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="theorems-H">H</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="hartogs-theorem"
+                class="index-entry"
+                href="#hartogs-theorem"
+                data-index-entry
+                data-search-term="hartogs' theorem"
+              >
+                <span>Hartogs' Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="hausdorff-maximal-principle"
+                class="index-entry"
+                href="#hausdorff-maximal-principle"
+                data-index-entry
+                data-search-term="hausdorff maximal principle"
+              >
+                <span>Hausdorff Maximal Principle</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="theorems-K">K</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="k-nig-s-theorem"
+                class="index-entry"
+                href="#k-nig-s-theorem"
+                data-index-entry
+                data-search-term="k\u00f6nig's theorem"
+              >
+                <span>König's Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="theorems-M">M</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="mostowski-collapse-theorem"
+                class="index-entry"
+                href="#mostowski-collapse-theorem"
+                data-index-entry
+                data-search-term="mostowski collapse theorem"
+              >
+                <span>Mostowski Collapse Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="theorems-O">O</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="ordinal-recursion-theorem"
+                class="index-entry"
+                href="#ordinal-recursion-theorem"
+                data-index-entry
+                data-search-term="ordinal recursion theorem"
+              >
+                <span>Ordinal Recursion Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="theorems-S">S</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="schr-der-bernstein-theorem"
+                class="index-entry"
+                href="#schr-der-bernstein-theorem"
+                data-index-entry
+                data-search-term="schr\u00f6der\u2013bernstein theorem"
+              >
+                <span>Schröder–Bernstein Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="theorems-T">T</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="transfinite-induction-theorem"
+                class="index-entry"
+                href="#transfinite-induction-theorem"
+                data-index-entry
+                data-search-term="transfinite induction theorem"
+              >
+                <span>Transfinite Induction Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="transfinite-recursion-theorem"
+                class="index-entry"
+                href="#transfinite-recursion-theorem"
+                data-index-entry
+                data-search-term="transfinite recursion theorem"
+              >
+                <span>Transfinite Recursion Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="theorems-W">W</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="well-ordering-theorem"
+                class="index-entry"
+                href="#well-ordering-theorem"
+                data-index-entry
+                data-search-term="well-ordering theorem"
+              >
+                <span>Well-Ordering Theorem</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="theorems-Z">Z</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="zorn-s-lemma"
+                class="index-entry"
+                href="#zorn-s-lemma"
+                data-index-entry
+                data-search-term="zorn's lemma"
+              >
+                <span>Zorn's Lemma</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const search = document.querySelector<HTMLInputElement>("#theorem-search");
+  const entries = Array.from(
+    document.querySelectorAll<HTMLElement>("[data-index-entry]"),
+  );
+  const groups = Array.from(
+    document.querySelectorAll<HTMLElement>("[data-alpha-group]"),
+  );
+  const resultCount =
+    document.querySelector<HTMLOutputElement>("#theorem-result-count");
+
+  const updateIndex = () => {
+    const query = search?.value.trim().toLowerCase() ?? "";
+    let visible = 0;
+
+    entries.forEach((entry) => {
+      const matches = (entry.dataset.searchTerm ?? "").includes(query);
+      entry.hidden = !matches;
+
+      if (matches) visible += 1;
+    });
+
+    groups.forEach((group) => {
+      const hasVisibleEntries = Array.from(
+        group.querySelectorAll<HTMLElement>("[data-index-entry]"),
+      ).some((entry) => !entry.hidden);
+
+      group.hidden = !hasVisibleEntries;
+    });
+
+    if (resultCount) {
+      resultCount.textContent =
+        query.length === 0
+          ? `${visible} theorems`
+          : `${visible} matching theorem${visible === 1 ? "" : "s"}`;
+    }
+  };
+
+  search?.addEventListener("input", updateIndex);
+</script>
+
+<style>
+  .index-tools {
+    display: grid;
+    gap: 1rem;
+    margin-top: clamp(2rem, 5vw, 4rem);
+    padding: 1.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 1.2rem;
+    background: rgba(17, 11, 37, 0.55);
+  }
+
+  .search-control {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .search-control span {
+    color: var(--accent, #71e6ff);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+  }
+
+  .search-control input {
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.11);
+    border-radius: 0.8rem;
+    padding: 0.85rem 1rem;
+    color: inherit;
+    background: rgba(5, 5, 18, 0.42);
+    font: inherit;
+  }
+
+  .search-control input:focus {
+    border-color: rgba(113, 230, 255, 0.48);
+    outline: none;
+  }
+
+  .alphabet-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .alphabet-nav a {
+    display: grid;
+    place-items: center;
+    min-width: 2.1rem;
+    min-height: 2.1rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.55rem;
+    color: rgba(239, 234, 255, 0.76);
+    text-decoration: none;
+  }
+
+  .alphabet-nav a:hover,
+  .alphabet-nav a:focus-visible {
+    border-color: rgba(113, 230, 255, 0.42);
+    color: var(--accent, #71e6ff);
+    outline: none;
+  }
+
+  #theorem-result-count {
+    color: rgba(239, 234, 255, 0.62);
+    font-size: 0.9rem;
+  }
+
+  .alphabet-index {
+    display: grid;
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .alphabet-group {
+    display: grid;
+    grid-template-columns: 72px minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .alphabet-group h2 {
+    position: sticky;
+    top: 1rem;
+    align-self: start;
+    margin: 0;
+    color: var(--accent, #71e6ff);
+    font-size: clamp(2rem, 5vw, 3.8rem);
+    line-height: 1;
+  }
+
+  .alphabet-entry-list {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .index-entry {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 0.8rem;
+    padding: 0.85rem 1rem;
+    color: inherit;
+    background: rgba(255, 255, 255, 0.025);
+    text-decoration: none;
+  }
+
+  .index-entry:hover,
+  .index-entry:focus-visible {
+    border-color: rgba(113, 230, 255, 0.32);
+    background: rgba(113, 230, 255, 0.045);
+    outline: none;
+  }
+
+  .index-arrow {
+    color: var(--accent, #71e6ff);
+  }
+
+  [hidden] {
+    display: none !important;
+  }
+
+  @media (max-width: 600px) {
+    .alphabet-group {
+      grid-template-columns: 1fr;
+    }
+
+    .alphabet-group h2 {
+      position: static;
+    }
+  }
+</style>

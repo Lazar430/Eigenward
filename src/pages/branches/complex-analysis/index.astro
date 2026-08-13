@@ -1,0 +1,251 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import ComplexAnalysisSidebar from "../../../components/ComplexAnalysisSidebar.astro";
+import Math from "../../../components/Math.astro";
+import { withBase } from "@/utils/paths";
+
+const cauchyRiemann = String.raw`
+f=u+iv,\qquad
+u_x=v_y,\qquad
+u_y=-v_x
+`;
+
+const cauchyFormula = String.raw`
+f(z_0)=\frac{1}{2\pi i}
+\int_\gamma \frac{f(z)}{z-z_0}\,dz
+`;
+
+const lessons = [
+  {
+    number: "01",
+    title: "Complex Numbers and Geometry",
+    href: withBase("branches/complex-analysis/lessons/"),
+    text: "Algebra of complex numbers, modulus, argument, polar form, roots, and the geometry of the complex plane."
+  },
+  {
+    number: "02",
+    title: "Complex Differentiation",
+    href: withBase("branches/complex-analysis/lessons/"),
+    text: "Complex limits, continuity, differentiability, Cauchy\u2013Riemann equations, and the rigidity of holomorphic functions."
+  },
+  {
+    number: "03",
+    title: "Elementary Holomorphic Functions",
+    href: withBase("branches/complex-analysis/lessons/"),
+    text: "Exponential, logarithm, powers, trigonometric functions, branches, and local inverses."
+  },
+  {
+    number: "04",
+    title: "Contour Integration",
+    href: withBase("branches/complex-analysis/lessons/"),
+    text: "Curves, line integrals, primitives, path independence, and the first integral theorems."
+  },
+  {
+    number: "05",
+    title: "Cauchy's Theorems",
+    href: withBase("branches/complex-analysis/lessons/"),
+    text: "Cauchy's theorem, Cauchy's integral formula, deformation of contours, and the consequences of holomorphicity."
+  },
+  {
+    number: "06",
+    title: "Power Series and Analyticity",
+    href: withBase("branches/complex-analysis/lessons/"),
+    text: "Taylor series, analytic continuation, zeros, identity principles, and local power-series structure."
+  },
+  {
+    number: "07",
+    title: "Laurent Series and Singularities",
+    href: withBase("branches/complex-analysis/lessons/"),
+    text: "Annuli of convergence, isolated singularities, removable points, poles, essential singularities, and residues."
+  },
+  {
+    number: "08",
+    title: "Residues and Applications",
+    href: withBase("branches/complex-analysis/lessons/"),
+    text: "Residue theorem, contour evaluation of real integrals, argument principle, and counting zeros and poles."
+  },
+];
+
+const problems = [
+  {
+    title: "A contour integral by deformation",
+    text: "Evaluate a contour integral by moving the path through a region where the integrand is holomorphic."
+  },
+  {
+    title: "Locate and classify singularities",
+    text: "Find the singularities of a meromorphic expression and classify each one using Laurent expansions."
+  },
+  {
+    title: "Count zeros without finding them",
+    text: "Use the argument principle or Rouch\u00e9's theorem to count zeros inside a prescribed region."
+  },
+];
+
+const theorems = [
+  "Cauchy's Integral Theorem",
+  "Cauchy's Integral Formula",
+  "Liouville's Theorem",
+  "Maximum Modulus Principle",
+  "Residue Theorem"
+];
+
+const definitions = [
+  "Holomorphic function",
+  "Analytic function",
+  "Contour",
+  "Primitive",
+  "Laurent series",
+  "Residue",
+  "Pole",
+  "Essential singularity"
+];
+
+const branchHref = withBase("branches/complex-analysis/");
+---
+
+<BaseLayout
+  title="Complex Analysis"
+  description="A structured path through holomorphic functions, contour integration, Cauchy's theorem, power series, singularities, residues, and conformal structure."
+>
+  <section class="hub-page">
+    <ComplexAnalysisSidebar />
+
+    <div class="hub-main">
+      <section class="hub-hero">
+        <span class="eyebrow">Branch prototype</span>
+
+        <h1>Complex Analysis</h1>
+
+        <p>
+          This page is the main entrance to the complex analysis section. The
+          branch studies functions of a complex variable, where differentiability
+          becomes unexpectedly rigid and local analytic information controls
+          global behavior through contour integration.
+        </p>
+      </section>
+
+      <section class="hub-overview-grid">
+        <a class="hub-overview-card" href={branchHref}>
+          <span class="eyebrow">Core idea</span>
+
+          <h2>Differentiability becomes rigid</h2>
+
+          <p>
+            Complex differentiability is far stronger than real differentiability:
+            holomorphic functions automatically acquire power-series expansions,
+            strong integral identities, and severe restrictions on their behavior.
+          </p>
+        </a>
+
+        <a class="hub-overview-card formuhub-card" href={branchHref}>
+          <span class="eyebrow">Local criterion</span>
+
+          <div class="hub-formula">
+            <Math tex={cauchyRiemann} display />
+          </div>
+
+          <p>
+            The Cauchy–Riemann equations express the compatibility forced on
+            the real and imaginary parts of a complex differentiable function.
+          </p>
+        </a>
+
+        <a class="hub-overview-card formuhub-card" href={branchHref}>
+          <span class="eyebrow">Integral control</span>
+
+          <div class="hub-formula">
+            <Math tex={cauchyFormula} display />
+          </div>
+
+          <p>
+            Cauchy's integral formula recovers the value of a holomorphic
+            function inside a contour entirely from its boundary values.
+          </p>
+        </a>
+      </section>
+
+      <section class="hub-section" id="lessons">
+        <div class="section-header">
+          <h2>Lessons</h2>
+
+          <p>
+            A sequential path through the central ideas. These cards are only
+            highlights; the complete curriculum lives on the lessons page.
+          </p>
+        </div>
+
+        <div class="lesson-timeline">
+          {
+            lessons.map((lesson) => (
+              <a class="lesson-card" href={lesson.href}>
+                <span class="lesson-number">{lesson.number}</span>
+
+                <div>
+                  <h3>{lesson.title}</h3>
+                  <p>{lesson.text}</p>
+                </div>
+              </a>
+            ))
+          }
+        </div>
+      </section>
+
+      <section class="hub-section" id="problems">
+        <div class="section-header">
+          <h2>Highlighted problems</h2>
+
+          <p>
+            A small rotating shelf of representative problems from the branch.
+          </p>
+        </div>
+
+        <div class="hub-problem-grid">
+          {
+            problems.map((problem) => (
+              <a
+                class="hub-problem-card"
+                href={withBase("branches/complex-analysis/problems/")}
+              >
+                <span class="eyebrow">Problem</span>
+
+                <h3>{problem.title}</h3>
+
+                <p>{problem.text}</p>
+              </a>
+            ))
+          }
+        </div>
+      </section>
+
+      <section class="hub-index-grid">
+        <a
+          class="hub-index-card"
+          id="theorems"
+          href={withBase("branches/complex-analysis/theorems/")}
+        >
+          <span class="eyebrow">Theorem index</span>
+
+          <h2>Theorems</h2>
+
+          <ul>
+            {theorems.map((theorem) => <li>{theorem}</li>)}
+          </ul>
+        </a>
+
+        <a
+          class="hub-index-card"
+          id="definitions"
+          href={withBase("branches/complex-analysis/definitions/")}
+        >
+          <span class="eyebrow">Definition index</span>
+
+          <h2>Definitions</h2>
+
+          <ul>
+            {definitions.map((definition) => <li>{definition}</li>)}
+          </ul>
+        </a>
+      </section>
+    </div>
+  </section>
+</BaseLayout>

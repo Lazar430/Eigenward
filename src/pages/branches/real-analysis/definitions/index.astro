@@ -1,0 +1,1225 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import RealAnalysisSidebar from "../../../../components/RealAnalysisSidebar.astro";
+
+const items = [
+  "Absolute convergence",
+  "Absolute value",
+  "Accumulation point",
+  "Alternating series",
+  "Archimedean property",
+  "Asymptotic equivalence",
+  "Banach contraction",
+  "Boundary",
+  "Bounded function",
+  "Bounded sequence",
+  "Cauchy product",
+  "Cauchy sequence",
+  "Closed ball",
+  "Closed set",
+  "Closure",
+  "Cluster point",
+  "Compact metric space",
+  "Compact set",
+  "Complete metric space",
+  "Connected set",
+  "Continuity",
+  "Continuous function",
+  "Contraction mapping",
+  "Convergent sequence",
+  "Convex function",
+  "Dense set",
+  "Derivative",
+  "Diameter",
+  "Differentiability",
+  "Discontinuity",
+  "Divergent sequence",
+  "Divergent series",
+  "Epsilon-delta limit",
+  "Equicontinuity",
+  "Extreme point",
+  "Function sequence",
+  "Greatest lower bound",
+  "Heine-Borel property",
+  "Improper integral",
+  "Infimum",
+  "Infinite limit",
+  "Interior",
+  "Interior point",
+  "Interval",
+  "Isolated point",
+  "Least upper bound",
+  "Limit",
+  "Limit at infinity",
+  "Limit inferior",
+  "Limit point",
+  "Limit superior",
+  "Lipschitz continuity",
+  "Local maximum",
+  "Local minimum",
+  "Lower Darboux sum",
+  "Metric",
+  "Metric space",
+  "Monotone function",
+  "Monotone sequence",
+  "Neighborhood",
+  "Open ball",
+  "Open set",
+  "Oscillation",
+  "Partition",
+  "Pointwise convergence",
+  "Power series",
+  "Radius of convergence",
+  "Real sequence",
+  "Refinement of a partition",
+  "Riemann integrable function",
+  "Riemann integral",
+  "Riemann sum",
+  "Sequential compactness",
+  "Series",
+  "Subsequence",
+  "Supremum",
+  "Taylor polynomial",
+  "Taylor series",
+  "Total boundedness",
+  "Uniform continuity",
+  "Uniform convergence",
+  "Upper Darboux sum"
+];
+
+const letters = [...new Set(items.map((item) => item[0].toUpperCase()))];
+---
+
+<BaseLayout
+  title="Real Analysis Definitions"
+  description="An alphabetical index of real analysis definitions."
+>
+  <section class="hub-page">
+    <RealAnalysisSidebar />
+
+    <div class="hub-main">
+      <section class="hub-hero">
+        <span class="eyebrow">Real Analysis · Definitions</span>
+
+        <h1>Definitions</h1>
+
+        <p>
+          An alphabetical index of the principal objects, properties, convergence notions, and vocabulary used throughout the real analysis section.
+        </p>
+      </section>
+
+      <section class="index-tools" aria-label="Definitions index controls">
+        <label class="search-control">
+          <span>Search definitions</span>
+          <input
+            id="definition-search"
+            type="search"
+            placeholder="Try “compact”, “limit”…"
+            autocomplete="off"
+          />
+        </label>
+
+        <nav class="alphabet-nav" aria-label="Jump to letter">
+          {
+            letters.map((letter) => (
+              <a href={`#definitions-${letter}`}>{letter}</a>
+            ))
+          }
+        </nav>
+
+        <output id="definition-result-count" aria-live="polite">
+          {items.length} definitions
+        </output>
+      </section>
+
+      <div class="alphabet-index" id="definition-index">
+        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-A">A</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="absolute-convergence"
+                class="index-entry"
+                href="#absolute-convergence"
+                data-index-entry
+                data-search-term="absolute convergence"
+              >
+                <span>Absolute convergence</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="absolute-value"
+                class="index-entry"
+                href="#absolute-value"
+                data-index-entry
+                data-search-term="absolute value"
+              >
+                <span>Absolute value</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="accumulation-point"
+                class="index-entry"
+                href="#accumulation-point"
+                data-index-entry
+                data-search-term="accumulation point"
+              >
+                <span>Accumulation point</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="alternating-series"
+                class="index-entry"
+                href="#alternating-series"
+                data-index-entry
+                data-search-term="alternating series"
+              >
+                <span>Alternating series</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="archimedean-property"
+                class="index-entry"
+                href="#archimedean-property"
+                data-index-entry
+                data-search-term="archimedean property"
+              >
+                <span>Archimedean property</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="asymptotic-equivalence"
+                class="index-entry"
+                href="#asymptotic-equivalence"
+                data-index-entry
+                data-search-term="asymptotic equivalence"
+              >
+                <span>Asymptotic equivalence</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-B">B</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="banach-contraction"
+                class="index-entry"
+                href="#banach-contraction"
+                data-index-entry
+                data-search-term="banach contraction"
+              >
+                <span>Banach contraction</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="boundary"
+                class="index-entry"
+                href="#boundary"
+                data-index-entry
+                data-search-term="boundary"
+              >
+                <span>Boundary</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="bounded-function"
+                class="index-entry"
+                href="#bounded-function"
+                data-index-entry
+                data-search-term="bounded function"
+              >
+                <span>Bounded function</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="bounded-sequence"
+                class="index-entry"
+                href="#bounded-sequence"
+                data-index-entry
+                data-search-term="bounded sequence"
+              >
+                <span>Bounded sequence</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-C">C</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="cauchy-product"
+                class="index-entry"
+                href="#cauchy-product"
+                data-index-entry
+                data-search-term="cauchy product"
+              >
+                <span>Cauchy product</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="cauchy-sequence"
+                class="index-entry"
+                href="#cauchy-sequence"
+                data-index-entry
+                data-search-term="cauchy sequence"
+              >
+                <span>Cauchy sequence</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="closed-ball"
+                class="index-entry"
+                href="#closed-ball"
+                data-index-entry
+                data-search-term="closed ball"
+              >
+                <span>Closed ball</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="closed-set"
+                class="index-entry"
+                href="#closed-set"
+                data-index-entry
+                data-search-term="closed set"
+              >
+                <span>Closed set</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="closure"
+                class="index-entry"
+                href="#closure"
+                data-index-entry
+                data-search-term="closure"
+              >
+                <span>Closure</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="cluster-point"
+                class="index-entry"
+                href="#cluster-point"
+                data-index-entry
+                data-search-term="cluster point"
+              >
+                <span>Cluster point</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="compact-metric-space"
+                class="index-entry"
+                href="#compact-metric-space"
+                data-index-entry
+                data-search-term="compact metric space"
+              >
+                <span>Compact metric space</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="compact-set"
+                class="index-entry"
+                href="#compact-set"
+                data-index-entry
+                data-search-term="compact set"
+              >
+                <span>Compact set</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="complete-metric-space"
+                class="index-entry"
+                href="#complete-metric-space"
+                data-index-entry
+                data-search-term="complete metric space"
+              >
+                <span>Complete metric space</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="connected-set"
+                class="index-entry"
+                href="#connected-set"
+                data-index-entry
+                data-search-term="connected set"
+              >
+                <span>Connected set</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="continuity"
+                class="index-entry"
+                href="#continuity"
+                data-index-entry
+                data-search-term="continuity"
+              >
+                <span>Continuity</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="continuous-function"
+                class="index-entry"
+                href="#continuous-function"
+                data-index-entry
+                data-search-term="continuous function"
+              >
+                <span>Continuous function</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="contraction-mapping"
+                class="index-entry"
+                href="#contraction-mapping"
+                data-index-entry
+                data-search-term="contraction mapping"
+              >
+                <span>Contraction mapping</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="convergent-sequence"
+                class="index-entry"
+                href="#convergent-sequence"
+                data-index-entry
+                data-search-term="convergent sequence"
+              >
+                <span>Convergent sequence</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="convex-function"
+                class="index-entry"
+                href="#convex-function"
+                data-index-entry
+                data-search-term="convex function"
+              >
+                <span>Convex function</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-D">D</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="dense-set"
+                class="index-entry"
+                href="#dense-set"
+                data-index-entry
+                data-search-term="dense set"
+              >
+                <span>Dense set</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="derivative"
+                class="index-entry"
+                href="#derivative"
+                data-index-entry
+                data-search-term="derivative"
+              >
+                <span>Derivative</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="diameter"
+                class="index-entry"
+                href="#diameter"
+                data-index-entry
+                data-search-term="diameter"
+              >
+                <span>Diameter</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="differentiability"
+                class="index-entry"
+                href="#differentiability"
+                data-index-entry
+                data-search-term="differentiability"
+              >
+                <span>Differentiability</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="discontinuity"
+                class="index-entry"
+                href="#discontinuity"
+                data-index-entry
+                data-search-term="discontinuity"
+              >
+                <span>Discontinuity</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="divergent-sequence"
+                class="index-entry"
+                href="#divergent-sequence"
+                data-index-entry
+                data-search-term="divergent sequence"
+              >
+                <span>Divergent sequence</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="divergent-series"
+                class="index-entry"
+                href="#divergent-series"
+                data-index-entry
+                data-search-term="divergent series"
+              >
+                <span>Divergent series</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-E">E</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="epsilon-delta-limit"
+                class="index-entry"
+                href="#epsilon-delta-limit"
+                data-index-entry
+                data-search-term="epsilon-delta limit"
+              >
+                <span>Epsilon-delta limit</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="equicontinuity"
+                class="index-entry"
+                href="#equicontinuity"
+                data-index-entry
+                data-search-term="equicontinuity"
+              >
+                <span>Equicontinuity</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="extreme-point"
+                class="index-entry"
+                href="#extreme-point"
+                data-index-entry
+                data-search-term="extreme point"
+              >
+                <span>Extreme point</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-F">F</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="function-sequence"
+                class="index-entry"
+                href="#function-sequence"
+                data-index-entry
+                data-search-term="function sequence"
+              >
+                <span>Function sequence</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-G">G</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="greatest-lower-bound"
+                class="index-entry"
+                href="#greatest-lower-bound"
+                data-index-entry
+                data-search-term="greatest lower bound"
+              >
+                <span>Greatest lower bound</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-H">H</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="heine-borel-property"
+                class="index-entry"
+                href="#heine-borel-property"
+                data-index-entry
+                data-search-term="heine-borel property"
+              >
+                <span>Heine-Borel property</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-I">I</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="improper-integral"
+                class="index-entry"
+                href="#improper-integral"
+                data-index-entry
+                data-search-term="improper integral"
+              >
+                <span>Improper integral</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="infimum"
+                class="index-entry"
+                href="#infimum"
+                data-index-entry
+                data-search-term="infimum"
+              >
+                <span>Infimum</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="infinite-limit"
+                class="index-entry"
+                href="#infinite-limit"
+                data-index-entry
+                data-search-term="infinite limit"
+              >
+                <span>Infinite limit</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="interior"
+                class="index-entry"
+                href="#interior"
+                data-index-entry
+                data-search-term="interior"
+              >
+                <span>Interior</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="interior-point"
+                class="index-entry"
+                href="#interior-point"
+                data-index-entry
+                data-search-term="interior point"
+              >
+                <span>Interior point</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="interval"
+                class="index-entry"
+                href="#interval"
+                data-index-entry
+                data-search-term="interval"
+              >
+                <span>Interval</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="isolated-point"
+                class="index-entry"
+                href="#isolated-point"
+                data-index-entry
+                data-search-term="isolated point"
+              >
+                <span>Isolated point</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-L">L</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="least-upper-bound"
+                class="index-entry"
+                href="#least-upper-bound"
+                data-index-entry
+                data-search-term="least upper bound"
+              >
+                <span>Least upper bound</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="limit"
+                class="index-entry"
+                href="#limit"
+                data-index-entry
+                data-search-term="limit"
+              >
+                <span>Limit</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="limit-at-infinity"
+                class="index-entry"
+                href="#limit-at-infinity"
+                data-index-entry
+                data-search-term="limit at infinity"
+              >
+                <span>Limit at infinity</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="limit-inferior"
+                class="index-entry"
+                href="#limit-inferior"
+                data-index-entry
+                data-search-term="limit inferior"
+              >
+                <span>Limit inferior</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="limit-point"
+                class="index-entry"
+                href="#limit-point"
+                data-index-entry
+                data-search-term="limit point"
+              >
+                <span>Limit point</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="limit-superior"
+                class="index-entry"
+                href="#limit-superior"
+                data-index-entry
+                data-search-term="limit superior"
+              >
+                <span>Limit superior</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="lipschitz-continuity"
+                class="index-entry"
+                href="#lipschitz-continuity"
+                data-index-entry
+                data-search-term="lipschitz continuity"
+              >
+                <span>Lipschitz continuity</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="local-maximum"
+                class="index-entry"
+                href="#local-maximum"
+                data-index-entry
+                data-search-term="local maximum"
+              >
+                <span>Local maximum</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="local-minimum"
+                class="index-entry"
+                href="#local-minimum"
+                data-index-entry
+                data-search-term="local minimum"
+              >
+                <span>Local minimum</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="lower-darboux-sum"
+                class="index-entry"
+                href="#lower-darboux-sum"
+                data-index-entry
+                data-search-term="lower darboux sum"
+              >
+                <span>Lower Darboux sum</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-M">M</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="metric"
+                class="index-entry"
+                href="#metric"
+                data-index-entry
+                data-search-term="metric"
+              >
+                <span>Metric</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="metric-space"
+                class="index-entry"
+                href="#metric-space"
+                data-index-entry
+                data-search-term="metric space"
+              >
+                <span>Metric space</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="monotone-function"
+                class="index-entry"
+                href="#monotone-function"
+                data-index-entry
+                data-search-term="monotone function"
+              >
+                <span>Monotone function</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="monotone-sequence"
+                class="index-entry"
+                href="#monotone-sequence"
+                data-index-entry
+                data-search-term="monotone sequence"
+              >
+                <span>Monotone sequence</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-N">N</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="neighborhood"
+                class="index-entry"
+                href="#neighborhood"
+                data-index-entry
+                data-search-term="neighborhood"
+              >
+                <span>Neighborhood</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-O">O</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="open-ball"
+                class="index-entry"
+                href="#open-ball"
+                data-index-entry
+                data-search-term="open ball"
+              >
+                <span>Open ball</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="open-set"
+                class="index-entry"
+                href="#open-set"
+                data-index-entry
+                data-search-term="open set"
+              >
+                <span>Open set</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="oscillation"
+                class="index-entry"
+                href="#oscillation"
+                data-index-entry
+                data-search-term="oscillation"
+              >
+                <span>Oscillation</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-P">P</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="partition"
+                class="index-entry"
+                href="#partition"
+                data-index-entry
+                data-search-term="partition"
+              >
+                <span>Partition</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="pointwise-convergence"
+                class="index-entry"
+                href="#pointwise-convergence"
+                data-index-entry
+                data-search-term="pointwise convergence"
+              >
+                <span>Pointwise convergence</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="power-series"
+                class="index-entry"
+                href="#power-series"
+                data-index-entry
+                data-search-term="power series"
+              >
+                <span>Power series</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-R">R</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="radius-of-convergence"
+                class="index-entry"
+                href="#radius-of-convergence"
+                data-index-entry
+                data-search-term="radius of convergence"
+              >
+                <span>Radius of convergence</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="real-sequence"
+                class="index-entry"
+                href="#real-sequence"
+                data-index-entry
+                data-search-term="real sequence"
+              >
+                <span>Real sequence</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="refinement-of-a-partition"
+                class="index-entry"
+                href="#refinement-of-a-partition"
+                data-index-entry
+                data-search-term="refinement of a partition"
+              >
+                <span>Refinement of a partition</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="riemann-integrable-function"
+                class="index-entry"
+                href="#riemann-integrable-function"
+                data-index-entry
+                data-search-term="riemann integrable function"
+              >
+                <span>Riemann integrable function</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="riemann-integral"
+                class="index-entry"
+                href="#riemann-integral"
+                data-index-entry
+                data-search-term="riemann integral"
+              >
+                <span>Riemann integral</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="riemann-sum"
+                class="index-entry"
+                href="#riemann-sum"
+                data-index-entry
+                data-search-term="riemann sum"
+              >
+                <span>Riemann sum</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-S">S</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="sequential-compactness"
+                class="index-entry"
+                href="#sequential-compactness"
+                data-index-entry
+                data-search-term="sequential compactness"
+              >
+                <span>Sequential compactness</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="series"
+                class="index-entry"
+                href="#series"
+                data-index-entry
+                data-search-term="series"
+              >
+                <span>Series</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="subsequence"
+                class="index-entry"
+                href="#subsequence"
+                data-index-entry
+                data-search-term="subsequence"
+              >
+                <span>Subsequence</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="supremum"
+                class="index-entry"
+                href="#supremum"
+                data-index-entry
+                data-search-term="supremum"
+              >
+                <span>Supremum</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-T">T</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="taylor-polynomial"
+                class="index-entry"
+                href="#taylor-polynomial"
+                data-index-entry
+                data-search-term="taylor polynomial"
+              >
+                <span>Taylor polynomial</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="taylor-series"
+                class="index-entry"
+                href="#taylor-series"
+                data-index-entry
+                data-search-term="taylor series"
+              >
+                <span>Taylor series</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="total-boundedness"
+                class="index-entry"
+                href="#total-boundedness"
+                data-index-entry
+                data-search-term="total boundedness"
+              >
+                <span>Total boundedness</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>        <section class="alphabet-group" data-alpha-group>
+          <h2 id="definitions-U">U</h2>
+
+          <div class="alphabet-entry-list">
+              <a
+                id="uniform-continuity"
+                class="index-entry"
+                href="#uniform-continuity"
+                data-index-entry
+                data-search-term="uniform continuity"
+              >
+                <span>Uniform continuity</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="uniform-convergence"
+                class="index-entry"
+                href="#uniform-convergence"
+                data-index-entry
+                data-search-term="uniform convergence"
+              >
+                <span>Uniform convergence</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+              <a
+                id="upper-darboux-sum"
+                class="index-entry"
+                href="#upper-darboux-sum"
+                data-index-entry
+                data-search-term="upper darboux sum"
+              >
+                <span>Upper Darboux sum</span>
+                <span class="index-arrow" aria-hidden="true">→</span>
+              </a>
+          </div>
+        </section>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const search = document.querySelector<HTMLInputElement>("#definition-search");
+  const entries = Array.from(
+    document.querySelectorAll<HTMLElement>("[data-index-entry]"),
+  );
+  const groups = Array.from(
+    document.querySelectorAll<HTMLElement>("[data-alpha-group]"),
+  );
+  const resultCount =
+    document.querySelector<HTMLOutputElement>("#definition-result-count");
+
+  const updateIndex = () => {
+    const query = search?.value.trim().toLowerCase() ?? "";
+    let visible = 0;
+
+    entries.forEach((entry) => {
+      const matches = (entry.dataset.searchTerm ?? "").includes(query);
+      entry.hidden = !matches;
+
+      if (matches) visible += 1;
+    });
+
+    groups.forEach((group) => {
+      const hasVisibleEntries = Array.from(
+        group.querySelectorAll<HTMLElement>("[data-index-entry]"),
+      ).some((entry) => !entry.hidden);
+
+      group.hidden = !hasVisibleEntries;
+    });
+
+    if (resultCount) {
+      resultCount.textContent =
+        query.length === 0
+          ? `${visible} definitions`
+          : `${visible} matching definition${visible === 1 ? "" : "s"}`;
+    }
+  };
+
+  search?.addEventListener("input", updateIndex);
+</script>
+
+<style>
+  .index-tools {
+    display: grid;
+    gap: 1rem;
+    margin-top: clamp(2rem, 5vw, 4rem);
+    padding: 1.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 1.2rem;
+    background: rgba(17, 11, 37, 0.55);
+  }
+
+  .search-control {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .search-control span {
+    color: var(--accent, #71e6ff);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+  }
+
+  .search-control input {
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.11);
+    border-radius: 0.8rem;
+    padding: 0.85rem 1rem;
+    color: inherit;
+    background: rgba(5, 5, 18, 0.42);
+    font: inherit;
+  }
+
+  .search-control input:focus {
+    border-color: rgba(113, 230, 255, 0.48);
+    outline: none;
+  }
+
+  .alphabet-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .alphabet-nav a {
+    display: grid;
+    place-items: center;
+    min-width: 2.1rem;
+    min-height: 2.1rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.55rem;
+    color: rgba(239, 234, 255, 0.76);
+    text-decoration: none;
+  }
+
+  .alphabet-nav a:hover,
+  .alphabet-nav a:focus-visible {
+    border-color: rgba(113, 230, 255, 0.42);
+    color: var(--accent, #71e6ff);
+    outline: none;
+  }
+
+  #definition-result-count {
+    color: rgba(239, 234, 255, 0.62);
+    font-size: 0.9rem;
+  }
+
+  .alphabet-index {
+    display: grid;
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .alphabet-group {
+    display: grid;
+    grid-template-columns: 72px minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .alphabet-group h2 {
+    position: sticky;
+    top: 1rem;
+    align-self: start;
+    margin: 0;
+    color: var(--accent, #71e6ff);
+    font-size: clamp(2rem, 5vw, 3.8rem);
+    line-height: 1;
+  }
+
+  .alphabet-entry-list {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .index-entry {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 0.8rem;
+    padding: 0.85rem 1rem;
+    color: inherit;
+    background: rgba(255, 255, 255, 0.025);
+    text-decoration: none;
+  }
+
+  .index-entry:hover,
+  .index-entry:focus-visible {
+    border-color: rgba(113, 230, 255, 0.32);
+    background: rgba(113, 230, 255, 0.045);
+    outline: none;
+  }
+
+  .index-arrow {
+    color: var(--accent, #71e6ff);
+  }
+
+  [hidden] {
+    display: none !important;
+  }
+
+  @media (max-width: 600px) {
+    .alphabet-group {
+      grid-template-columns: 1fr;
+    }
+
+    .alphabet-group h2 {
+      position: static;
+    }
+  }
+</style>

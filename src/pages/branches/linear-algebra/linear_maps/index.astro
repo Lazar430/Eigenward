@@ -1,235 +1,8 @@
 ---
 import BaseLayout from "../../../../layouts/BaseLayout.astro";
 import LinearAlgebraSidebar from "../../../../components/LinearAlgebraSidebar.astro";
-import katex from "katex";
-
-const displayMath = (tex: string) =>
-  katex.renderToString(tex, {
-    displayMode: true,
-    throwOnError: false
-  });
-
-const inlineMath = (tex: string) =>
-  katex.renderToString(tex, {
-    displayMode: false,
-    throwOnError: false
-  });
-
-const AInRn = inlineMath(String.raw`A \in \mathbb{R}^{n \times n}`);
-const AInline = inlineMath(String.raw`A`);
-const LInline = inlineMath(String.raw`L`);
-const UInline = inlineMath(String.raw`U`);
-const oneInline = inlineMath(String.raw`1`);
-const l21Inline = inlineMath(String.raw`l_{21}`);
-const l31Inline = inlineMath(String.raw`l_{31}`);
-const l32Inline = inlineMath(String.raw`l_{32}`);
-const threeHalvesInline = inlineMath(String.raw`\frac{3}{2}`);
-const threeByThreeInline = inlineMath(String.raw`3 \times 3`);
-const kInline = inlineMath(String.raw`k`);
-const k1Inline = inlineMath(String.raw`k_1`);
-const k2Inline = inlineMath(String.raw`k_2`);
-const k3Inline = inlineMath(String.raw`k_3`);
-const u21EqualsZero = inlineMath(String.raw`u_{21}=0`);
-const u31EqualsZero = inlineMath(String.raw`u_{31}=0`);
-const u32EqualsZero = inlineMath(String.raw`u_{32}=0`);
-const u11Inline = inlineMath(String.raw`u_{11}`);
-const u12Inline = inlineMath(String.raw`u_{12}`);
-const u22Inline = inlineMath(String.raw`u_{22}`);
-const u11EqualsA11Inline = inlineMath(String.raw`u_{11} = a_{11}`);
-const jEqualsOneInline = inlineMath(String.raw`j = 1`);
-const jEqualsTwoInline = inlineMath(String.raw`j = 2`);
-const l32EqualsK3Inline = inlineMath(String.raw`l_{32} = k_3`);
-
-const eqAEqualsLU = displayMath(String.raw`A = LU.`);
-
-const rowConvention = displayMath(
-  String.raw`R_i \longrightarrow R_i - k \cdot R_j, \qquad j < i`
-);
-
-const exampleOneMatrix = displayMath(String.raw`
-\begin{pmatrix}
-4 & 2\\
-6 & 3
-\end{pmatrix}
-`);
-
-const exampleOneReduction = displayMath(String.raw`
-\begin{pmatrix}
-4 & 2\\
-6 & 3
-\end{pmatrix}
-\xrightarrow{R_2 \to R_2 - \frac{3}{2}R_1}
-\begin{pmatrix}
-4 & 2\\
-0 & 0
-\end{pmatrix}
-`);
-
-const exampleOneLUSetup = displayMath(String.raw`
-\begin{pmatrix}
-1 & 0\\
-l_{21} & 1
-\end{pmatrix}
-\begin{pmatrix}
-4 & 2\\
-0 & 0
-\end{pmatrix}
-=
-\begin{pmatrix}
-4 & 2\\
-6 & 3
-\end{pmatrix}
-`);
-
-const exampleOneLU = displayMath(String.raw`
-\begin{pmatrix}
-4 & 2\\
-6 & 3
-\end{pmatrix}
-=
-\begin{pmatrix}
-1 & 0\\
-\frac{3}{2} & 1
-\end{pmatrix}
-\begin{pmatrix}
-4 & 2\\
-0 & 0
-\end{pmatrix}
-`);
-
-const exampleTwoMatrix = displayMath(String.raw`
-\begin{pmatrix}
-2 & 4 & 2\\
-4 & 9 & 6\\
-2 & 6 & 9
-\end{pmatrix}
-`);
-
-const exampleTwoReductionOne = displayMath(String.raw`
-\begin{pmatrix}
-2 & 4 & 2\\
-4 & 9 & 6\\
-2 & 6 & 9
-\end{pmatrix}
-\xrightarrow[
-R_3 \to R_3 - R_1
-]{R_2 \to R_2 - 2R_1}
-\begin{pmatrix}
-2 & 4 & 2\\
-0 & 1 & 2\\
-0 & 2 & 7
-\end{pmatrix}
-`);
-
-const exampleTwoReductionTwo = displayMath(String.raw`
-\begin{pmatrix}
-2 & 4 & 2\\
-0 & 1 & 2\\
-0 & 2 & 7
-\end{pmatrix}
-\xrightarrow{R_3 \to R_3 - 2R_2}
-\begin{pmatrix}
-2 & 4 & 2\\
-0 & 1 & 2\\
-0 & 0 & 3
-\end{pmatrix}
-`);
-
-const exampleTwoLUSetup = displayMath(String.raw`
-\begin{pmatrix}
-2 & 4 & 2\\
-4 & 9 & 6\\
-2 & 6 & 9
-\end{pmatrix}
-=
-\begin{pmatrix}
-1 & 0 & 0\\
-l_{21} & 1 & 0\\
-l_{31} & l_{32} & 1
-\end{pmatrix}
-\begin{pmatrix}
-2 & 4 & 2\\
-0 & 1 & 2\\
-0 & 0 & 3
-\end{pmatrix}
-`);
-
-const exampleTwoLU = displayMath(String.raw`
-\begin{pmatrix}
-2 & 4 & 2\\
-4 & 9 & 6\\
-2 & 6 & 9
-\end{pmatrix}
-=
-\begin{pmatrix}
-1 & 0 & 0\\
-2 & 1 & 0\\
-1 & 2 & 1
-\end{pmatrix}
-\begin{pmatrix}
-2 & 4 & 2\\
-0 & 1 & 2\\
-0 & 0 & 3
-\end{pmatrix}
-`);
-
-const uEquations = displayMath(String.raw`
-\begin{aligned}
-u_{1j} &= a_{1j},\\
-u_{2j} &= a_{2j} - k_1u_{1j},\\
-u_{3j} &= a_{3j} - k_2u_{1j} - k_3u_{2j}.
-\end{aligned}
-`);
-
-const kOne = displayMath(String.raw`
-0 = a_{21} - k_1u_{11}
-\quad\Longrightarrow\quad
-k_1 = \frac{a_{21}}{a_{11}}
-`);
-
-const kTwo = displayMath(String.raw`
-0 = a_{31} - k_2a_{11}
-\quad\Longrightarrow\quad
-k_2 = \frac{a_{31}}{a_{11}}
-`);
-
-const kThree = displayMath(String.raw`
-0 = a_{32} - k_2a_{12} - k_3u_{22}
-\quad\Longrightarrow\quad
-k_3 =
-\frac{a_{32} - k_2a_{12}}{u_{22}}
-`);
-
-const generalLU = displayMath(String.raw`
-\begin{pmatrix}
-a_{11} & a_{12} & a_{13}\\
-a_{21} & a_{22} & a_{23}\\
-a_{31} & a_{32} & a_{33}
-\end{pmatrix}
-=
-\begin{pmatrix}
-1 & 0 & 0\\
-l_{21} & 1 & 0\\
-l_{31} & l_{32} & 1
-\end{pmatrix}
-\begin{pmatrix}
-u_{11} & u_{12} & u_{13}\\
-0 & u_{22} & u_{23}\\
-0 & 0 & u_{33}
-\end{pmatrix}
-`);
-
-const lFirstColumn = displayMath(String.raw`
-a_{i1} = l_{i1}u_{11}
-\quad\Longrightarrow\quad
-l_{i1} = \frac{a_{i1}}{a_{11}}
-`);
-
-const lThirtyTwo = displayMath(String.raw`
-a_{32} = l_{31}u_{12} + l_{32}u_{22}
-\quad\Longrightarrow\quad
-l_{32} = \frac{a_{32} - l_{31}a_{12}}{u_{22}}
-`);
+import Math from "../../../../components/Math.astro";
+import Equation from "../../../../components/Equation.astro";
 ---
 
 <BaseLayout
@@ -261,14 +34,16 @@ l_{32} = \frac{a_{32} - l_{31}a_{12}}{u_{22}}
 
         <p>
           Let us start with a <span class="emph">square matrix</span>. A matrix
-          <span class="inline-math" set:html={AInRn} /> is said to have an LU
+          <Math tex={String.raw`A \in \mathbb{R}^{n \times n}`} /> is said to have an LU
           factorization if there is a lower triangular matrix
-          <span class="inline-math" set:html={LInline} /> and an upper triangular
-          matrix <span class="inline-math" set:html={UInline} />, of appropriate
+          <Math tex="L" /> and an upper triangular
+          matrix <Math tex="U" />, of appropriate
           dimensions, such that we can write:
         </p>
 
-        <div class="topic-equation unnumbered" set:html={eqAEqualsLU} />
+        <Equation
+          tex="A = LU."
+        />
 
         <p>
           Finding these two matrices essentially boils down to
@@ -290,10 +65,11 @@ l_{32} = \frac{a_{32} - l_{31}a_{12}}{u_{22}}
           going to choose the following row-reduction convention:
         </p>
 
-        <div class="topic-equation" id="eq1">
-          <div class="equation-body" set:html={rowConvention} />
-          <a class="equation-number" href="#eq1">(1)</a>
-        </div>
+        <Equation
+          id="eq1"
+          number={1}
+          tex={String.raw`R_i \longrightarrow R_i - k \cdot R_j, \qquad j < i`}
+        />
 
         <p>
           This means that we reduce the current row by subtracting a multiple of
@@ -306,36 +82,87 @@ l_{32} = \frac{a_{32} - l_{31}a_{12}}{u_{22}}
           <div class="drop-content">
             <p>For starters, consider:</p>
 
-            <div class="topic-equation unnumbered" set:html={exampleOneMatrix} />
+            <Equation
+              tex={String.raw`
+\begin{pmatrix}
+4 & 2\\
+6 & 3
+\end{pmatrix}
+`}
+            />
 
             <p>
               This is an easy-going example. We obtain its row-reduced form
               after only one operation:
             </p>
 
-            <div class="topic-equation unnumbered" set:html={exampleOneReduction} />
+            <Equation
+              tex={String.raw`
+\begin{pmatrix}
+4 & 2\\
+6 & 3
+\end{pmatrix}
+\xrightarrow{R_2 \to R_2 - \frac{3}{2}R_1}
+\begin{pmatrix}
+4 & 2\\
+  0 & 0
+\end{pmatrix}
+	      `}
+            />
 
             <p>
               It is apparent that we can take
-              <span class="inline-math" set:html={UInline} /> to be the matrix
+              <Math tex="U" /> to be the matrix
               above. Since it is not <span class="emph">invertible</span>,
-              <span class="inline-math" set:html={LInline} /> cannot be unique.
+              <Math tex="L" /> cannot be unique.
               But if we accept the convention that
-              <span class="inline-math" set:html={LInline} /> should be unit
+              <Math tex="L" /> should be unit
               lower triangular, meaning that it has only
-              <span class="inline-math" set:html={oneInline} />s on its main
+              <Math tex="1" />s on its main
               diagonal, then:
             </p>
 
-            <div class="topic-equation unnumbered" set:html={exampleOneLUSetup} />
+            <Equation
+              tex={String.raw`
+\begin{pmatrix}
+1 & 0\\
+l_{21} & 1
+\end{pmatrix}
+\begin{pmatrix}
+4 & 2\\
+0 & 0
+\end{pmatrix}
+=
+\begin{pmatrix}
+4 & 2\\
+6 & 3
+\end{pmatrix}
+`}
+            />
 
             <p>
               So it is straightforward to see that
-              <span class="inline-math" set:html={l21Inline} /> must be
-              <span class="inline-math" set:html={threeHalvesInline} />. Thus:
+              <Math tex="l_{21}" /> must be
+              <Math tex={String.raw`\frac{3}{2}`} />. Thus:
             </p>
 
-            <div class="topic-equation unnumbered" set:html={exampleOneLU} />
+            <Equation
+              tex={String.raw`
+\begin{pmatrix}
+4 & 2\\
+6 & 3
+\end{pmatrix}
+=
+\begin{pmatrix}
+1 & 0\\
+\frac{3}{2} & 1
+\end{pmatrix}
+\begin{pmatrix}
+4 & 2\\
+0 & 0
+\end{pmatrix}
+`}
+            />
           </div>
         </details>
 
@@ -347,30 +174,106 @@ l_{32} = \frac{a_{32} - l_{31}a_{12}}{u_{22}}
               Now for the second example, let us take a look at a bigger matrix:
             </p>
 
-            <div class="topic-equation unnumbered" set:html={exampleTwoMatrix} />
+            <Equation
+              tex={String.raw`
+\begin{pmatrix}
+2 & 4 & 2\\
+4 & 9 & 6\\
+2 & 6 & 9
+\end{pmatrix}
+`}
+            />
 
             <p>We are just going to let Gauss cook for the next couple lines:</p>
 
-            <div class="topic-equation unnumbered" set:html={exampleTwoReductionOne} />
+            <Equation
+              tex={String.raw`
+\begin{pmatrix}
+2 & 4 & 2\\
+4 & 9 & 6\\
+2 & 6 & 9
+\end{pmatrix}
+\xrightarrow[
+R_3 \to R_3 - R_1
+	      ]{R_2 \to R_2 - 2R_1}
+\begin{pmatrix}
+2 & 4 & 2\\
+  0 & 1 & 2\\
+  0 & 2 & 7
+\end{pmatrix}
+	      `}
+            />
 
-            <div class="topic-equation unnumbered" set:html={exampleTwoReductionTwo} />
+            <Equation
+              tex={String.raw`
+\begin{pmatrix}
+2 & 4 & 2\\
+0 & 1 & 2\\
+0 & 2 & 7
+\end{pmatrix}
+\xrightarrow{R_3 \to R_3 - 2R_2}
+\begin{pmatrix}
+2 & 4 & 2\\
+  0 & 1 & 2\\
+  0 & 0 & 3
+\end{pmatrix}
+	      `}
+            />
 
             <p>
               Again, the row-reduced form of
-              <span class="inline-math" set:html={AInline} /> is the perfect
-              candidate for <span class="inline-math" set:html={UInline} />.
-              Now <span class="inline-math" set:html={LInline} /> is given by:
+              <Math tex="A" /> is the perfect
+              candidate for <Math tex="U" />.
+              Now <Math tex="L" /> is given by:
             </p>
 
-            <div class="topic-equation unnumbered" set:html={exampleTwoLUSetup} />
+            <Equation
+              tex={String.raw`
+\begin{pmatrix}
+2 & 4 & 2\\
+4 & 9 & 6\\
+2 & 6 & 9
+\end{pmatrix}
+=
+\begin{pmatrix}
+1 & 0 & 0\\
+l_{21} & 1 & 0\\
+l_{31} & l_{32} & 1
+\end{pmatrix}
+\begin{pmatrix}
+2 & 4 & 2\\
+0 & 1 & 2\\
+0 & 0 & 3
+\end{pmatrix}
+`}
+            />
 
             <p>After not too much hassle, we end up with:</p>
 
-            <div class="topic-equation unnumbered" set:html={exampleTwoLU} />
+            <Equation
+              tex={String.raw`
+\begin{pmatrix}
+2 & 4 & 2\\
+4 & 9 & 6\\
+2 & 6 & 9
+\end{pmatrix}
+=
+\begin{pmatrix}
+1 & 0 & 0\\
+2 & 1 & 0\\
+1 & 2 & 1
+\end{pmatrix}
+\begin{pmatrix}
+2 & 4 & 2\\
+0 & 1 & 2\\
+0 & 0 & 3
+\end{pmatrix}
+`}
+            />
 
             <p>
               You might have noticed by now that the entries of
-              <span class="inline-math" set:html={LInline} /> seem to correspond
+              <Math tex="L" /> seem to correspond
               to the constants we multiply rows by. We will see where this hunch
               takes us in the following section.
             </p>
@@ -383,120 +286,172 @@ l_{32} = \frac{a_{32} - l_{31}a_{12}}{u_{22}}
 
         <p>
           We can establish some rules for finding the entries of
-          <span class="inline-math" set:html={LInline} /> and
-          <span class="inline-math" set:html={UInline} />. Particularly for the
-          <span class="inline-math" set:html={threeByThreeInline} /> case,
-          assuming we obtained <span class="inline-math" set:html={UInline} />
+          <Math tex="L" /> and
+          <Math tex="U" />. Particularly for the
+          <Math tex={String.raw`3 \times 3`} /> case,
+          assuming we obtained <Math tex="U" />
           by performing Gaussian elimination on
-          <span class="inline-math" set:html={AInline} />, as in the examples
+          <Math tex="A" />, as in the examples
           above, we can confidently say that:
         </p>
 
-        <div class="topic-equation" id="eq2">
-          <div class="equation-body" set:html={uEquations} />
-          <a class="equation-number" href="#eq2">(2)</a>
-        </div>
+        <Equation
+          id="eq2"
+          number={2}
+          tex={String.raw`
+\begin{aligned}
+u_{1j} &= a_{1j},\\
+u_{2j} &= a_{2j} - k_1u_{1j},\\
+u_{3j} &= a_{3j} - k_2u_{1j} - k_3u_{2j}.
+\end{aligned}
+`}
+        />
 
         <p>
-          Here the <span class="inline-math" set:html={kInline} />s are the
+          Here the <Math tex="k" />s are the
           constants such as the one in equation
           (<a class="eq-ref" href="#eq1">1</a>). This simply means that the first
-          row of <span class="inline-math" set:html={UInline} /> is identical to
-          the first row of <span class="inline-math" set:html={AInline} />. The
+          row of <Math tex="U" /> is identical to
+          the first row of <Math tex="A" />. The
           other rows are obtained by reducing the corresponding rows of
-          <span class="inline-math" set:html={AInline} /> by multiples of
-          previous rows of <span class="inline-math" set:html={UInline} />.
+          <Math tex="A" /> by multiples of
+          previous rows of <Math tex="U" />.
         </p>
 
         <p>
           Looking carefully at equation (<a class="eq-ref" href="#eq2">2</a>),
-          we notice that the <span class="inline-math" set:html={kInline} />s
+          we notice that the <Math tex="k" />s
           are constant, while the entries of
-          <span class="inline-math" set:html={UInline} /> and
-          <span class="inline-math" set:html={AInline} /> vary with the column
-          index. Since <span class="inline-math" set:html={UInline} /> is upper
-          triangular, <span class="inline-math" set:html={u21EqualsZero} />.
-          Choosing <span class="inline-math" set:html={jEqualsOneInline} /> in
+          <Math tex="U" /> and
+          <Math tex="A" /> vary with the column
+          index. Since <Math tex="U" /> is upper
+          triangular, <Math tex="u_{21}=0" />.
+          Choosing <Math tex="j = 1" /> in
           equation (<a class="eq-ref" href="#eq2">2</a>) gives:
         </p>
 
-        <div class="topic-equation" id="eq5">
-          <div class="equation-body" set:html={kOne} />
-          <a class="equation-number" href="#eq5">(5)</a>
-        </div>
+        <Equation
+          id="eq5"
+          number={5}
+          tex={String.raw`
+	  0 = a_{21} - k_1u_{11}
+\quad\Longrightarrow\quad
+k_1 = \frac{a_{21}}{a_{11}}
+`}
+        />
 
         <p>
-          since <span class="inline-math" set:html={u11EqualsA11Inline} />.
-          Similarly, <span class="inline-math" set:html={u31EqualsZero} />, so
-          choosing <span class="inline-math" set:html={jEqualsOneInline} /> in
+          since <Math tex="u_{11} = a_{11}" />.
+          Similarly, <Math tex="u_{31}=0" />, so
+          choosing <Math tex="j = 1" /> in
           equation (<a class="eq-ref" href="#eq2">2</a>) gives:
         </p>
 
-        <div class="topic-equation" id="eq6">
-          <div class="equation-body" set:html={kTwo} />
-          <a class="equation-number" href="#eq6">(6)</a>
-        </div>
+        <Equation
+          id="eq6"
+          number={6}
+          tex={String.raw`
+	  0 = a_{31} - k_2a_{11}
+\quad\Longrightarrow\quad
+k_2 = \frac{a_{31}}{a_{11}}
+`}
+        />
 
         <p>
-          Finally, <span class="inline-math" set:html={u32EqualsZero} />.
-          Choosing <span class="inline-math" set:html={jEqualsTwoInline} /> in
+          Finally, <Math tex="u_{32}=0" />.
+          Choosing <Math tex="j = 2" /> in
           equation (<a class="eq-ref" href="#eq2">2</a>) gives:
         </p>
 
-        <div class="topic-equation" id="eq7">
-          <div class="equation-body" set:html={kThree} />
-          <a class="equation-number" href="#eq7">(7)</a>
-        </div>
+        <Equation
+          id="eq7"
+          number={7}
+          tex={String.raw`
+	  0 = a_{32} - k_2a_{12} - k_3u_{22}
+\quad\Longrightarrow\quad
+k_3 =
+\frac{a_{32} - k_2a_{12}}{u_{22}}
+`}
+        />
 
         <p>
           Why did we bother finding concrete formulas for the
-          <span class="inline-math" set:html={kInline} />s? After all, they are
+          <Math tex="k" />s? After all, they are
           fairly easy to compute intuitively. The reason is that if we try to
-          find the entries of <span class="inline-math" set:html={LInline} />
+          find the entries of <Math tex="L" />
           directly from the matrix product
         </p>
 
-        <div class="topic-equation unnumbered" set:html={generalLU} />
+        <Equation
+          tex={String.raw`
+\begin{pmatrix}
+a_{11} & a_{12} & a_{13}\\
+a_{21} & a_{22} & a_{23}\\
+a_{31} & a_{32} & a_{33}
+\end{pmatrix}
+=
+\begin{pmatrix}
+1 & 0 & 0\\
+l_{21} & 1 & 0\\
+l_{31} & l_{32} & 1
+\end{pmatrix}
+\begin{pmatrix}
+u_{11} & u_{12} & u_{13}\\
+0 & u_{22} & u_{23}\\
+	0 & 0 & u_{33}
+	\end{pmatrix}
+	`}
+        />
 
         <p>then we find:</p>
 
-        <div class="topic-equation" id="eq8">
-          <div class="equation-body" set:html={lFirstColumn} />
-          <a class="equation-number" href="#eq8">(8)</a>
-        </div>
+        <Equation
+          id="eq8"
+          number={8}
+          tex={String.raw`
+	  a_{i1} = l_{i1}u_{11}
+\quad\Longrightarrow\quad
+	  l_{i1} = \frac{a_{i1}}{a_{11}}
+	  `}
+        />
 
-        <div class="topic-equation" id="eq9">
-          <div class="equation-body" set:html={lThirtyTwo} />
-          <a class="equation-number" href="#eq9">(9)</a>
-        </div>
+        <Equation
+          id="eq9"
+          number={9}
+          tex={String.raw`
+	  a_{32} = l_{31}u_{12} + l_{32}u_{22}
+\quad\Longrightarrow\quad
+	  l_{32} = \frac{a_{32} - l_{31}a_{12}}{u_{22}}
+	  `}
+        />
 
         <p>
           Equation (<a class="eq-ref" href="#eq8">8</a>) holds because the first
-          column of <span class="inline-math" set:html={AInline} /> is given by
-          the product between <span class="inline-math" set:html={LInline} /> and
-          the first column of <span class="inline-math" set:html={UInline} />.
-          That column of <span class="inline-math" set:html={UInline} /> selects
-          the first column of <span class="inline-math" set:html={LInline} /> and
-          scales it by <span class="inline-math" set:html={u11Inline} />.
+          column of <Math tex="A" /> is given by
+          the product between <Math tex="L" /> and
+          the first column of <Math tex="U" />.
+          That column of <Math tex="U" /> selects
+          the first column of <Math tex="L" /> and
+          scales it by <Math tex="u_{11}" />.
           Comparing this to equation (<a class="eq-ref" href="#eq6">6</a>)
-          reveals that <span class="inline-math" set:html={l21Inline} /> equals
-          <span class="inline-math" set:html={k1Inline} /> and
-          <span class="inline-math" set:html={l31Inline} /> equals
-          <span class="inline-math" set:html={k2Inline} />.
+          reveals that <Math tex="l_{21}" /> equals
+          <Math tex="k_1" /> and
+          <Math tex="l_{31}" /> equals
+          <Math tex="k_2" />.
         </p>
 
         <p>
           Equation (<a class="eq-ref" href="#eq9">9</a>) holds because the second
-          column of <span class="inline-math" set:html={AInline} /> is given by
-          the product between <span class="inline-math" set:html={LInline} /> and
-          the second column of <span class="inline-math" set:html={UInline} />.
+          column of <Math tex="A" /> is given by
+          the product between <Math tex="L" /> and
+          the second column of <Math tex="U" />.
           This selects the first two columns of
-          <span class="inline-math" set:html={LInline} />, scales them by
-          <span class="inline-math" set:html={u12Inline} /> and
-          <span class="inline-math" set:html={u22Inline} />, and adds them
+          <Math tex="L" />, scales them by
+          <Math tex="u_{12}" /> and
+          <Math tex="u_{22}" />, and adds them
           together. Comparing this with equation
           (<a class="eq-ref" href="#eq7">7</a>) makes it clear that
-          <span class="inline-math" set:html={l32EqualsK3Inline} />.
+          <Math tex="l_{32} = k_3" />.
         </p>
 
         <div class="takeaway-box">
@@ -504,7 +459,7 @@ l_{32} = \frac{a_{32} - l_{31}a_{12}}{u_{22}}
 
           <p>
             The entries below the main diagonal of
-            <span class="inline-math" set:html={LInline} /> are given by the
+            <Math tex="L" /> are given by the
             constants we use to scale rows during Gaussian elimination.
           </p>
         </div>

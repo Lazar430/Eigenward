@@ -1,0 +1,201 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import RealAnalysisSidebar from "../../../../components/RealAnalysisSidebar.astro";
+import { withBase } from "@/utils/paths";
+
+const lessons = [
+  {
+    number: "01",
+    title: "The Real Number System",
+    href: withBase("branches/real-analysis/lessons/"),
+    text: "Ordered-field structure, absolute value, intervals, bounds, suprema and infima, completeness, the Archimedean property, and density of the rationals and irrationals."
+  },
+  {
+    number: "02",
+    title: "Sequences and Convergence",
+    href: withBase("branches/real-analysis/lessons/"),
+    text: "Convergent sequences, algebra of limits, order properties, monotone sequences, subsequences, accumulation points, and basic asymptotic behavior."
+  },
+  {
+    number: "03",
+    title: "Cauchy Sequences, limsup, and liminf",
+    href: withBase("branches/real-analysis/lessons/"),
+    text: "Cauchy criteria, completeness through sequences, upper and lower limits, cluster points, and precise control of oscillatory sequences."
+  },
+  {
+    number: "04",
+    title: "Limits of Functions",
+    href: withBase("branches/real-analysis/lessons/"),
+    text: "Epsilon-delta limits, one-sided and infinite limits, sequential criteria, algebra of limits, comparison arguments, and asymptotic notation."
+  },
+  {
+    number: "05",
+    title: "Continuity",
+    href: withBase("branches/real-analysis/lessons/"),
+    text: "Continuity at a point and on sets, composition, preservation of limits, uniform continuity, inverse continuity, and continuity under algebraic operations."
+  },
+  {
+    number: "06",
+    title: "Topology of the Real Line",
+    href: withBase("branches/real-analysis/lessons/"),
+    text: "Open and closed sets, neighborhoods, accumulation points, closure, interior, boundary, connectedness, compactness, and the Heine-Borel viewpoint."
+  },
+  {
+    number: "07",
+    title: "Differentiation",
+    href: withBase("branches/real-analysis/lessons/"),
+    text: "Differentiability, local linear approximation, derivative rules, one-sided derivatives, higher derivatives, extrema, and the relation between differentiability and continuity."
+  },
+  {
+    number: "08",
+    title: "Mean-Value Principles and Taylor Theory",
+    href: withBase("branches/real-analysis/lessons/"),
+    text: "Rolle's theorem, the mean value theorem, Cauchy's mean value theorem, Darboux's theorem, Taylor's theorem, remainders, convexity, and consequences for uniqueness and approximation."
+  },
+  {
+    number: "09",
+    title: "The Riemann Integral",
+    href: withBase("branches/real-analysis/lessons/"),
+    text: "Partitions, upper and lower sums, Darboux sums, Riemann integrability, integrability criteria, and structural properties of the integral."
+  },
+  {
+    number: "10",
+    title: "The Fundamental Theorem and Improper Integration",
+    href: withBase("branches/real-analysis/lessons/"),
+    text: "The fundamental theorem of calculus, differentiation of integral functions, change of variables, integration by parts, improper integrals, and convergence criteria."
+  },
+  {
+    number: "11",
+    title: "Infinite Series of Numbers",
+    href: withBase("branches/real-analysis/lessons/"),
+    text: "Convergence and absolute convergence, comparison methods, root and ratio tests, alternating series, rearrangements, Cauchy products, and summability phenomena."
+  },
+  {
+    number: "12",
+    title: "Sequences and Series of Functions",
+    href: withBase("branches/real-analysis/lessons/"),
+    text: "Pointwise and uniform convergence, uniform Cauchy criteria, continuity of limits, interchange of limits with integrals and derivatives, and counterexamples when hypotheses fail."
+  },
+  {
+    number: "13",
+    title: "Power Series",
+    href: withBase("branches/real-analysis/lessons/"),
+    text: "Radius and interval of convergence, termwise differentiation and integration, analytic behavior inside the interval of convergence, and Taylor series as power-series representations."
+  },
+  {
+    number: "14",
+    title: "Metric Spaces",
+    href: withBase("branches/real-analysis/lessons/"),
+    text: "Metrics, open and closed balls, convergence, continuity, compactness, connectedness, completeness, dense sets, and the abstraction of real-line arguments."
+  },
+  {
+    number: "15",
+    title: "Compactness and Completeness in Metric Spaces",
+    href: withBase("branches/real-analysis/lessons/"),
+    text: "Sequential compactness, total boundedness, complete subspaces, compactness criteria, finite-intersection arguments, and the interaction between compactness and continuity."
+  },
+  {
+    number: "16",
+    title: "Contractions and Fixed Points",
+    href: withBase("branches/real-analysis/lessons/"),
+    text: "Contraction mappings, iterative approximation, the Banach fixed-point theorem, error estimates, and applications to existence and uniqueness problems."
+  },
+  {
+    number: "17",
+    title: "Function Spaces and Approximation",
+    href: withBase("branches/real-analysis/lessons/"),
+    text: "Normed spaces of continuous functions, the supremum norm, equicontinuity, Arzel\u00e0-Ascoli, polynomial approximation, and the first steps toward functional analysis."
+  },
+];
+---
+
+<BaseLayout
+  title="Real Analysis Lessons"
+  description="A sequential curriculum through the real number system, convergence, continuity, differentiation, integration, infinite series, metric spaces, and approximation."
+>
+  <section class="hub-page">
+    <RealAnalysisSidebar />
+
+    <div class="hub-main">
+      <section class="hub-hero">
+        <span class="eyebrow">Real Analysis · Lessons</span>
+
+        <h1>Lessons</h1>
+
+        <p>
+          A sequential route through the subject, beginning with completeness
+          of the real numbers and ending with abstract metric-space methods and
+          approximation theory. Later lessons freely use the language and
+          results established earlier in the sequence.
+        </p>
+      </section>
+
+      <section class="hub-section lesson-index-section">
+        <div class="section-header">
+          <h2>Full lesson path</h2>
+
+          <p>
+            Each card represents a substantial topic rather than a single
+            theorem or technique, so the curriculum stays broad without
+            fragmenting closely related material into overlapping lessons.
+          </p>
+        </div>
+
+        <div class="lesson-timeline">
+          {
+            lessons.map((lesson) => (
+              <a class="lesson-card" href={lesson.href}>
+                <span class="lesson-number">{lesson.number}</span>
+
+                <div>
+                  <h3>{lesson.title}</h3>
+                  <p>{lesson.text}</p>
+                </div>
+
+                <span class="lesson-arrow" aria-hidden="true">→</span>
+              </a>
+            ))
+          }
+        </div>
+      </section>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .lesson-index-section {
+    margin-top: clamp(2rem, 5vw, 4rem);
+  }
+
+  .lesson-card {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .lesson-arrow {
+    color: var(--accent, #71e6ff);
+    font-size: 1.15rem;
+    transition: transform 180ms ease;
+  }
+
+  .lesson-card:hover .lesson-arrow,
+  .lesson-card:focus-visible .lesson-arrow {
+    transform: translateX(4px);
+  }
+
+  @media (max-width: 640px) {
+    .lesson-card {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .lesson-arrow {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lesson-arrow {
+      transition: none;
+    }
+  }
+</style>

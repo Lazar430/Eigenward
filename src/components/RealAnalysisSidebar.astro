@@ -1,0 +1,19 @@
+---
+import { withBase } from "@/utils/paths";
+
+const items = [
+  { label: "Home", href: withBase("branches/real-analysis/") },
+  { label: "Lessons", href: withBase("branches/real-analysis/lessons/") },
+  { label: "Problems", href: withBase("problems/real-analysis/") },
+  { label: "Theorems", href: withBase("branches/real-analysis/theorems/") },
+  { label: "Definitions", href: withBase("branches/real-analysis/definitions/") }
+];
+---
+
+<aside class="hub-sidebar" aria-label="Real Analysis navigation">
+  <span class="hub-sidebar-title">Real Analysis</span>
+
+  <nav>
+    {items.map((item) => <a href={item.href}>{item.label}</a>)}
+  </nav>
+</aside>

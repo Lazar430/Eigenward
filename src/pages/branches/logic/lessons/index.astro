@@ -1,0 +1,219 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import MathematicalLogicSidebar from "../../../../components/MathematicalLogicSidebar.astro";
+import { withBase } from "@/utils/paths";
+
+const lessons = [
+  {
+    number: "01",
+    title: "Formal Languages and Propositional Syntax",
+    href: withBase("branches/logic/lessons/"),
+    text: "Alphabets, strings, formation rules, parse trees, propositional variables, connectives, subformulas, substitutions, and the distinction between object language and metalanguage."
+  },
+  {
+    number: "02",
+    title: "Propositional Semantics",
+    href: withBase("branches/logic/lessons/"),
+    text: "Valuations, truth functions, satisfiability, validity, semantic consequence, logical equivalence, functional completeness, and semantic methods for finite propositional reasoning."
+  },
+  {
+    number: "03",
+    title: "Normal Forms and Boolean Structure",
+    href: withBase("branches/logic/lessons/"),
+    text: "Conjunctive and disjunctive normal forms, negation normal form, truth-functional completeness, Boolean identities, and systematic transformations of formulas."
+  },
+  {
+    number: "04",
+    title: "Natural Deduction",
+    href: withBase("branches/logic/lessons/"),
+    text: "Introduction and elimination rules, assumptions, discharged hypotheses, derivations, proof construction, derived rules, and the relation between formal and ordinary mathematical reasoning."
+  },
+  {
+    number: "05",
+    title: "Hilbert Systems and the Deduction Theorem",
+    href: withBase("branches/logic/lessons/"),
+    text: "Axiomatic calculi, substitution schemes, modus ponens, derivability, metatheorems, the deduction theorem, and comparison with rule-based proof systems."
+  },
+  {
+    number: "06",
+    title: "Sequent Calculus and Structural Proof Theory",
+    href: withBase("branches/logic/lessons/"),
+    text: "Sequents, structural and logical rules, derivation trees, weakening, contraction, exchange, cut, and the proof-theoretic organization of logical consequence."
+  },
+  {
+    number: "07",
+    title: "First-Order Languages and Syntax",
+    href: withBase("branches/logic/lessons/"),
+    text: "Function and relation symbols, terms, atomic formulas, quantifiers, free and bound variables, substitution, sentences, signatures, and formal theories."
+  },
+  {
+    number: "08",
+    title: "Structures, Assignments, and Satisfaction",
+    href: withBase("branches/logic/lessons/"),
+    text: "First-order structures, interpretations, variable assignments, recursive definitions of truth, models, elementary semantic consequence, and the distinction between syntax and semantics."
+  },
+  {
+    number: "09",
+    title: "First-Order Proof Systems",
+    href: withBase("branches/logic/lessons/"),
+    text: "Quantifier rules, eigenvariable conditions, formal derivations, proof strategies, equality axioms, and the extension of propositional proof systems to first-order logic."
+  },
+  {
+    number: "10",
+    title: "Soundness and Completeness",
+    href: withBase("branches/logic/lessons/"),
+    text: "Soundness, consistency, Henkin constants, maximal consistent theories, term models, the completeness theorem, and the equivalence between semantic consequence and formal derivability."
+  },
+  {
+    number: "11",
+    title: "Compactness and Its Consequences",
+    href: withBase("branches/logic/lessons/"),
+    text: "The compactness theorem, finitely satisfiable theories, nonstandard constructions, compactness arguments, and the expressive limitations revealed by compactness."
+  },
+  {
+    number: "12",
+    title: "L\u00f6wenheim\u2013Skolem Phenomena",
+    href: withBase("branches/logic/lessons/"),
+    text: "Downward and upward L\u00f6wenheim\u2013Skolem theorems, countable models, cardinality effects, and what first-order theories can and cannot control about the sizes of their models."
+  },
+  {
+    number: "13",
+    title: "Formal Arithmetic and Representability",
+    href: withBase("branches/logic/lessons/"),
+    text: "The language of arithmetic, Peano-style theories, coding finite data by numbers, representable functions and relations, effective axiomatization, and the setup for metamathematics."
+  },
+  {
+    number: "14",
+    title: "Recursive Functions and Computability",
+    href: withBase("branches/logic/lessons/"),
+    text: "Primitive recursive functions, partial recursive functions, minimization, computable functions, effective procedures, and equivalent models of computation."
+  },
+  {
+    number: "15",
+    title: "Turing Machines and Decidable Sets",
+    href: withBase("branches/logic/lessons/"),
+    text: "Turing machines, configurations, computation, decidable and recognizable languages, reductions, universal machines, and the basic architecture of undecidability proofs."
+  },
+  {
+    number: "16",
+    title: "Undecidability and Reductions",
+    href: withBase("branches/logic/lessons/"),
+    text: "The halting problem, many-one reductions, recursively enumerable sets, undecidable theories, Church's theorem, and methods for transferring impossibility results."
+  },
+  {
+    number: "17",
+    title: "Diagonalization and Self-Reference",
+    href: withBase("branches/logic/lessons/"),
+    text: "Diagonal arguments, fixed-point constructions, G\u00f6del numbering, the diagonal lemma, self-reference, and the mechanisms behind semantic and syntactic limitation results."
+  },
+  {
+    number: "18",
+    title: "G\u00f6del's Incompleteness Theorems",
+    href: withBase("branches/logic/lessons/"),
+    text: "The first and second incompleteness theorems, G\u00f6del and Rosser sentences, consistency assumptions, provability predicates, and the limits of sufficiently expressive effective theories."
+  },
+  {
+    number: "19",
+    title: "Definability, Truth, and Tarski's Theorem",
+    href: withBase("branches/logic/lessons/"),
+    text: "Definable relations, arithmetical truth, semantic versus syntactic definability, Tarski's undefinability theorem, and the boundary between a theory and its metatheory."
+  },
+  {
+    number: "20",
+    title: "Beyond First-Order Logic",
+    href: withBase("branches/logic/lessons/"),
+    text: "Second-order syntax and semantics, infinitary logics, modal viewpoints, strengths and failures of completeness or compactness, and how changing the logic changes the metatheory."
+  },
+];
+---
+
+<BaseLayout
+  title="Mathematical Logic Lessons"
+  description="A sequential curriculum through propositional and first-order logic, proof systems, completeness, computability, undecidability, and incompleteness."
+>
+  <section class="hub-page">
+    <MathematicalLogicSidebar />
+
+    <div class="hub-main">
+      <section class="hub-hero">
+        <span class="eyebrow">Mathematical Logic · Lessons</span>
+
+        <h1>Lessons</h1>
+
+        <p>
+          A sequential route from formal syntax and truth-functional semantics
+          to first-order logic, proof theory, computability, undecidability, and
+          the incompleteness phenomena that arise when mathematics studies its
+          own formal systems.
+        </p>
+      </section>
+
+      <section class="hub-section lesson-index-section">
+        <div class="section-header">
+          <h2>Full lesson path</h2>
+
+          <p>
+            Each lesson is intentionally broad enough to form a coherent unit:
+            closely related proof systems, semantic ideas, and computability
+            notions are grouped together rather than split into overlapping cards.
+          </p>
+        </div>
+
+        <div class="lesson-timeline">
+          {
+            lessons.map((lesson) => (
+              <a class="lesson-card" href={lesson.href}>
+                <span class="lesson-number">{lesson.number}</span>
+
+                <div>
+                  <h3>{lesson.title}</h3>
+                  <p>{lesson.text}</p>
+                </div>
+
+                <span class="lesson-arrow" aria-hidden="true">→</span>
+              </a>
+            ))
+          }
+        </div>
+      </section>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .lesson-index-section {
+    margin-top: clamp(2rem, 5vw, 4rem);
+  }
+
+  .lesson-card {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .lesson-arrow {
+    color: var(--accent, #71e6ff);
+    font-size: 1.15rem;
+    transition: transform 180ms ease;
+  }
+
+  .lesson-card:hover .lesson-arrow,
+  .lesson-card:focus-visible .lesson-arrow {
+    transform: translateX(4px);
+  }
+
+  @media (max-width: 640px) {
+    .lesson-card {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .lesson-arrow {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lesson-arrow {
+      transition: none;
+    }
+  }
+</style>

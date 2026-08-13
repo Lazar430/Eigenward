@@ -1,14 +1,465 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { withBase } from "@/utils/paths";
+import ProblemsSidebar from "../../components/ProblemsSidebar.astro";
+import Math from "../../components/Math.astro";
+
+const problemCards = [
+  {
+    branch: "Algebra · Identities",
+    title: "Shorthand Identities",
+    href: withBase("problems/algebra/shorthand-identities/"),
+    ariaLabel: "Open the Shorthand Identities problem collection",
+    formula: String.raw`\begin{aligned}
+        (a+b)^2 &= a^2+2ab+b^2,\\
+        a^2-b^2 &= (a-b)(a+b),\\
+        a^3+b^3 &= (a+b)(a^2-ab+b^2)
+      \end{aligned}`,
+    text:
+      "A collection of problems built around rapid expansions, factorizations, substitutions, and the recognition of useful algebraic forms."
+  },
+  {
+    branch: "Algebra · Sums of Squares",
+    title: "Lagrange Identities",
+    href: withBase("problems/algebra/lagrange-identities/"),
+    ariaLabel: "Open the Lagrange Identities problem collection",
+    formula: String.raw`\begin{aligned}
+        (a^2+b^2)(c^2+d^2)
+        &=(ac-bd)^2+(ad+bc)^2,\\[0.35em]
+        \left(\sum_{i=1}^{n}a_i^2\right)
+        \left(\sum_{i=1}^{n}b_i^2\right)
+        -\left(\sum_{i=1}^{n}a_ib_i\right)^2
+        &=\sum_{1\le i<j\le n}(a_ib_j-a_jb_i)^2
+      \end{aligned}`,
+    text:
+      "Problems involving products of sums of squares, determinant-like expressions, Cauchy–Schwarz remainders, and classical composition formulas."
+  },
+  {
+    branch: "Analysis · Harmonic Sums",
+    title: "Botez–Catalan",
+    href: withBase("problems/real-analysis/botez-catalan/"),
+    ariaLabel: "Open the Botez-Catalan problem collection",
+    formula: String.raw`\sum_{k=1}^{n}\frac{1}{n+k}
+      =H_{2n}-H_n
+      =\sum_{k=1}^{2n}\frac{(-1)^{k-1}}{k}`,
+    text:
+      "A shelf of finite-sum problems centered on the Botez–Catalan identity, harmonic numbers, alternating sums, estimates, and limiting arguments."
+  },
+  {
+    branch: "Number Theory · Proof Techniques",
+    title: "Irrationality Proofs",
+    href: withBase("problems/irrationality-proofs/"),
+    ariaLabel: "Open the Irrationality Proofs problem collection",
+    formula: String.raw`\sqrt{2}\notin\mathbb{Q},
+      \qquad
+      e=\sum_{n=0}^{\infty}\frac{1}{n!}\notin\mathbb{Q},
+      \qquad
+      \log_{2}3\notin\mathbb{Q}`,
+    text:
+      "Contradiction, infinite descent, divisibility, rational approximation, and series-based arguments for proving that familiar constants are irrational."
+  }
+];
+
+const collections = [
+  "Algebra",
+  "Number Theory",
+  "Geometry",
+  "Combinatorics",
+  "Analysis",
+  "Probability"
+];
+
+const difficultyLevels = [
+  "Warm-up",
+  "Intermediate",
+  "Advanced",
+  "Olympiad",
+  "Open-ended"
+];
 ---
 
-<BaseLayout title="Problems">
-  <section class="simple-page">
-    <h1>Problems</h1>
+<BaseLayout
+  title="Problems"
+  description="A growing archive of mathematical problems organized by subject, technique, and difficulty."
+>
+  <section class="hub-page">
+    <ProblemsSidebar />
 
-    <p>
-      This section will contain problem sets, solved examples, olympiad methods,
-      school-level exercises, and research-flavored exploratory problems.
-    </p>
+    <div class="hub-main">
+      <section class="hub-hero">
+        <span class="eyebrow">Problems prototype</span>
+
+        <h1>Problems</h1>
+
+        <p>
+          A growing collection of exercises, curiosities, proof problems, and
+          longer investigations. The archive will eventually be searchable by
+          branch, technique, difficulty, prerequisites, and theorems used.
+        </p>
+      </section>
+
+      <section class="problems-list" aria-labelledby="featured-problems-title">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">Selected collections</span>
+
+            <h2 id="featured-problems-title" class="section-title">
+              Featured problems
+            </h2>
+          </div>
+
+          <p>
+            Each card is a doorway into a themed collection rather than a
+            single isolated exercise.
+          </p>
+        </div>
+
+        <div class="problem-card-grid">
+          {
+            problemCards.map((problem) => (
+              <a
+                class="problem-card"
+                href={problem.href}
+                aria-label={problem.ariaLabel}
+              >
+                <header class="problem-card-header">
+                  <span class="problem-branch">{problem.branch}</span>
+
+                  <h3>{problem.title}</h3>
+                </header>
+
+                <div
+                  class="problem-formula"
+                  role="img"
+                  aria-label={`Representative equations for ${problem.title}`}
+                >
+                  <Math tex={problem.formula} display />
+                </div>
+
+                <p class="problem-description">{problem.text}</p>
+
+                <span class="read-label" aria-hidden="true">
+                  View collection <span>→</span>
+                </span>
+              </a>
+            ))
+          }
+        </div>
+      </section>
+
+      <section class="problem-index-grid">
+        <a
+          class="problem-index-card"
+          href={withBase("problems/")}
+          id="subjects"
+        >
+          <span class="eyebrow">Browse by branch</span>
+
+          <h2>Subjects</h2>
+
+          <ul>
+            {collections.map((collection) => <li>{collection}</li>)}
+          </ul>
+        </a>
+
+        <a
+          class="problem-index-card"
+          href={withBase("problems/")}
+          id="difficulty"
+        >
+          <span class="eyebrow">Browse by level</span>
+
+          <h2>Difficulty</h2>
+
+          <ul>
+            {difficultyLevels.map((level) => <li>{level}</li>)}
+          </ul>
+        </a>
+      </section>
+    </div>
   </section>
 </BaseLayout>
+
+<style>
+  .hub-page {
+    display: grid;
+    grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+    gap: clamp(1.5rem, 4vw, 4rem);
+    width: min(100% - 2rem, 1500px);
+    margin: 0 auto;
+    padding: clamp(2.5rem, 6vw, 6rem) 0;
+  }
+
+  .hub-main {
+    min-width: 0;
+  }
+
+  .hub-hero,
+  .problems-list {
+    width: 100%;
+  }
+
+  .hub-hero {
+    padding: clamp(1.5rem, 4vw, 3rem);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 1.4rem;
+    background:
+      radial-gradient(
+        circle at 88% 10%,
+        rgba(113, 230, 255, 0.08),
+        transparent 34%
+      ),
+      linear-gradient(
+        140deg,
+        rgba(122, 91, 207, 0.12),
+        rgba(17, 11, 37, 0.58)
+      );
+  }
+
+  .eyebrow,
+  .problem-branch {
+    color: var(--accent, #71e6ff);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .hub-hero h1 {
+    margin: 0.65rem 0 0;
+    font-size: clamp(2.5rem, 7vw, 5.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.055em;
+  }
+
+  .hub-hero p {
+    max-width: 760px;
+    margin: 1.25rem 0 0;
+    color: rgba(239, 234, 255, 0.72);
+    font-size: clamp(1rem, 1.6vw, 1.18rem);
+    line-height: 1.7;
+  }
+
+  .problems-list {
+    margin-top: clamp(2rem, 5vw, 4rem);
+  }
+
+  .section-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .section-heading p {
+    max-width: 520px;
+    margin: 0;
+    color: rgba(239, 234, 255, 0.62);
+    line-height: 1.65;
+  }
+
+  .section-title {
+    margin: 0.45rem 0 0;
+    font-size: clamp(1.7rem, 3.5vw, 2.7rem);
+    letter-spacing: -0.045em;
+  }
+
+  .problem-card-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .problem-card {
+    display: grid;
+    grid-template-rows: auto auto auto auto;
+    gap: 1.2rem;
+    min-width: 0;
+    border: 1px solid rgba(255, 255, 255, 0.11);
+    border-radius: 1.4rem;
+    padding: clamp(1.15rem, 2.5vw, 1.75rem);
+    color: inherit;
+    background:
+      radial-gradient(
+        circle at 85% 0%,
+        rgba(113, 230, 255, 0.09),
+        transparent 30%
+      ),
+      linear-gradient(
+        145deg,
+        rgba(35, 23, 67, 0.86),
+        rgba(13, 9, 29, 0.91)
+      );
+    box-shadow:
+      0 24px 70px rgba(0, 0, 0, 0.27),
+      inset 0 1px 0 rgba(255, 255, 255, 0.045);
+    text-decoration: none;
+    overflow: hidden;
+    transition:
+      transform 180ms ease,
+      border-color 180ms ease,
+      box-shadow 180ms ease;
+  }
+
+  .problem-card:hover,
+  .problem-card:focus-visible {
+    transform: translateY(-4px);
+    border-color: rgba(113, 230, 255, 0.44);
+    box-shadow:
+      0 30px 85px rgba(0, 0, 0, 0.34),
+      0 0 28px rgba(113, 230, 255, 0.08);
+    outline: none;
+  }
+
+  .problem-card-header {
+    display: grid;
+    gap: 0.65rem;
+  }
+
+  .problem-card h3 {
+    margin: 0;
+    font-size: clamp(1.65rem, 3.2vw, 2.9rem);
+    line-height: 1;
+    letter-spacing: -0.05em;
+  }
+
+  .problem-formula {
+    display: grid;
+    place-items: center;
+    min-width: 0;
+    padding: clamp(1rem, 3vw, 2rem) 0;
+    color: rgba(247, 244, 255, 0.94);
+    overflow: auto hidden;
+  }
+
+  .problem-formula :global(.katex-display) {
+    max-width: 100%;
+    margin: 0;
+  }
+
+  .problem-formula :global(.katex) {
+    font-size: clamp(0.92rem, 1.45vw, 1.22rem);
+  }
+
+  .problem-description {
+    margin: 0;
+    color: rgba(239, 234, 255, 0.72);
+    font-size: clamp(0.96rem, 1.25vw, 1.06rem);
+    line-height: 1.72;
+  }
+
+  .read-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    width: fit-content;
+    color: rgba(239, 248, 255, 0.9);
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  .read-label span {
+    color: var(--accent, #71e6ff);
+    font-size: 1.15rem;
+    transition: transform 180ms ease;
+  }
+
+  .problem-card:hover .read-label span,
+  .problem-card:focus-visible .read-label span {
+    transform: translateX(4px);
+  }
+
+  .problem-index-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+    margin-top: clamp(2rem, 5vw, 4rem);
+  }
+
+  .problem-index-card {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1.25rem;
+    padding: clamp(1.25rem, 3vw, 2rem);
+    color: inherit;
+    background: rgba(16, 11, 35, 0.62);
+    text-decoration: none;
+    transition:
+      transform 180ms ease,
+      border-color 180ms ease;
+  }
+
+  .problem-index-card:hover,
+  .problem-index-card:focus-visible {
+    transform: translateY(-3px);
+    border-color: rgba(113, 230, 255, 0.38);
+    outline: none;
+  }
+
+  .problem-index-card h2 {
+    margin: 0.55rem 0 1rem;
+    font-size: clamp(1.55rem, 3vw, 2.35rem);
+    letter-spacing: -0.04em;
+  }
+
+  .problem-index-card ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .problem-index-card li {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 999px;
+    padding: 0.5rem 0.75rem;
+    color: rgba(239, 234, 255, 0.72);
+    background: rgba(255, 255, 255, 0.035);
+    font-size: 0.86rem;
+  }
+
+  @media (max-width: 900px) {
+    .hub-page {
+      grid-template-columns: 1fr;
+    }
+
+    .section-heading {
+      display: grid;
+      align-items: initial;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .hub-page {
+      width: min(100% - 1rem, 1500px);
+    }
+
+    .hub-hero,
+    .problem-card {
+      border-radius: 1rem;
+    }
+
+    .problem-index-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .problem-card,
+    .problem-index-card,
+    .read-label span {
+      transition: none;
+    }
+
+    .problem-card:hover,
+    .problem-card:focus-visible,
+    .problem-index-card:hover,
+    .problem-index-card:focus-visible {
+      transform: none;
+    }
+  }
+</style>

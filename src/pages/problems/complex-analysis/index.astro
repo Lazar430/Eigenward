@@ -1,0 +1,348 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import ComplexAnalysisSidebar from "../../../components/ComplexAnalysisSidebar.astro";
+import Math from "../../../components/Math.astro";
+import { withBase } from "@/utils/paths";
+
+const problemCards = [
+  {
+    branch: "Complex Differentiation \u00b7 Cauchy\u2013Riemann",
+    title: "Differentiable at One Point, Holomorphic Nowhere Nearby",
+    href: withBase("problems/complex-analysis/pointwise-differentiability/"),
+    ariaLabel: "Open Differentiable at One Point, Holomorphic Nowhere Nearby",
+    formula: String.raw`f(z)=|z|^2,\qquad
+    f'(0)\;?,\qquad
+    f'(z)\text{ for }z\neq0\;?`,
+    text: "Determine where the complex derivative exists and use the example to separate differentiability at a point from holomorphicity on a neighborhood."
+  },
+  {
+    branch: "Branches \u00b7 Logarithm",
+    title: "Can a Logarithm Exist on This Domain?",
+    href: withBase("problems/complex-analysis/logarithm-branch/"),
+    ariaLabel: "Open Can a Logarithm Exist on This Domain?",
+    formula: String.raw`\operatorname{Log}z
+    =
+\log|z|+i\operatorname{Arg}z`,
+    text: "Decide whether a single-valued holomorphic logarithm can be defined on a given punctured or slit domain, and identify the topological obstruction."
+  },
+  {
+    branch: "Contour Integration \u00b7 Cauchy Formula",
+    title: "The Integral Knows the Inside",
+    href: withBase("problems/complex-analysis/cauchy-formula/"),
+    ariaLabel: "Open The Integral Knows the Inside",
+    formula: String.raw`\int_{|z|=2}
+\frac{e^z}{(z-1)^3}\,dz`,
+    text: "Evaluate the contour integral using the higher-derivative form of Cauchy's integral formula rather than parameterizing the circle."
+  },
+  {
+    branch: "Power Series \u00b7 Radius of Convergence",
+    title: "Find the Nearest Obstruction",
+    href: withBase("problems/complex-analysis/taylor-radius/"),
+    ariaLabel: "Open Find the Nearest Obstruction",
+    formula: String.raw`f(z)=\frac{1}{1+z^2},
+\qquad
+\sum_{n=0}^{\infty}a_n(z-z_0)^n`,
+    text: "Determine the radius of convergence of the Taylor series about a prescribed center by locating the nearest complex singularity."
+  },
+  {
+    branch: "Singularities \u00b7 Laurent Series",
+    title: "Classify the Singularity",
+    href: withBase("problems/complex-analysis/classify-singularity/"),
+    ariaLabel: "Open Classify the Singularity",
+    formula: String.raw`f(z)=
+\frac{e^{1/z}}{z^2}`,
+    text: "Find the Laurent expansion around the origin, classify the isolated singularity, and compute the residue."
+  },
+  {
+    branch: "Residues \u00b7 Real Integrals",
+    title: "A Real Integral Through the Upper Half-Plane",
+    href: withBase("problems/complex-analysis/residue-real-integral/"),
+    ariaLabel: "Open A Real Integral Through the Upper Half-Plane",
+    formula: String.raw`\int_{-\infty}^{\infty}
+\frac{dx}{x^4+1}`,
+    text: "Choose a contour, identify enclosed poles, estimate the arc contribution, and recover the real integral from the residue theorem."
+  },
+  {
+    branch: "Argument Principle \u00b7 Zero Counting",
+    title: "Count the Zeros Without Solving",
+    href: withBase("problems/complex-analysis/count-zeros/"),
+    ariaLabel: "Open Count the Zeros Without Solving",
+    formula: String.raw`p(z)=z^7+4z^3+2,
+\qquad
+N_{\{|z|<1\}}\;?`,
+    text: "Use Rouch\u00e9's theorem or the argument principle to count zeros in the unit disk without finding them explicitly."
+  },
+  {
+    branch: "Maximum Principle \u00b7 Rigidity",
+    title: "A Bounded Entire Function",
+    href: withBase("problems/complex-analysis/liouville/"),
+    ariaLabel: "Open A Bounded Entire Function",
+    formula: String.raw`f:\mathbb C\to\mathbb C,\qquad
+    |f(z)|\le M`,
+    text: "Derive constancy from Cauchy estimates or Liouville's theorem and compare the proof with what would happen for real differentiable functions."
+  },
+  {
+    branch: "Conformal Maps \u00b7 M\u00f6bius Transformations",
+    title: "Map a Half-Plane to the Disk",
+    href: withBase("problems/complex-analysis/mobius-half-plane-disk/"),
+    ariaLabel: "Open Map a Half-Plane to the Disk",
+    formula: String.raw`w=\frac{z-i}{z+i}`,
+    text: "Show that a M\u00f6bius transformation maps the upper half-plane biholomorphically onto the unit disk and track the boundary under the map."
+  },
+  {
+    branch: "Schwarz Lemma \u00b7 Equality Case",
+    title: "When Does the Bound Become Equality?",
+    href: withBase("problems/complex-analysis/schwarz-equality/"),
+    ariaLabel: "Open When Does the Bound Become Equality?",
+    formula: String.raw`f:\mathbb D\to\mathbb D,\qquad
+    f(0)=0,\qquad
+    |f'(0)|=1`,
+    text: "Use Schwarz's lemma to prove that equality forces the function to be a rotation of the disk."
+  },
+];
+---
+
+<BaseLayout
+  title="Complex Analysis Problems"
+  description="A collection of complex analysis problems on holomorphic functions, contour integrals, series, singularities, residues, zero counting, and conformal maps."
+>
+  <section class="hub-page">
+    <ComplexAnalysisSidebar />
+
+    <div class="hub-main">
+      <section class="hub-hero">
+        <span class="eyebrow">Complex Analysis · Problems</span>
+
+        <h1>Problems</h1>
+
+        <p>
+          A dedicated shelf of contour integrals, singularity problems, analytic
+          estimates, zero-counting arguments, and conformal-mapping exercises
+          from across the complex analysis branch.
+        </p>
+      </section>
+
+      <section
+        class="problems-list"
+        aria-labelledby="complex-analysis-problems-title"
+      >
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">Selected problems</span>
+
+            <h2
+              id="complex-analysis-problems-title"
+              class="section-title"
+            >
+              Problem shelf
+            </h2>
+          </div>
+
+          <p>
+            The displayed formulas are representative snapshots rather than
+            complete problem statements.
+          </p>
+        </div>
+
+        <div class="problem-card-grid">
+          {
+            problemCards.map((problem) => (
+              <a
+                class="problem-card"
+                href={problem.href}
+                aria-label={problem.ariaLabel}
+              >
+                <header class="problem-card-header">
+                  <span class="problem-branch">{problem.branch}</span>
+                  <h3>{problem.title}</h3>
+                </header>
+
+                <div
+                  class="problem-formula"
+                  role="img"
+                  aria-label={`Representative formula for ${problem.title}`}
+                >
+                  <Math tex={problem.formula} display />
+                </div>
+
+                <p class="problem-description">{problem.text}</p>
+
+                <span class="read-label" aria-hidden="true">
+                  View problem <span>→</span>
+                </span>
+              </a>
+            ))
+          }
+        </div>
+      </section>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .problems-list {
+    width: 100%;
+    margin-top: clamp(2rem, 5vw, 4rem);
+  }
+
+  .section-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .section-heading p {
+    max-width: 520px;
+    margin: 0;
+    color: rgba(239, 234, 255, 0.62);
+    line-height: 1.65;
+  }
+
+  .section-title {
+    margin: 0.45rem 0 0;
+    font-size: clamp(1.7rem, 3.5vw, 2.7rem);
+    letter-spacing: -0.045em;
+  }
+
+  .problem-card-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .problem-card {
+    display: grid;
+    gap: 1.2rem;
+    min-width: 0;
+    border: 1px solid rgba(255, 255, 255, 0.11);
+    border-radius: 1.4rem;
+    padding: clamp(1.15rem, 2.5vw, 1.75rem);
+    color: inherit;
+    background:
+      radial-gradient(
+        circle at 85% 0%,
+        rgba(113, 230, 255, 0.09),
+        transparent 30%
+      ),
+      linear-gradient(
+        145deg,
+        rgba(35, 23, 67, 0.86),
+        rgba(13, 9, 29, 0.91)
+      );
+    box-shadow:
+      0 24px 70px rgba(0, 0, 0, 0.27),
+      inset 0 1px 0 rgba(255, 255, 255, 0.045);
+    text-decoration: none;
+    overflow: hidden;
+    transition:
+      transform 180ms ease,
+      border-color 180ms ease,
+      box-shadow 180ms ease;
+  }
+
+  .problem-card:hover,
+  .problem-card:focus-visible {
+    transform: translateY(-4px);
+    border-color: rgba(113, 230, 255, 0.44);
+    box-shadow:
+      0 30px 85px rgba(0, 0, 0, 0.34),
+      0 0 28px rgba(113, 230, 255, 0.08);
+    outline: none;
+  }
+
+  .problem-card-header {
+    display: grid;
+    gap: 0.65rem;
+  }
+
+  .problem-branch {
+    color: var(--accent, #71e6ff);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .problem-card h3 {
+    margin: 0;
+    font-size: clamp(1.65rem, 3.2vw, 2.9rem);
+    line-height: 1;
+    letter-spacing: -0.05em;
+  }
+
+  .problem-formula {
+    display: grid;
+    place-items: center;
+    min-width: 0;
+    padding: clamp(1rem, 3vw, 2rem) 0;
+    color: rgba(247, 244, 255, 0.94);
+    overflow: auto hidden;
+  }
+
+  .problem-formula :global(.katex-display) {
+    max-width: 100%;
+    margin: 0;
+  }
+
+  .problem-formula :global(.katex) {
+    font-size: clamp(0.92rem, 1.45vw, 1.22rem);
+  }
+
+  .problem-description {
+    max-width: 900px;
+    margin: 0;
+    color: rgba(239, 234, 255, 0.72);
+    font-size: clamp(0.96rem, 1.25vw, 1.06rem);
+    line-height: 1.72;
+  }
+
+  .read-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    width: fit-content;
+    color: rgba(239, 248, 255, 0.9);
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  .read-label span {
+    color: var(--accent, #71e6ff);
+    font-size: 1.15rem;
+    transition: transform 180ms ease;
+  }
+
+  .problem-card:hover .read-label span,
+  .problem-card:focus-visible .read-label span {
+    transform: translateX(4px);
+  }
+
+  @media (max-width: 900px) {
+    .section-heading {
+      display: grid;
+      align-items: initial;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .problem-card {
+      border-radius: 1rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .problem-card,
+    .read-label span {
+      transition: none;
+    }
+
+    .problem-card:hover,
+    .problem-card:focus-visible {
+      transform: none;
+    }
+  }
+</style>

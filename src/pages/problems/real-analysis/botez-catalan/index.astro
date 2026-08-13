@@ -1,0 +1,204 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import ProblemsSidebar from "../../../../components/ProblemsSidebar.astro";
+import Math from "../../../../components/Math.astro";
+import Equation from "../../../../components/Equation.astro";
+---
+
+<BaseLayout
+  title="On the Botez-Catalan Identity"
+  description="Taking a look at a lesser known identity."
+>
+  <section class="la-page">
+    <ProblemsSidebar />
+
+    <article class="topic-article">
+      <header class="topic-hero">
+	<span class="eyebrow">Real Analysis · Sequences and Series</span>
+	<h1>On the Botez-Catalan Identity</h1>
+
+	<p>
+	  Taking a look at a lesser known identity.
+	</p>
+      </header>
+
+      <nav class="topic-toc" aria-label="Page sections">
+	<a href="#broad-stroke">Broad Stroke</a>
+	<a href="#quick-examples">Quick Examples</a>
+	<a href="#a-deeper-look">A Deeper Look</a>
+      </nav>
+
+      <section class="topic-section" id="round-i">
+	<h2>Round I</h2>
+
+	<p> Say you're given this identity: </p>
+
+	<Equation
+	  tex={String.raw`1 - \frac{1}{2} + \frac{1}{3} - \frac{1}{4} + ... + \frac{1}{11} - \frac{1}{12} = \frac{1}{7} + \frac{1}{8} + ... + \frac{1}{12}.`}
+	/>
+
+	<p>
+	  How does one prove it? Certainly it wouldn't be an unfeasible task to just compute the <span class="emph"> LHS </span> directly... but try to entertain
+	  coming up with a more unique way to do it.
+	</p>
+	<details class = "drop-example">
+	  <summary>Proof</summary>
+
+	  <p> We are going to use this profound fact of life: </p>
+
+	  <Equation tex={String.raw`1 - \frac{1}{2} = \frac{1}{2}.`}/>
+
+	  <p> Try not to cry while you take it all in... Interestingly enough, halving gives you half. Halving the half further: </p>
+
+	  <Equation tex={String.raw`1 - \frac{1}{2} - \frac{1}{4} = \frac{1}{4}.`}/>
+
+	  Further halving the halved half:
+
+	  <Equation tex={String.raw`1 - \frac{1}{2} - \frac{1}{4} - \frac{1}{8} = \frac{1}{8}.`}/>
+
+	  And this of course works given any starting point, as long as we keep subtracting halves:
+
+	  <Equation tex={String.raw`\frac{1}{3} - \frac{1}{6} - \frac{1}{12} = \frac{1}{12}.`}/>
+
+	  Consider the <span class="emph"> LHS </span>:
+
+	  <Equation
+	    tex={String.raw`1 - \frac{1}{2} + \frac{1}{3} - \frac{1}{4} + \frac{1}{5} - \frac{1}{6} + {\red \frac{1}{7}}
+            - \frac{1}{8} + {\red \frac{1}{9}} - \frac{1}{10} + {\red \frac{1}{11}} - \frac{1}{12}.`}
+	  />
+
+	  The highlighted fractions are already parts of the <span class="emph"> LHS </span>. Let's see how we can group together the remaining fractions in order to
+	  get what we want:
+
+	  <Equation
+	    tex={String.raw`\text{LHS} = \frac{1}{7} + \underbrace{\left(1 - \frac{1}{2} - \frac{1}{4} - \frac{1}{8}\right)}_{\displaystyle \frac{1}{8}} + \frac{1}{9}
+	    + \underbrace{\left(\frac{1}{5} - \frac{1}{10}\right)}_{\displaystyle \frac{1}{10}}
+	    + \frac{1}{11} + \underbrace{\left(\frac{1}{3} - \frac{1}{6} - \frac{1}{12}\right)}_{\displaystyle \frac{1}{12}}.`}
+	  />
+	  
+	  <div class = "drop-content">
+	    
+	  </div>
+	  
+	</details>
+	
+      </section>
+
+      <section class="topic-section" id="round-ii">
+        <h2>Round II</h2>
+
+	<p> The previous identity was a particular case of the Botez-Catalan idenity, which states: </p>
+
+	<Equation
+	  tex={String.raw`\sum_{k=1}^{n}\frac{1}{n+k} = H_{2n}-H_n =\sum_{k=1}^{2n}\frac{(-1)^{k-1}}{k}.`}
+	/>
+
+	<p> Here, <Math tex="H_n"/> refers to the <span class="emph"> Harmonic sum </span> of all positive integers up to <Math tex="n"/>, meaning the sum of their reciprocals: </p>
+
+	<Equation
+	  tex={String.raw`H_n = \sum_{k = 1}^{n}\frac{1}{k} = 1 + \frac{1}{2} + \frac{1}{3} + \cdots + \frac{1}{n - 1} + \frac{1}{n}.`}
+	/>
+
+	<p> Indeed, </p>
+
+	<Equation id="a-eq1" number={1}
+	  tex={String.raw`\sum_{k=1}^{n}\frac{1}{n+k} = \frac{1}{n + 1} + \frac{1}{n + 2} + \cdots + \frac{1}{2n - 1} + \frac{1}{2n},`}
+	/>
+
+	<p> which is what's left if you consider the harmonic sum up to <Math tex="2n"/>, <Math tex=" H_{2n} "/>, and subtract the first half of it
+        up to <Math tex="n"/>, <Math tex="H_n"/>, so that
+        the surviving fractions begin from the one with <Math tex="n + 1"/> in its denominator onwards. That clears up the middle part - not much of a mystery there. What
+	is remarkable instead is that the sum to the left equals the one to the right. </p>
+
+	<p> The right sum is kind of like <Math tex=" H_{2n} "/> with a twist:  </p>
+
+	<Equation id = "a-eq2", number={2}
+	  tex={String.raw`\sum_{k=1}^{2n}\frac{(-1)^{k-1}}{k} = 1 - \frac{1}{2} + \frac{1}{3} - \frac{1}{4} + \frac{1}{5}  - \cdots + \frac{1}{2n - 1} - \frac{1}{2n};`}
+	/>
+
+	<p> depending on parity of the denominator, we either add those fractions whose denominators are odd, or subtract those that have an even denominator. </p>
+
+	<p> Let's see why does equation (<a class="eq-ref" href="#a-eq1">1</a>) equal equation (<a class="eq-ref" href="#a-eq2">2</a>). </p>
+	
+	<details class="drop-example">
+	  <summary>Proof</summary>
+
+	  <div class="drop-content">
+
+	    <details class="drop-example">
+	      <summary>Somewhat complicated variant (for funsies?)</summary>
+
+	      <div class="drop-content">
+
+	    
+	    
+	      </div>
+	  
+	    </details>
+
+	    <details class="drop-example">
+	      <summary>More straightforward variant</summary>
+
+	      <div class="drop-content">
+
+		<p>
+		  This is the more approachable and sensible way of proving the formula. There are only a few steps, none particularly challenging to follow (hopefully!).
+		  First, we simply express the <span class="emph"> LHS </span> as the subtraction of two harmonic sums, as previously discussed:
+		</p>
+
+		<Equation
+		  tex={String.raw`\sum_{k=1}^{n}\frac{1}{n+k} = H_{2n} - H_n = \sum_{k=1}^{2n}\frac{1}{k} - \sum_{k=1}^{n}\frac{1}{k}.`}
+		/>
+
+		Ideally, we would want to combine these two sums into one. The problem here is their different ranges. The first sum has twice as many terms as the second.
+		How do we work around that? The trick is to delve into some reindexing shenanigans. Looking at the bigger sum, we can pair together consecutive terms like so:
+
+		<Equation id="a-eq3" number={3}
+		  tex={String.raw`\sum_{k=1}^{2n}\frac{1}{k} = \left(1 + \frac{1}{2}\right) + \left(\frac{1}{3} + \frac{1}{4}\right)
+		  + \cdots + \left(\frac{1}{2n - 1} + \frac{1}{2n}\right).`}
+		/>
+
+		So instead of seeing it as a sum of <Math tex="2n"/> separate fractions, we'll treat it as the sum of <Math tex="n"/> pairs of fractions:
+
+		<Equation
+		  tex={String.raw`\sum_{k=1}^{2n}\frac{1}{k} = \sum_{k=1}^{n}\left( \frac{1}{2k - 1} + \frac{1}{2k} \right).`}
+		/>
+
+		If you are wondering where does the general term expression come from, just look at the final term of equation (<a class="eq-ref" href="#a-eq3">3</a>).
+		We return to where we started:
+
+		<Equation
+		  tex={String.raw`\sum_{k=1}^{n}\frac{1}{n+k} = \sum_{k=1}^{n}\left( \frac{1}{2k - 1} + \frac{1}{2k} \right) - \sum_{k=1}^{n}\frac{1}{k}.`}
+		/>
+
+		Now we are able to merge the two sums. Also noting that
+
+		<Equation
+		  tex={String.raw`\frac{1}{2k} - \frac{1}{k} = -\frac{1}{2k},`}
+		/>
+
+		what we get is:
+
+		<Equation
+		  tex={String.raw`\sum_{k=1}^{n}\frac{1}{n+k} = \sum_{k=1}^{n}\left( \frac{1}{2k - 1} - \frac{1}{2k} \right).`}
+		/>
+
+		But then again, on the right we have the sum of <Math tex="n"/> pairs of fractions, meaning the sum of <Math tex="2n"/> distinct fractions. And as we can observe,
+		fractions whose denominator is odd get added, while those with even denominators get subtracted. Therefore, a more compact way of writing this is exactly:
+
+		<Equation
+		  tex={String.raw`\sum_{k=1}^{n}\frac{1}{n+k} = \sum_{k=1}^{2n}\frac{(-1)^{k-1}}{k}.`}
+		/>
+	    
+	      </div>
+	  
+	    </details>
+	    
+	  </div>
+	  
+	</details>
+	
+      </section>
+    </article>
+  </section>
+</BaseLayout>

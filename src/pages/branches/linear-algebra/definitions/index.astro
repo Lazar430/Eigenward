@@ -1,0 +1,380 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import LinearAlgebraSidebar from "../../../../components/LinearAlgebraSidebar.astro";
+const definitions = [
+  "Adjoint map",
+  "Affine combination",
+  "Affine map",
+  "Affine space",
+  "Affine subspace",
+  "Algebraic multiplicity",
+  "Alternating form",
+  "Annihilator",
+  "Basis",
+  "Bilinear form",
+  "Canonical coordinates",
+  "Change-of-basis matrix",
+  "Characteristic polynomial",
+  "Cholesky factorization",
+  "Codimension",
+  "Column rank",
+  "Column space",
+  "Companion matrix",
+  "Condition number",
+  "Coordinate functional",
+  "Coordinate vector",
+  "Cyclic subspace",
+  "Defective matrix",
+  "Determinant",
+  "Diagonal matrix",
+  "Diagonalizable operator",
+  "Dimension",
+  "Direct sum",
+  "Dual basis",
+  "Dual map",
+  "Dual space",
+  "Eigenspace",
+  "Eigenvalue",
+  "Eigenvector",
+  "Elementary matrix",
+  "Endomorphism",
+  "Euclidean inner product",
+  "Exterior algebra",
+  "Exterior power",
+  "Frobenius norm",
+  "Generalized eigenvector",
+  "Geometric multiplicity",
+  "Gram matrix",
+  "Gram\u2013Schmidt process",
+  "Hermitian form",
+  "Hermitian matrix",
+  "Homogeneous system",
+  "Image",
+  "Independent set",
+  "Inner product",
+  "Invariant subspace",
+  "Invertible linear map",
+  "Isomorphism",
+  "Jordan block",
+  "Jordan chain",
+  "Jordan form",
+  "Kernel",
+  "Least-squares solution",
+  "Linear combination",
+  "Linear functional",
+  "Linear independence",
+  "Linear map",
+  "Linear operator",
+  "Linear span",
+  "LU factorization",
+  "Matrix norm",
+  "Matrix of a linear map",
+  "Minimal polynomial",
+  "Moore\u2013Penrose pseudoinverse",
+  "Multilinear map",
+  "Nilpotent operator",
+  "Normal operator",
+  "Null space",
+  "Nullity",
+  "Operator norm",
+  "Orthogonal complement",
+  "Orthogonal matrix",
+  "Orthogonal projection",
+  "Orthogonal set",
+  "Orthonormal basis",
+  "Permutation matrix",
+  "Polar decomposition",
+  "Positive-definite form",
+  "Positive-semidefinite form",
+  "Projection operator",
+  "QR factorization",
+  "Quadratic form",
+  "Quotient map",
+  "Quotient space",
+  "Rank",
+  "Rank factorization",
+  "Rank-one operator",
+  "Rational canonical form",
+  "Row rank",
+  "Row space",
+  "Scalar matrix",
+  "Self-adjoint operator",
+  "Sesquilinear form",
+  "Similarity",
+  "Singular matrix",
+  "Singular value",
+  "Singular value decomposition",
+  "Skew-adjoint operator",
+  "Skew-symmetric form",
+  "Skew-symmetric matrix",
+  "Span",
+  "Spectral decomposition",
+  "Subspace",
+  "Symmetric bilinear form",
+  "Symmetric matrix",
+  "Tensor product",
+  "Trace",
+  "Transpose map",
+  "Triangular matrix",
+  "Triangularizable operator",
+  "Unitary matrix",
+  "Unitary operator",
+  "Vector space",
+  "Zero map"
+];
+const letters = [...new Set(definitions.map((definition) => definition[0].toUpperCase()))];
+---
+<BaseLayout title="Linear Algebra Definitions" description="An alphabetical index of linear algebra terminology and concepts.">
+  <section class="hub-page"><LinearAlgebraSidebar /><div class="hub-main">
+    <section class="hub-hero"><span class="eyebrow">Linear Algebra · Definitions</span><h1>Definitions</h1><p>An alphabetical index of the principal objects, constructions, and vocabulary used throughout the linear algebra section.</p></section>
+    <section class="index-tools" aria-label="Definition index controls">
+      <label class="search-control"><span>Search definitions</span><input id="definition-search" type="search" placeholder="Try “basis”, “orthogonal”, “Jordan”…" autocomplete="off" /></label>
+      <nav class="alphabet-nav" aria-label="Jump to letter">{letters.map((letter) => (<a href={`#definitions-${letter}`}>{letter}</a>))}</nav>
+      <output class="result-count" id="definition-result-count" aria-live="polite">{definitions.length} definitions</output>
+    </section>
+    <div class="alphabet-index" id="definition-index">        <section class="alphabet-group" data-alpha-group>
+      <h2 id="definitions-A">A</h2>
+      <div class="alphabet-entry-list">
+        <a id="adjoint-map" class="index-entry" href="#adjoint-map" data-index-entry data-search-term={"adjoint map"}><span>Adjoint map</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="affine-combination" class="index-entry" href="#affine-combination" data-index-entry data-search-term={"affine combination"}><span>Affine combination</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="affine-map" class="index-entry" href="#affine-map" data-index-entry data-search-term={"affine map"}><span>Affine map</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="affine-space" class="index-entry" href="#affine-space" data-index-entry data-search-term={"affine space"}><span>Affine space</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="affine-subspace" class="index-entry" href="#affine-subspace" data-index-entry data-search-term={"affine subspace"}><span>Affine subspace</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="algebraic-multiplicity" class="index-entry" href="#algebraic-multiplicity" data-index-entry data-search-term={"algebraic multiplicity"}><span>Algebraic multiplicity</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="alternating-form" class="index-entry" href="#alternating-form" data-index-entry data-search-term={"alternating form"}><span>Alternating form</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="annihilator" class="index-entry" href="#annihilator" data-index-entry data-search-term={"annihilator"}><span>Annihilator</span><span class="index-arrow" aria-hidden="true">→</span></a>
+      </div>
+    </section>        <section class="alphabet-group" data-alpha-group>
+      <h2 id="definitions-B">B</h2>
+      <div class="alphabet-entry-list">
+        <a id="basis" class="index-entry" href="#basis" data-index-entry data-search-term={"basis"}><span>Basis</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="bilinear-form" class="index-entry" href="#bilinear-form" data-index-entry data-search-term={"bilinear form"}><span>Bilinear form</span><span class="index-arrow" aria-hidden="true">→</span></a>
+      </div>
+    </section>        <section class="alphabet-group" data-alpha-group>
+      <h2 id="definitions-C">C</h2>
+      <div class="alphabet-entry-list">
+        <a id="canonical-coordinates" class="index-entry" href="#canonical-coordinates" data-index-entry data-search-term={"canonical coordinates"}><span>Canonical coordinates</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="change-of-basis-matrix" class="index-entry" href="#change-of-basis-matrix" data-index-entry data-search-term={"change-of-basis matrix"}><span>Change-of-basis matrix</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="characteristic-polynomial" class="index-entry" href="#characteristic-polynomial" data-index-entry data-search-term={"characteristic polynomial"}><span>Characteristic polynomial</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="cholesky-factorization" class="index-entry" href="#cholesky-factorization" data-index-entry data-search-term={"cholesky factorization"}><span>Cholesky factorization</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="codimension" class="index-entry" href="#codimension" data-index-entry data-search-term={"codimension"}><span>Codimension</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="column-rank" class="index-entry" href="#column-rank" data-index-entry data-search-term={"column rank"}><span>Column rank</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="column-space" class="index-entry" href="#column-space" data-index-entry data-search-term={"column space"}><span>Column space</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="companion-matrix" class="index-entry" href="#companion-matrix" data-index-entry data-search-term={"companion matrix"}><span>Companion matrix</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="condition-number" class="index-entry" href="#condition-number" data-index-entry data-search-term={"condition number"}><span>Condition number</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="coordinate-functional" class="index-entry" href="#coordinate-functional" data-index-entry data-search-term={"coordinate functional"}><span>Coordinate functional</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="coordinate-vector" class="index-entry" href="#coordinate-vector" data-index-entry data-search-term={"coordinate vector"}><span>Coordinate vector</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="cyclic-subspace" class="index-entry" href="#cyclic-subspace" data-index-entry data-search-term={"cyclic subspace"}><span>Cyclic subspace</span><span class="index-arrow" aria-hidden="true">→</span></a>
+      </div>
+    </section>        <section class="alphabet-group" data-alpha-group>
+      <h2 id="definitions-D">D</h2>
+      <div class="alphabet-entry-list">
+        <a id="defective-matrix" class="index-entry" href="#defective-matrix" data-index-entry data-search-term={"defective matrix"}><span>Defective matrix</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="determinant" class="index-entry" href="#determinant" data-index-entry data-search-term={"determinant"}><span>Determinant</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="diagonal-matrix" class="index-entry" href="#diagonal-matrix" data-index-entry data-search-term={"diagonal matrix"}><span>Diagonal matrix</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="diagonalizable-operator" class="index-entry" href="#diagonalizable-operator" data-index-entry data-search-term={"diagonalizable operator"}><span>Diagonalizable operator</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="dimension" class="index-entry" href="#dimension" data-index-entry data-search-term={"dimension"}><span>Dimension</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="direct-sum" class="index-entry" href="#direct-sum" data-index-entry data-search-term={"direct sum"}><span>Direct sum</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="dual-basis" class="index-entry" href="#dual-basis" data-index-entry data-search-term={"dual basis"}><span>Dual basis</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="dual-map" class="index-entry" href="#dual-map" data-index-entry data-search-term={"dual map"}><span>Dual map</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="dual-space" class="index-entry" href="#dual-space" data-index-entry data-search-term={"dual space"}><span>Dual space</span><span class="index-arrow" aria-hidden="true">→</span></a>
+      </div>
+    </section>        <section class="alphabet-group" data-alpha-group>
+      <h2 id="definitions-E">E</h2>
+      <div class="alphabet-entry-list">
+        <a id="eigenspace" class="index-entry" href="#eigenspace" data-index-entry data-search-term={"eigenspace"}><span>Eigenspace</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="eigenvalue" class="index-entry" href="#eigenvalue" data-index-entry data-search-term={"eigenvalue"}><span>Eigenvalue</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="eigenvector" class="index-entry" href="#eigenvector" data-index-entry data-search-term={"eigenvector"}><span>Eigenvector</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="elementary-matrix" class="index-entry" href="#elementary-matrix" data-index-entry data-search-term={"elementary matrix"}><span>Elementary matrix</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="endomorphism" class="index-entry" href="#endomorphism" data-index-entry data-search-term={"endomorphism"}><span>Endomorphism</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="euclidean-inner-product" class="index-entry" href="#euclidean-inner-product" data-index-entry data-search-term={"euclidean inner product"}><span>Euclidean inner product</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="exterior-algebra" class="index-entry" href="#exterior-algebra" data-index-entry data-search-term={"exterior algebra"}><span>Exterior algebra</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="exterior-power" class="index-entry" href="#exterior-power" data-index-entry data-search-term={"exterior power"}><span>Exterior power</span><span class="index-arrow" aria-hidden="true">→</span></a>
+      </div>
+    </section>        <section class="alphabet-group" data-alpha-group>
+      <h2 id="definitions-F">F</h2>
+      <div class="alphabet-entry-list">
+        <a id="frobenius-norm" class="index-entry" href="#frobenius-norm" data-index-entry data-search-term={"frobenius norm"}><span>Frobenius norm</span><span class="index-arrow" aria-hidden="true">→</span></a>
+      </div>
+    </section>        <section class="alphabet-group" data-alpha-group>
+      <h2 id="definitions-G">G</h2>
+      <div class="alphabet-entry-list">
+        <a id="generalized-eigenvector" class="index-entry" href="#generalized-eigenvector" data-index-entry data-search-term={"generalized eigenvector"}><span>Generalized eigenvector</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="geometric-multiplicity" class="index-entry" href="#geometric-multiplicity" data-index-entry data-search-term={"geometric multiplicity"}><span>Geometric multiplicity</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="gram-matrix" class="index-entry" href="#gram-matrix" data-index-entry data-search-term={"gram matrix"}><span>Gram matrix</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="gram-schmidt-process" class="index-entry" href="#gram-schmidt-process" data-index-entry data-search-term={"gram\u2013schmidt process"}><span>Gram–Schmidt process</span><span class="index-arrow" aria-hidden="true">→</span></a>
+      </div>
+    </section>        <section class="alphabet-group" data-alpha-group>
+      <h2 id="definitions-H">H</h2>
+      <div class="alphabet-entry-list">
+        <a id="hermitian-form" class="index-entry" href="#hermitian-form" data-index-entry data-search-term={"hermitian form"}><span>Hermitian form</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="hermitian-matrix" class="index-entry" href="#hermitian-matrix" data-index-entry data-search-term={"hermitian matrix"}><span>Hermitian matrix</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="homogeneous-system" class="index-entry" href="#homogeneous-system" data-index-entry data-search-term={"homogeneous system"}><span>Homogeneous system</span><span class="index-arrow" aria-hidden="true">→</span></a>
+      </div>
+    </section>        <section class="alphabet-group" data-alpha-group>
+      <h2 id="definitions-I">I</h2>
+      <div class="alphabet-entry-list">
+        <a id="image" class="index-entry" href="#image" data-index-entry data-search-term={"image"}><span>Image</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="independent-set" class="index-entry" href="#independent-set" data-index-entry data-search-term={"independent set"}><span>Independent set</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="inner-product" class="index-entry" href="#inner-product" data-index-entry data-search-term={"inner product"}><span>Inner product</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="invariant-subspace" class="index-entry" href="#invariant-subspace" data-index-entry data-search-term={"invariant subspace"}><span>Invariant subspace</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="invertible-linear-map" class="index-entry" href="#invertible-linear-map" data-index-entry data-search-term={"invertible linear map"}><span>Invertible linear map</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="isomorphism" class="index-entry" href="#isomorphism" data-index-entry data-search-term={"isomorphism"}><span>Isomorphism</span><span class="index-arrow" aria-hidden="true">→</span></a>
+      </div>
+    </section>        <section class="alphabet-group" data-alpha-group>
+      <h2 id="definitions-J">J</h2>
+      <div class="alphabet-entry-list">
+        <a id="jordan-block" class="index-entry" href="#jordan-block" data-index-entry data-search-term={"jordan block"}><span>Jordan block</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="jordan-chain" class="index-entry" href="#jordan-chain" data-index-entry data-search-term={"jordan chain"}><span>Jordan chain</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="jordan-form" class="index-entry" href="#jordan-form" data-index-entry data-search-term={"jordan form"}><span>Jordan form</span><span class="index-arrow" aria-hidden="true">→</span></a>
+      </div>
+    </section>        <section class="alphabet-group" data-alpha-group>
+      <h2 id="definitions-K">K</h2>
+      <div class="alphabet-entry-list">
+        <a id="kernel" class="index-entry" href="#kernel" data-index-entry data-search-term={"kernel"}><span>Kernel</span><span class="index-arrow" aria-hidden="true">→</span></a>
+      </div>
+    </section>        <section class="alphabet-group" data-alpha-group>
+      <h2 id="definitions-L">L</h2>
+      <div class="alphabet-entry-list">
+        <a id="least-squares-solution" class="index-entry" href="#least-squares-solution" data-index-entry data-search-term={"least-squares solution"}><span>Least-squares solution</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="linear-combination" class="index-entry" href="#linear-combination" data-index-entry data-search-term={"linear combination"}><span>Linear combination</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="linear-functional" class="index-entry" href="#linear-functional" data-index-entry data-search-term={"linear functional"}><span>Linear functional</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="linear-independence" class="index-entry" href="#linear-independence" data-index-entry data-search-term={"linear independence"}><span>Linear independence</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="linear-map" class="index-entry" href="#linear-map" data-index-entry data-search-term={"linear map"}><span>Linear map</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="linear-operator" class="index-entry" href="#linear-operator" data-index-entry data-search-term={"linear operator"}><span>Linear operator</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="linear-span" class="index-entry" href="#linear-span" data-index-entry data-search-term={"linear span"}><span>Linear span</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="lu-factorization" class="index-entry" href="#lu-factorization" data-index-entry data-search-term={"lu factorization"}><span>LU factorization</span><span class="index-arrow" aria-hidden="true">→</span></a>
+      </div>
+    </section>        <section class="alphabet-group" data-alpha-group>
+      <h2 id="definitions-M">M</h2>
+      <div class="alphabet-entry-list">
+        <a id="matrix-norm" class="index-entry" href="#matrix-norm" data-index-entry data-search-term={"matrix norm"}><span>Matrix norm</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="matrix-of-a-linear-map" class="index-entry" href="#matrix-of-a-linear-map" data-index-entry data-search-term={"matrix of a linear map"}><span>Matrix of a linear map</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="minimal-polynomial" class="index-entry" href="#minimal-polynomial" data-index-entry data-search-term={"minimal polynomial"}><span>Minimal polynomial</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="moore-penrose-pseudoinverse" class="index-entry" href="#moore-penrose-pseudoinverse" data-index-entry data-search-term={"moore\u2013penrose pseudoinverse"}><span>Moore–Penrose pseudoinverse</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="multilinear-map" class="index-entry" href="#multilinear-map" data-index-entry data-search-term={"multilinear map"}><span>Multilinear map</span><span class="index-arrow" aria-hidden="true">→</span></a>
+      </div>
+    </section>        <section class="alphabet-group" data-alpha-group>
+      <h2 id="definitions-N">N</h2>
+      <div class="alphabet-entry-list">
+        <a id="nilpotent-operator" class="index-entry" href="#nilpotent-operator" data-index-entry data-search-term={"nilpotent operator"}><span>Nilpotent operator</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="normal-operator" class="index-entry" href="#normal-operator" data-index-entry data-search-term={"normal operator"}><span>Normal operator</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="null-space" class="index-entry" href="#null-space" data-index-entry data-search-term={"null space"}><span>Null space</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="nullity" class="index-entry" href="#nullity" data-index-entry data-search-term={"nullity"}><span>Nullity</span><span class="index-arrow" aria-hidden="true">→</span></a>
+      </div>
+    </section>        <section class="alphabet-group" data-alpha-group>
+      <h2 id="definitions-O">O</h2>
+      <div class="alphabet-entry-list">
+        <a id="operator-norm" class="index-entry" href="#operator-norm" data-index-entry data-search-term={"operator norm"}><span>Operator norm</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="orthogonal-complement" class="index-entry" href="#orthogonal-complement" data-index-entry data-search-term={"orthogonal complement"}><span>Orthogonal complement</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="orthogonal-matrix" class="index-entry" href="#orthogonal-matrix" data-index-entry data-search-term={"orthogonal matrix"}><span>Orthogonal matrix</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="orthogonal-projection" class="index-entry" href="#orthogonal-projection" data-index-entry data-search-term={"orthogonal projection"}><span>Orthogonal projection</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="orthogonal-set" class="index-entry" href="#orthogonal-set" data-index-entry data-search-term={"orthogonal set"}><span>Orthogonal set</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="orthonormal-basis" class="index-entry" href="#orthonormal-basis" data-index-entry data-search-term={"orthonormal basis"}><span>Orthonormal basis</span><span class="index-arrow" aria-hidden="true">→</span></a>
+      </div>
+    </section>        <section class="alphabet-group" data-alpha-group>
+      <h2 id="definitions-P">P</h2>
+      <div class="alphabet-entry-list">
+        <a id="permutation-matrix" class="index-entry" href="#permutation-matrix" data-index-entry data-search-term={"permutation matrix"}><span>Permutation matrix</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="polar-decomposition" class="index-entry" href="#polar-decomposition" data-index-entry data-search-term={"polar decomposition"}><span>Polar decomposition</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="positive-definite-form" class="index-entry" href="#positive-definite-form" data-index-entry data-search-term={"positive-definite form"}><span>Positive-definite form</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="positive-semidefinite-form" class="index-entry" href="#positive-semidefinite-form" data-index-entry data-search-term={"positive-semidefinite form"}><span>Positive-semidefinite form</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="projection-operator" class="index-entry" href="#projection-operator" data-index-entry data-search-term={"projection operator"}><span>Projection operator</span><span class="index-arrow" aria-hidden="true">→</span></a>
+      </div>
+    </section>        <section class="alphabet-group" data-alpha-group>
+      <h2 id="definitions-Q">Q</h2>
+      <div class="alphabet-entry-list">
+        <a id="qr-factorization" class="index-entry" href="#qr-factorization" data-index-entry data-search-term={"qr factorization"}><span>QR factorization</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="quadratic-form" class="index-entry" href="#quadratic-form" data-index-entry data-search-term={"quadratic form"}><span>Quadratic form</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="quotient-map" class="index-entry" href="#quotient-map" data-index-entry data-search-term={"quotient map"}><span>Quotient map</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="quotient-space" class="index-entry" href="#quotient-space" data-index-entry data-search-term={"quotient space"}><span>Quotient space</span><span class="index-arrow" aria-hidden="true">→</span></a>
+      </div>
+    </section>        <section class="alphabet-group" data-alpha-group>
+      <h2 id="definitions-R">R</h2>
+      <div class="alphabet-entry-list">
+        <a id="rank" class="index-entry" href="#rank" data-index-entry data-search-term={"rank"}><span>Rank</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="rank-factorization" class="index-entry" href="#rank-factorization" data-index-entry data-search-term={"rank factorization"}><span>Rank factorization</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="rank-one-operator" class="index-entry" href="#rank-one-operator" data-index-entry data-search-term={"rank-one operator"}><span>Rank-one operator</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="rational-canonical-form" class="index-entry" href="#rational-canonical-form" data-index-entry data-search-term={"rational canonical form"}><span>Rational canonical form</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="row-rank" class="index-entry" href="#row-rank" data-index-entry data-search-term={"row rank"}><span>Row rank</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="row-space" class="index-entry" href="#row-space" data-index-entry data-search-term={"row space"}><span>Row space</span><span class="index-arrow" aria-hidden="true">→</span></a>
+      </div>
+    </section>        <section class="alphabet-group" data-alpha-group>
+      <h2 id="definitions-S">S</h2>
+      <div class="alphabet-entry-list">
+        <a id="scalar-matrix" class="index-entry" href="#scalar-matrix" data-index-entry data-search-term={"scalar matrix"}><span>Scalar matrix</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="self-adjoint-operator" class="index-entry" href="#self-adjoint-operator" data-index-entry data-search-term={"self-adjoint operator"}><span>Self-adjoint operator</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="sesquilinear-form" class="index-entry" href="#sesquilinear-form" data-index-entry data-search-term={"sesquilinear form"}><span>Sesquilinear form</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="similarity" class="index-entry" href="#similarity" data-index-entry data-search-term={"similarity"}><span>Similarity</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="singular-matrix" class="index-entry" href="#singular-matrix" data-index-entry data-search-term={"singular matrix"}><span>Singular matrix</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="singular-value" class="index-entry" href="#singular-value" data-index-entry data-search-term={"singular value"}><span>Singular value</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="singular-value-decomposition" class="index-entry" href="#singular-value-decomposition" data-index-entry data-search-term={"singular value decomposition"}><span>Singular value decomposition</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="skew-adjoint-operator" class="index-entry" href="#skew-adjoint-operator" data-index-entry data-search-term={"skew-adjoint operator"}><span>Skew-adjoint operator</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="skew-symmetric-form" class="index-entry" href="#skew-symmetric-form" data-index-entry data-search-term={"skew-symmetric form"}><span>Skew-symmetric form</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="skew-symmetric-matrix" class="index-entry" href="#skew-symmetric-matrix" data-index-entry data-search-term={"skew-symmetric matrix"}><span>Skew-symmetric matrix</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="span" class="index-entry" href="#span" data-index-entry data-search-term={"span"}><span>Span</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="spectral-decomposition" class="index-entry" href="#spectral-decomposition" data-index-entry data-search-term={"spectral decomposition"}><span>Spectral decomposition</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="subspace" class="index-entry" href="#subspace" data-index-entry data-search-term={"subspace"}><span>Subspace</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="symmetric-bilinear-form" class="index-entry" href="#symmetric-bilinear-form" data-index-entry data-search-term={"symmetric bilinear form"}><span>Symmetric bilinear form</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="symmetric-matrix" class="index-entry" href="#symmetric-matrix" data-index-entry data-search-term={"symmetric matrix"}><span>Symmetric matrix</span><span class="index-arrow" aria-hidden="true">→</span></a>
+      </div>
+    </section>        <section class="alphabet-group" data-alpha-group>
+      <h2 id="definitions-T">T</h2>
+      <div class="alphabet-entry-list">
+        <a id="tensor-product" class="index-entry" href="#tensor-product" data-index-entry data-search-term={"tensor product"}><span>Tensor product</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="trace" class="index-entry" href="#trace" data-index-entry data-search-term={"trace"}><span>Trace</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="transpose-map" class="index-entry" href="#transpose-map" data-index-entry data-search-term={"transpose map"}><span>Transpose map</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="triangular-matrix" class="index-entry" href="#triangular-matrix" data-index-entry data-search-term={"triangular matrix"}><span>Triangular matrix</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="triangularizable-operator" class="index-entry" href="#triangularizable-operator" data-index-entry data-search-term={"triangularizable operator"}><span>Triangularizable operator</span><span class="index-arrow" aria-hidden="true">→</span></a>
+      </div>
+    </section>        <section class="alphabet-group" data-alpha-group>
+      <h2 id="definitions-U">U</h2>
+      <div class="alphabet-entry-list">
+        <a id="unitary-matrix" class="index-entry" href="#unitary-matrix" data-index-entry data-search-term={"unitary matrix"}><span>Unitary matrix</span><span class="index-arrow" aria-hidden="true">→</span></a>
+        <a id="unitary-operator" class="index-entry" href="#unitary-operator" data-index-entry data-search-term={"unitary operator"}><span>Unitary operator</span><span class="index-arrow" aria-hidden="true">→</span></a>
+      </div>
+    </section>        <section class="alphabet-group" data-alpha-group>
+      <h2 id="definitions-V">V</h2>
+      <div class="alphabet-entry-list">
+        <a id="vector-space" class="index-entry" href="#vector-space" data-index-entry data-search-term={"vector space"}><span>Vector space</span><span class="index-arrow" aria-hidden="true">→</span></a>
+      </div>
+    </section>        <section class="alphabet-group" data-alpha-group>
+      <h2 id="definitions-Z">Z</h2>
+      <div class="alphabet-entry-list">
+        <a id="zero-map" class="index-entry" href="#zero-map" data-index-entry data-search-term={"zero map"}><span>Zero map</span><span class="index-arrow" aria-hidden="true">→</span></a>
+      </div>
+    </section></div>
+  </div></section>
+</BaseLayout>
+<script>
+  const search = document.querySelector<HTMLInputElement>("#definition-search");
+  const entries = Array.from(document.querySelectorAll<HTMLElement>("[data-index-entry]"));
+  const groups = Array.from(document.querySelectorAll<HTMLElement>("[data-alpha-group]"));
+  const resultCount = document.querySelector<HTMLOutputElement>("#definition-result-count");
+  const updateIndex = () => { const query = search?.value.trim().toLowerCase() ?? ""; let visible = 0; entries.forEach((entry) => { const matches = (entry.dataset.searchTerm ?? "").includes(query); entry.hidden = !matches; if (matches) visible += 1; }); groups.forEach((group) => { group.hidden = !Array.from(group.querySelectorAll<HTMLElement>("[data-index-entry]")).some((entry) => !entry.hidden); }); if (resultCount) resultCount.textContent = query.length === 0 ? `${visible} definitions` : `${visible} matching definition${visible === 1 ? "" : "s"}`; };
+  search?.addEventListener("input", updateIndex);
+</script>
+
+<style>
+  .index-tools { display:grid; gap:1rem; margin-top:clamp(2rem,5vw,4rem); padding:1.25rem; border:1px solid rgba(255,255,255,.09); border-radius:1.2rem; background:rgba(17,11,37,.55); }
+  .search-control { display:grid; gap:.55rem; }
+  .search-control span { color:var(--accent,#71e6ff); font-size:.75rem; font-weight:800; letter-spacing:.13em; text-transform:uppercase; }
+  .search-control input { width:100%; border:1px solid rgba(255,255,255,.11); border-radius:.8rem; padding:.85rem 1rem; color:inherit; background:rgba(5,5,18,.42); font:inherit; }
+  .search-control input:focus { border-color:rgba(113,230,255,.48); outline:none; }
+  .alphabet-nav { display:flex; flex-wrap:wrap; gap:.45rem; }
+  .alphabet-nav a { display:grid; place-items:center; min-width:2.1rem; min-height:2.1rem; border:1px solid rgba(255,255,255,.1); border-radius:.55rem; color:rgba(239,234,255,.76); text-decoration:none; }
+  .alphabet-nav a:hover,.alphabet-nav a:focus-visible { border-color:rgba(113,230,255,.42); color:var(--accent,#71e6ff); outline:none; }
+  .result-count { color:rgba(239,234,255,.62); font-size:.9rem; }
+  .alphabet-index { display:grid; gap:2rem; margin-top:2rem; }
+  .alphabet-group { display:grid; grid-template-columns:72px minmax(0,1fr); gap:1rem; }
+  .alphabet-group h2 { position:sticky; top:1rem; align-self:start; margin:0; color:var(--accent,#71e6ff); font-size:clamp(2rem,5vw,3.8rem); line-height:1; }
+  .alphabet-entry-list { display:grid; gap:.55rem; }
+  .index-entry,.theorem-entry { display:flex; align-items:center; justify-content:space-between; gap:1rem; border:1px solid rgba(255,255,255,.08); border-radius:.8rem; padding:.85rem 1rem; color:inherit; background:rgba(255,255,255,.025); text-decoration:none; }
+  .index-entry:hover,.index-entry:focus-visible,.theorem-entry:hover,.theorem-entry:focus-visible { border-color:rgba(113,230,255,.32); background:rgba(113,230,255,.045); outline:none; }
+  .theorem-entry { padding:1rem 1.1rem; }
+  .theorem-entry h3 { margin:0; font-size:clamp(1rem,1.7vw,1.25rem); }
+  .theorem-entry p { max-width:900px; margin:.4rem 0 0; color:rgba(239,234,255,.64); line-height:1.55; }
+  .index-arrow { flex:0 0 auto; color:var(--accent,#71e6ff); }
+  [hidden] { display:none !important; }
+  @media (max-width:600px) { .alphabet-group { grid-template-columns:1fr; } .alphabet-group h2 { position:static; } }
+</style>

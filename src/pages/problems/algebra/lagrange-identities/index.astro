@@ -1,0 +1,191 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import ProblemsSidebar from "../../../../components/ProblemsSidebar.astro";
+import Math from "../../../../components/Math.astro";
+import Equation from "../../../../components/Equation.astro";
+---
+
+<BaseLayout
+  title="Lagrange Identities"
+  description="A survey of the classical linear algebra formula."
+>
+  <section class="la-page">
+    <ProblemsSidebar />
+
+    <article class="topic-article">
+      <header class="topic-hero">
+        <span class="eyebrow">Algebra · Identities</span>
+        <h1>Lagrange Identities</h1>
+
+        <p>
+	  A survey of the classical linear algebra formula.
+        </p>
+      </header>
+
+      <nav class="topic-toc" aria-label="Page sections">
+        <a href="#broad-stroke">Broad Stroke</a>
+        <a href="#quick-examples">Quick Examples</a>
+        <a href="#a-deeper-look">A Deeper Look</a>
+      </nav>
+
+      <section class="topic-section" id="round-i">
+        <h2>Round I</h2>
+
+	<p>
+	  Let there be <Math tex="x_i, y_i \in \mathbb{R}, i = \overline{1, 3}"/>. One textbook problem I once stumbled upon in high school asked of me to prove the following
+	  two identities (which are in fact particular cases of the general Lagrange formula we'll discuss in a bit):
+
+	  <Equation
+	    tex={String.raw`(x_1^2 + x_2^2)(y_1^2 + y_2^2) = (x_1y_1 + x_2y_2)^2 + (x_1y_2 - x_2y_1)^2,`}
+	  />
+	  
+	  <Equation
+	    tex={String.raw`(x_1^2 + x_2^2 + x_3^2)(y_1^2 + y_2^2 + y_3^2) - (x_1y_1 + x_2y_2 + x_3y_3)^2 =
+	    (x_1y_2 - x_2y_1)^2 + (x_2y_3 - x_3y_2)^2 + (x_3y_1 - x_1y_3)^2.`}
+	  />
+
+	  Try maybe crafting some neat proofs for each (maybe a unique proof for the first one and then use it to prove the second one). If you're thinking of raw expansion here,
+	  that'd probably be a waste of time and energy; you can just skip to the general case and see the direct algebraic proof.
+
+	  
+	</p>
+	
+	<details class = "drop-example">
+	  <summary>Proof</summary>
+	  
+	  <div class = "drop-content">
+	    <p> Okay, these two particular proofs presented here don't have to be what you would've come up with necessarily, they're just for the fun of it since base cases usually
+	    leave more room for creativity and exploration. The first proof might be interesting. The second one maybe not so much, it just makes some shortcuts. </p>
+
+
+	    <details class="drop-example">
+	      <summary>First One</summary>
+
+	      <div class="drop-content">
+		
+		<p> We're going to use <span class="emph"> complex algebra </span>
+		  (you might notice Lagrange's identity seems to have something to do with the concept of
+		  <span class="emph"> magnitude </span> of, say, a complex number, or a vector - more on that later btw).
+                Consider two complex numbers, <Math tex="z = x_1 + x_2i"/> and <Math tex="w =y_1 - y_2i"/>.
+		Remember the complex moduli of each is expressed as <Math tex="|z| = \sqrt{x_1^2 + x_2^2}"/> and <Math tex="|w| = \sqrt{y_1^2 + y_2^2}"/> respectivelly.
+                Take the product between <Math tex="z"/> and the conjugate of <Math tex="w"/>: </p>
+
+		<Equation
+		  tex={String.raw`z\overline{w} = (x_1y_1 + x_2y_2) - (x_1y_2 - x_2y_1)i.`}
+		/>
+
+		<p> Now all we have to do is take the modulus of both the <span class="emph"> LHS </span> and <span class="emph"> RHS </span>, and make use of the fact that
+                <Math tex="|z\overline{w}| = |z||\overline{w}|"/>,
+                which is going to yield the result we are looking for. </p>
+		
+	      </div>
+
+	    </details>
+
+	    <details class="drop-example">
+	      <summary>Second One</summary>
+
+	      <p> Again, what we want to prove is this: </p>
+
+	      <Equation
+		tex={String.raw`({\red x_1^2 + x_2^2} + x_3^2)({\red y_1^2 + y_2^2} + y_3^2) - ({\red x_1y_1 + x_2y_2} + x_3y_3)^2 =
+		(x_1y_2 - x_2y_1)^2 + (x_2y_3 - x_3y_2)^2 + (x_3y_1 - x_1y_3)^2.`}
+	      />
+
+	      <p> The highlighted parts in the <span class="emph"> LHS </span> are already present in the first formula we've proven. Let's use that: </p>
+
+	      <Equation
+		tex={String.raw`\text{LHS } = \underbrace{(x_1^2 + x_2^2)(y_1^2 + y_2^2) - (x_1y_1 + x_2y_2)^2}_{(x_1y_2 - x_2y_1)^2}
+		+ (x_1^2 + x_2^2)y_3^2 + (y_1^2 + y_2^2)x_3^2 - 2(x_1y_1 + x_2y_2)x_3y_3,`}
+	      />
+
+	      <p> and then notice how we can express the second half of the expression: </p>
+
+	      <Equation
+		tex={String.raw`(x_1^2 + x_2^2)y_3^2 + (y_1^2 + y_2^2)x_3^2 - 2(x_1y_1 + x_2y_2)x_3y_3 =
+		\underbrace{(x_2y_3)^2 - 2(x_3y_2)(x_2y_3) + (x_3y_2)^2}_{(x_2y_3 - x_3y_2)^2} + \underbrace{(x_3y_1)^2 - 2(x_3y_1)(x_1y_3) + (x_1y_3)^2}_{(x_3y_1 - x_1y_3)^2}.`}
+	      />
+
+	      <p> Putting it all together gives the desired result. </p>
+
+	      <div class="drop-content">
+
+	      </div>
+
+	    </details>
+	    
+	  </div>
+	  
+	</details>
+	
+      </section>
+
+      <section class="topic-section" id="round-ii">
+        <h2>Round II</h2>
+
+	<p>
+	  Tackling the proofs in the previous section is probably a healthy exercise. We proved the base case and then moved on to a higher order case to maybe form some sort of
+	  idea as to how to handle increasing the number of variables indefinitely. So proving the general formula, which by now you can probably infer that it should look something
+	  like this (for <Math tex="x_i, y_i \in \mathbb{R}, i = \overline{1, n}"/>):
+
+	  <Equation
+	    tex={String.raw`\left(
+            \sum_{i = 1}^{n}x_i^2 \right)\left( \sum_{i = 1}^{n}y_i^2 \right) - \left( \sum_{i = 1}^{n}x_iy_i \right)^2 = \sum_{1 \leq i,j \leq n}(x_iy_j - x_jy_i)^2,`}
+	  />
+
+	  is going to require a strategy that's pretty similar to what we did before.
+	  
+	</p>
+	
+	<details class="drop-example">
+	  <summary>Proof</summary>
+
+	  <p> The proof itself shouldn't be to tough to wrap one's mind around, but it requires some level of comfort with the <Math tex="\Sigma"/> notation. We'll simply start from
+	  the <span class="emph"> LHS </span> and make our way to the <span class="emph"> RHS </span> with relative ease. First, we are going to expand the two products: </p>
+
+	  <Equation
+	    tex={String.raw`\text{LHS} = \left(
+            \sum_{i = 1}^{n}x_i^2 \right)\left( \sum_{i = 1}^{n}y_i^2 \right) - \left( \sum_{i = 1}^{n}x_iy_i \right)\left( \sum_{i = 1}^{n}x_iy_i \right)
+	    = \sum_{1 \leq i,j \leq n}(x_iy_j)^2 - \sum_{1 \leq i,j \leq n}x_iy_jx_jy_i.`}
+	  />
+
+	  <p> Basically, if you think about what we do when we expand the product of two parentheses, we are forming every possible pair between a term in the first parenthesis and
+	    a term from the second parenthesis. So indices <Math tex="i"/> and <Math tex="j"/> range from <Math tex="1"/> to <Math tex="n"/>, generating all pairs, which is what
+	    the <Math tex="\sum_{1 \leq i,j \leq n}"/>  notation means, thus turning two sums into one, and the summand itself is simply the product between the two original summands
+            (so <Math tex="(x_iy_i)^2"/> comes from multiplying together <Math tex="x_i^2"/> and <Math tex="y_i^2"/> and <Math tex="x_iy_jx_jy_i"/> comes from multiplying together
+            <Math tex="\text{ }x_iy_i"/> and <Math tex="x_jy_j"/> - then we simply rearanged terms conveniently).
+	  </p>
+
+	  <p> Since the two resulting sums have identical ranges, we can combine them into one: </p>
+
+	  <Equation
+	    tex={String.raw`
+            \text{LHS}
+	    = \sum_{1 \leq i,j \leq n}((x_iy_j)^2 - x_iy_jx_jy_i).`}
+	  />
+
+	  <p>
+	    Notice how the summand becomes <Math tex="0"/> when <Math tex="i = j"/>, so we could technically specify that <Math tex="i \neq j"/> beneath the sum notation to avoid
+	    redundancy, but ultimately it's inconsequential. Now we're almost there, but the <span class="emph"> RHS </span> we want to arrive at is a sum of squares,
+            <Math tex="(x_iy_j - x_jy_i)^2"/>, while our current summand, <Math tex="(x_iy_j)^2 - x_iy_jx_jy_i"/> is half a square. Since <Math tex="i"/> and <Math tex="j\text{ }"/>
+	    form together all possible pairs of indices ranging from <Math tex="1"/> to <Math tex="n"/>, every <Math tex="(i, j)"/> pair has a corresponding <Math tex="(j, i)\text{ }"/>
+	    pair, meaning every <Math tex="(x_iy_j)^2 - x_iy_jx_jy_i"/> term has a corresponding <Math tex="(x_jy_i)^2 - x_jy_ix_iy_j"/> term somewhere in the sum. Combining them,
+	    we get:
+	  </p>
+
+	  <Equation
+	    tex={String.raw`(x_iy_j)^2 - x_iy_jx_jy_i + (x_jy_i)^2 - x_jy_ix_iy_j = (x_iy_j)^2 - 2x_iy_jx_jy_i + (x_jy_i)^2 = (x_iy_j - x_jy_i)^2.`}
+	  />
+
+	  This is exactly the summand we were looking for and the proof is done.
+
+	  <div class="drop-content">
+	    
+	  </div>
+	  
+	</details>
+	
+      </section>
+    </article>
+  </section>
+</BaseLayout>

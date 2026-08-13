@@ -1,0 +1,327 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import MathematicalLogicSidebar from "../../../components/MathematicalLogicSidebar.astro";
+import Math from "../../../components/Math.astro";
+import { withBase } from "@/utils/paths";
+
+const problemCards = [
+  {
+    branch: "Propositional Logic \u00b7 Normal Forms",
+    title: "One Formula, Several Normal Forms",
+    href: withBase("problems/logic/normal-forms/"),
+    ariaLabel: "Open One Formula, Several Normal Forms",
+    formula: String.raw`(p\to q)\leftrightarrow(\neg r\lor p)`,
+    text: "Determine satisfiability and validity, then convert the formula into negation, conjunctive, and disjunctive normal forms without losing equivalence."
+  },
+  {
+    branch: "Natural Deduction \u00b7 Formal Proofs",
+    title: "Discharging the Right Assumptions",
+    href: withBase("problems/logic/natural-deduction/"),
+    ariaLabel: "Open Discharging the Right Assumptions",
+    formula: String.raw`\Gamma\vdash (p\to q)\to(\neg q\to\neg p)`,
+    text: "Construct a natural-deduction proof while explicitly tracking assumptions, discharged hypotheses, and every introduction or elimination rule."
+  },
+  {
+    branch: "Sequent Calculus \u00b7 Cut",
+    title: "A Proof With and Without Cut",
+    href: withBase("problems/logic/cut-elimination/"),
+    ariaLabel: "Open A Proof With and Without Cut",
+    formula: String.raw`\Gamma\Rightarrow\Delta,A
+\qquad
+A,\Pi\Rightarrow\Lambda
+\qquad\Longrightarrow\qquad
+\Gamma,\Pi\Rightarrow\Delta,\Lambda`,
+    text: "Produce a derivation using the cut rule and then reorganize it into a cut-free proof, comparing the structure of the two derivations."
+  },
+  {
+    branch: "First-Order Logic \u00b7 Semantics",
+    title: "Truth Depends on the Structure",
+    href: withBase("problems/logic/structure-satisfaction/"),
+    ariaLabel: "Open Truth Depends on the Structure",
+    formula: String.raw`\forall x\,\exists y\,(x<y)`,
+    text: "Evaluate the same sentence in several structures and explain precisely how the interpretation, rather than the bare syntax, determines its truth."
+  },
+  {
+    branch: "Completeness \u00b7 Consistency",
+    title: "From Consistency to a Model",
+    href: withBase("problems/logic/consistency-to-model/"),
+    ariaLabel: "Open From Consistency to a Model",
+    formula: String.raw`T\nvdash\bot
+\qquad\Longrightarrow\qquad
+\exists\mathcal M\;(\mathcal M\models T)`,
+    text: "Trace the main stages of a Henkin-style construction and identify where maximal consistency and witness constants are used."
+  },
+  {
+    branch: "Compactness \u00b7 Infinite Structures",
+    title: "Force an Infinite Model",
+    href: withBase("problems/logic/compactness-infinite-model/"),
+    ariaLabel: "Open Force an Infinite Model",
+    formula: String.raw`T\cup\{\exists x_1,\ldots,x_n\,
+\bigwedge_{i<j}x_i\neq x_j:n\ge1\}`,
+    text: "Use compactness to turn arbitrarily large finite models into an infinite model and isolate the finite satisfiability argument."
+  },
+  {
+    branch: "Computability \u00b7 Turing Machines",
+    title: "Recognizer or Decider?",
+    href: withBase("problems/logic/recognizer-or-decider/"),
+    ariaLabel: "Open Recognizer or Decider?",
+    formula: String.raw`L(M)=\{\,w:M\text{ eventually accepts }w\,\}`,
+    text: "Analyze a machine description and decide whether it recognizes a language, decides it, or may loop forever on certain inputs."
+  },
+  {
+    branch: "Undecidability \u00b7 Reduction",
+    title: "Reduce the Halting Problem",
+    href: withBase("problems/logic/halting-reduction/"),
+    ariaLabel: "Open Reduce the Halting Problem",
+    formula: String.raw`\mathrm{HALT}\le_m A`,
+    text: "Design a many-one reduction from the halting problem to a target decision problem and prove both directions of the reduction carefully."
+  },
+  {
+    branch: "Diagonalization \u00b7 Self-Reference",
+    title: "Build the G\u00f6del Sentence",
+    href: withBase("problems/logic/diagonal-lemma/"),
+    ariaLabel: "Open Build the G\u00f6del Sentence",
+    formula: String.raw`T\vdash G\leftrightarrow\neg\operatorname{Prov}_T(\ulcorner G\urcorner)`,
+    text: "Use the diagonal lemma schematically to construct a sentence that refers to its own provability and explain why this is not a semantic paradox."
+  },
+  {
+    branch: "Incompleteness \u00b7 Provability",
+    title: "What Can the Theory Prove About Itself?",
+    href: withBase("problems/logic/second-incompleteness/"),
+    ariaLabel: "Open What Can the Theory Prove About Itself?",
+    formula: String.raw`T\nvdash\operatorname{Con}(T)`,
+    text: "Separate the hypotheses needed for the second incompleteness theorem and analyze why a sufficiently strong consistent theory cannot establish its own consistency."
+  },
+];
+---
+
+<BaseLayout
+  title="Mathematical Logic Problems"
+  description="A collection of mathematical logic problems on syntax, semantics, proof systems, first-order logic, compactness, computability, undecidability, and incompleteness."
+>
+  <section class="hub-page">
+    <MathematicalLogicSidebar />
+
+    <div class="hub-main">
+      <section class="hub-hero">
+        <span class="eyebrow">Mathematical Logic · Problems</span>
+
+        <h1>Problems</h1>
+
+        <p>
+          A dedicated shelf of formal derivations, semantic constructions,
+          metatheoretic arguments, reductions, and self-reference problems drawn
+          from the main themes of mathematical logic.
+        </p>
+      </section>
+
+      <section class="problems-list" aria-labelledby="logic-problems-title">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">Selected problems</span>
+
+            <h2 id="logic-problems-title" class="section-title">
+              Problem shelf
+            </h2>
+          </div>
+
+          <p>
+            The displayed formulas are representative snapshots rather than
+            complete problem statements.
+          </p>
+        </div>
+
+        <div class="problem-card-grid">
+          {
+            problemCards.map((problem) => (
+              <a
+                class="problem-card"
+                href={problem.href}
+                aria-label={problem.ariaLabel}
+              >
+                <header class="problem-card-header">
+                  <span class="problem-branch">{problem.branch}</span>
+                  <h3>{problem.title}</h3>
+                </header>
+
+                <div
+                  class="problem-formula"
+                  role="img"
+                  aria-label={`Representative formula for ${problem.title}`}
+                >
+                  <Math tex={problem.formula} display />
+                </div>
+
+                <p class="problem-description">{problem.text}</p>
+
+                <span class="read-label" aria-hidden="true">
+                  View problem <span>→</span>
+                </span>
+              </a>
+            ))
+          }
+        </div>
+      </section>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .problems-list {
+    width: 100%;
+    margin-top: clamp(2rem, 5vw, 4rem);
+  }
+
+  .section-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .section-heading p {
+    max-width: 520px;
+    margin: 0;
+    color: rgba(239, 234, 255, 0.62);
+    line-height: 1.65;
+  }
+
+  .section-title {
+    margin: 0.45rem 0 0;
+    font-size: clamp(1.7rem, 3.5vw, 2.7rem);
+    letter-spacing: -0.045em;
+  }
+
+  .problem-card-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .problem-card {
+    display: grid;
+    gap: 1.2rem;
+    min-width: 0;
+    border: 1px solid rgba(255, 255, 255, 0.11);
+    border-radius: 1.4rem;
+    padding: clamp(1.15rem, 2.5vw, 1.75rem);
+    color: inherit;
+    background:
+      radial-gradient(circle at 85% 0%, rgba(113, 230, 255, 0.09), transparent 30%),
+      linear-gradient(145deg, rgba(35, 23, 67, 0.86), rgba(13, 9, 29, 0.91));
+    box-shadow:
+      0 24px 70px rgba(0, 0, 0, 0.27),
+      inset 0 1px 0 rgba(255, 255, 255, 0.045);
+    text-decoration: none;
+    overflow: hidden;
+    transition:
+      transform 180ms ease,
+      border-color 180ms ease,
+      box-shadow 180ms ease;
+  }
+
+  .problem-card:hover,
+  .problem-card:focus-visible {
+    transform: translateY(-4px);
+    border-color: rgba(113, 230, 255, 0.44);
+    box-shadow:
+      0 30px 85px rgba(0, 0, 0, 0.34),
+      0 0 28px rgba(113, 230, 255, 0.08);
+    outline: none;
+  }
+
+  .problem-card-header {
+    display: grid;
+    gap: 0.65rem;
+  }
+
+  .problem-branch {
+    color: var(--accent, #71e6ff);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .problem-card h3 {
+    margin: 0;
+    font-size: clamp(1.65rem, 3.2vw, 2.9rem);
+    line-height: 1;
+    letter-spacing: -0.05em;
+  }
+
+  .problem-formula {
+    display: grid;
+    place-items: center;
+    min-width: 0;
+    padding: clamp(1rem, 3vw, 2rem) 0;
+    color: rgba(247, 244, 255, 0.94);
+    overflow: auto hidden;
+  }
+
+  .problem-formula :global(.katex-display) {
+    max-width: 100%;
+    margin: 0;
+  }
+
+  .problem-formula :global(.katex) {
+    font-size: clamp(0.92rem, 1.45vw, 1.22rem);
+  }
+
+  .problem-description {
+    max-width: 900px;
+    margin: 0;
+    color: rgba(239, 234, 255, 0.72);
+    font-size: clamp(0.96rem, 1.25vw, 1.06rem);
+    line-height: 1.72;
+  }
+
+  .read-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    width: fit-content;
+    color: rgba(239, 248, 255, 0.9);
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  .read-label span {
+    color: var(--accent, #71e6ff);
+    font-size: 1.15rem;
+    transition: transform 180ms ease;
+  }
+
+  .problem-card:hover .read-label span,
+  .problem-card:focus-visible .read-label span {
+    transform: translateX(4px);
+  }
+
+  @media (max-width: 900px) {
+    .section-heading {
+      display: grid;
+      align-items: initial;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .problem-card {
+      border-radius: 1rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .problem-card,
+    .read-label span {
+      transition: none;
+    }
+
+    .problem-card:hover,
+    .problem-card:focus-visible {
+      transform: none;
+    }
+  }
+</style>
