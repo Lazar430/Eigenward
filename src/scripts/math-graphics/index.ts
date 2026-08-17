@@ -1,4 +1,13 @@
 export { COLORS, HUES } from "./core/colors";
+export { MathObject } from "./core/MathObject";
+export { MathObject3D } from "./core/MathObject3D";
+export {
+  MathScene3D,
+  createMathScene3D,
+  type MathScene3DOptions,
+} from "./core/MathScene3D";
+export type { CameraState3D, Vec3Like, Vec3Tuple } from "./core/types3D";
+
 export { MathObject2D } from "./core/MathObject2D";
 export {
   MathScene2D,
@@ -109,3 +118,89 @@ export {
   multiplyMatrix2,
   type Matrix2,
 } from "./linear-algebra/matrix2";
+
+export type {
+  ParametricSurfaceMap3D,
+  ParametricSurfaceSampleOptions3D,
+  SurfaceGeometryData3D,
+  SurfaceGrid3D,
+} from "./core/types3D";
+
+export {
+  createSurfaceGrid3D,
+  surfaceGridVertexIndex3D,
+  type SurfaceGrid3DOptions,
+} from "./geometry/surfaceGrid3D";
+export { sampleParametricSurface3D } from "./geometry/sampleParametricSurface3D";
+
+export {
+  Surface3D,
+  createSurface3D,
+  type Surface3DOptions,
+  type Surface3DStyle,
+} from "./primitives/Surface3D";
+export {
+  ParametricSurface3D,
+  createParametricSurface3D,
+  type ParametricSurface3DOptions,
+} from "./primitives/ParametricSurface3D";
+export {
+  createSphere3D,
+  type Sphere3DOptions,
+} from "./primitives/Sphere3D";
+export {
+  createTorus3D,
+  type Torus3DOptions,
+} from "./primitives/Torus3D";
+export {
+  TextLabel3D,
+  createTextLabel3D,
+  type TextLabel3DOptions,
+} from "./primitives/TextLabel3D";
+
+export {
+  LightingRig3D,
+  createLightingRig3D,
+  type LightingRig3DOptions,
+} from "./lighting/LightingRig3D";
+
+export {
+  OrbitController3D,
+  type OrbitController3DOptions,
+  type OrbitState3D,
+} from "./interaction/OrbitController3D";
+
+export {
+  clamp01,
+  linear,
+  smoothstep,
+  easeInOutCubic,
+  easeInOutSine,
+  type EasingFunction,
+} from "./animation/easing";
+
+export {
+  MorphCycle,
+  sampleMorphCycle,
+  type MorphCycleOptions,
+  type MorphCyclePhase,
+  type MorphCycleState,
+} from "./animation/morphCycle";
+
+export {
+  assertCompatibleSurfaceTopologies3D,
+  assertFiniteSurfacePositions3D,
+  copySurfacePositions3D,
+  createSurfaceMorphTarget3D,
+  createSurfaceMorphTargetFromGeometry3D,
+  lerpSurfacePositions3D,
+  type SurfaceMorphTarget3D,
+} from "./geometry/surfaceMorph3D";
+
+export {
+  MorphableSurface3D,
+  createMorphableSurface3D,
+  type MorphableSurface3DOptions,
+  type MorphState3D,
+} from "./primitives/MorphableSurface3D";
+

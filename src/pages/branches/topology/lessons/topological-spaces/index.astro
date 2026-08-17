@@ -1,0 +1,89 @@
+---
+import BaseLayout from "../../../../../layouts/BaseLayout.astro";
+import TopologySidebar from "../../../../../components/TopologySidebar.astro";
+import Math from "../../../../../components/Math.astro";
+import Equation from "../../../../../components/Equation.astro";
+import MathCanvas2D from "../../../../../components/math-graphics/MathCanvas2D.astro";
+---
+
+<BaseLayout
+  title="What's in a Topology"
+>
+  <section class="la-page">
+    <TopologySidebar />
+
+    <article class="topic-article">
+      <header class="topic-hero">
+        <span class="eyebrow">Topology · Foundations</span>
+        <h1>What's in a Topology?</h1>
+
+        <p>
+          Introduction to that one "donut is a mug" branch of mathematics.
+        </p>
+      </header>
+
+      <nav class="topic-toc" aria-label="Page sections">
+        <a href="#broad-stroke">Broad Stroke</a>
+        <a href="#topological-space">Topological Space</a>
+      </nav>
+
+      <section class="topic-section" id="broad-stroke">
+        <h2>Broad Stroke</h2>
+	
+	<p>
+	</p>
+	  
+      </section>
+
+      <section class="topic-section" id="topological-space">
+        <h2>Topological Space</h2>
+
+	<p>
+	  Let <Math tex="X"/> be a set and <Math tex="\mathcal{T} \subseteq \mathcal{P}(X)"/> a subset of its powerset (meaning a collection of subsets of <Math tex="X"/>).
+	  We say the structure <Math tex = "(X, \mathcal{T})"/> is a <span class="emph"> topology </span> or <span class="emph"> topological space </span> if the following
+	  axioms are verified:
+	</p>
+
+	<p>
+	  (<Math tex="T_1"/>) <Math tex="X"/> and <Math tex="\emptyset"/> are in <Math tex="\mathcal{T}"/>;
+	</p>
+
+	<p>
+	  (<Math tex="T_2"/>) Any arbitrary union of sets from <Math tex="\mathcal{T}"/> is still in <Math tex="\mathcal{T}"/>;
+	</p>
+
+	<p>
+	  (<Math tex="T_3"/>) Any finite intersection of sets from <Math tex="\mathcal{T}"/> is still in <Math tex="\mathcal{T}"/>.
+	</p>
+
+	<p> Elements of <Math tex="\mathcal{T}"/> are refered to as <span class = "emph">open sets</span>. </p>
+
+	<p>
+	  Now, the above definition is cool and all that... but seriously, what does any of it even mean? If this is your first introduction to topology, chance is you either know
+	  next to nothing about the field, or at most you've likely seen memes or visual explanations floating around that look something akin to this:
+	</p>
+
+	<MathCanvas2D
+	  id="mug-to-donut-scene"
+	  label="A visualization of how to deform a mug-like shape into a torus."
+	  aspectRatio="16 / 9"
+	/>
+
+	<p> Or maybe this: </p>
+
+	<MathCanvas2D
+	  id="cow-to-sphere-scene"
+	  label="A visualization of how to deform a cow-like shape into a sphere."
+	  aspectRatio="16 / 9"
+	/>
+	
+      </section>
+    </article>
+  </section>
+</BaseLayout>
+
+<script>
+  //import "../../../../../scripts/animations/lessons/topology/mugToTorusTest";
+  import "../../../../../scripts/animations/lessons/topology/cowToSphere";
+  import "../../../../../scripts/animations/lessons/topology/mugToDonut";
+</script>

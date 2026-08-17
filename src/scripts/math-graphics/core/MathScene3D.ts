@@ -1,68 +1,77 @@
 import {
   Color,
   Object3D,
-  OrthographicCamera,
+  PerspectiveCamera,
+  Raycaster,
   Scene,
   SRGBColorSpace,
+  Vector2,
   Vector3,
   WebGLRenderer,
   type ColorRepresentation,
+  type Intersection,
 } from "three";
 import { CSS2DRenderer } from "three/addons/renderers/CSS2DRenderer.js";
 import { disposeObjectTree } from "./disposeObjectTree";
-import { MathObject2D } from "./MathObject2D";
-import type {
-  FrameCallback,
-  Vec2Tuple,
-} from "./types";
+import { MathObject3D } from "./MathObject3D";
+import type { FrameCallback } from "./types";
+import type { CameraState3D, Vec3Like, Vec3Tuple } from "./types3D";
 
-export interface ViewBounds2D {
-  left: number;
-  right: number;
-  bottom: number;
-  top: number;
-  width: number;
-  height: number;
-}
-
-export type ViewChangeCallback2D = (bounds: ViewBounds2D) => void;
-
-export interface MathScene2DOptions {
-  /**
-   * Vertical world extent. Retained for compatibility with existing scenes.
-   * Ignored when unitSizePixels is supplied.
-   */
-  viewHeight?: number;
-  /**
-   * CSS pixels occupied by one mathematical unit. This makes the visible
-   * world adapt automatically to the canvas size.
-   */
-  unitSizePixels?: number;
-  /** Point placed at the center of the canvas. */
-  center?: Vec2Tuple;
+export interface MathScene3DOptions {
+  cameraPosition?: Vec3Tuple;
+  target?: Vec3Tuple;
+  fovDegrees?: number;
+  near?: number;
+  far?: number;
   /** null keeps the WebGL canvas transparent. */
   background?: ColorRepresentation | null;
   maxPixelRatio?: number;
 }
 
-/** Responsive orthographic 2D scene with one shared on-demand frame loop. */
-export class MathScene2D {
+function readVec3(value: Vec3Like): Vec3Tuple {
+  if ("x" in value) {
+    return [value.x, value.y, value.z];
+  }
+
+  return [value[0], value[1], value[2]];
+}
+
+function assertFiniteVec3(value: Vec3Like, label: string): void {
+  const [x, y, z] = readVec3(value);
+  if (![x, y, z].every(Number.isFinite)) {
+    throw new RangeError(`${label} must contain three finite numbers.`);
+  }
+}
+
+function copyTuple(value: Vec3Like): Vec3Tuple {
+  const [x, y, z] = readVec3(value);
+  return [x, y, z];
+}
+
+/**
+ * Responsive perspective 3D scene with one shared on-demand frame loop.
+ *
+ * The lifecycle deliberately mirrors MathScene2D: one renderer, one CSS label
+ * layer, centralized resize/visibility handling, invalidation, shared animation,
+ * and deterministic teardown. Interaction helpers can use the public canvas,
+ * camera, coordinate projection, and raycast methods without owning rendering.
+ */
+export class MathScene3D {
   readonly threeScene = new Scene();
-  readonly camera = new OrthographicCamera(-1, 1, 1, -1, 0, 100);
+  readonly camera: PerspectiveCamera;
   readonly renderer: WebGLRenderer;
   readonly labelRenderer: CSS2DRenderer;
 
   private readonly resizeObserver: ResizeObserver;
   private readonly intersectionObserver: IntersectionObserver;
   private readonly frameCallbacks = new Set<FrameCallback>();
-  private readonly viewChangeCallbacks = new Set<ViewChangeCallback2D>();
   private readonly labelContainer: HTMLElement;
   private readonly previousContainerPosition: string;
   private readonly changedContainerPosition: boolean;
+  private readonly raycaster = new Raycaster();
+  private readonly pointerNdc = new Vector2();
 
-  private viewHeight: number;
-  private unitSizePixels: number | null;
-  private center: Vec2Tuple;
+  private target: Vec3Tuple;
   private maxPixelRatio: number;
 
   private animationFrame = 0;
@@ -73,23 +82,29 @@ export class MathScene2D {
   constructor(
     /** Public so reusable interaction helpers can attach pointer listeners. */
     readonly canvas: HTMLCanvasElement,
-    options: MathScene2DOptions = {},
+    options: MathScene3DOptions = {},
   ) {
-    this.viewHeight = options.viewHeight ?? 6;
-    this.unitSizePixels = options.unitSizePixels ?? null;
-    this.center = options.center ?? [0, 0];
+    const cameraPosition = options.cameraPosition ?? [4.5, 3.2, 6.5];
+    const target = options.target ?? [0, 0, 0];
+    const fovDegrees = options.fovDegrees ?? 42;
+    const near = options.near ?? 0.05;
+    const far = options.far ?? 1000;
+
+    assertFiniteVec3(cameraPosition, "cameraPosition");
+    assertFiniteVec3(target, "target");
+
+    if (!(fovDegrees > 0 && fovDegrees < 180)) {
+      throw new RangeError("fovDegrees must be between 0 and 180 degrees.");
+    }
+    if (!(near > 0)) {
+      throw new RangeError("near must be greater than zero.");
+    }
+    if (!(far > near)) {
+      throw new RangeError("far must be greater than near.");
+    }
+
+    this.target = copyTuple(target);
     this.maxPixelRatio = options.maxPixelRatio ?? 2;
-
-    if (!(this.viewHeight > 0)) {
-      throw new RangeError("viewHeight must be greater than zero.");
-    }
-
-    if (
-      this.unitSizePixels !== null &&
-	!(this.unitSizePixels > 0)
-    ) {
-      throw new RangeError("unitSizePixels must be greater than zero.");
-    }
 
     if (!(this.maxPixelRatio > 0)) {
       throw new RangeError("maxPixelRatio must be greater than zero.");
@@ -98,7 +113,7 @@ export class MathScene2D {
     const container = canvas.parentElement;
     if (!container) {
       throw new Error(
-        "MathScene2D requires the canvas to have a positioned parent element.",
+        "MathScene3D requires the canvas to have a positioned parent element.",
       );
     }
 
@@ -111,6 +126,11 @@ export class MathScene2D {
       container.style.position = "relative";
     }
 
+    this.camera = new PerspectiveCamera(fovDegrees, 1, near, far);
+    this.camera.position.set(...cameraPosition);
+    this.camera.lookAt(...this.target);
+    this.threeScene.add(this.camera);
+
     this.renderer = new WebGLRenderer({
       canvas,
       antialias: true,
@@ -120,7 +140,7 @@ export class MathScene2D {
     this.renderer.outputColorSpace = SRGBColorSpace;
 
     this.labelRenderer = new CSS2DRenderer();
-    this.labelRenderer.domElement.className = "math-scene-2d-label-layer";
+    this.labelRenderer.domElement.className = "math-scene-3d-label-layer";
     this.labelRenderer.domElement.setAttribute("aria-hidden", "true");
     Object.assign(this.labelRenderer.domElement.style, {
       position: "absolute",
@@ -136,10 +156,6 @@ export class MathScene2D {
     } else {
       this.renderer.setClearColor(new Color(options.background), 1);
     }
-
-    this.camera.position.set(0, 0, 10);
-    this.camera.lookAt(0, 0, 0);
-    this.threeScene.add(this.camera);
 
     this.resizeObserver = new ResizeObserver(() => this.resize());
     this.resizeObserver.observe(canvas);
@@ -165,7 +181,7 @@ export class MathScene2D {
   add(...objects: Object3D[]): this {
     for (const object of objects) {
       object.traverse((child) => {
-        if (child instanceof MathObject2D) {
+        if (child instanceof MathObject3D) {
           child.bindSceneHooks(
             () => this.invalidate(),
             (callback: FrameCallback) => this.onFrame(callback),
@@ -186,43 +202,6 @@ export class MathScene2D {
     return this;
   }
 
-  setView(options: {
-    viewHeight?: number;
-    unitSizePixels?: number | null;
-    center?: Vec2Tuple;
-  }): this {
-    if (options.viewHeight !== undefined) {
-      if (!(options.viewHeight > 0)) {
-        throw new RangeError("viewHeight must be greater than zero.");
-      }
-      this.viewHeight = options.viewHeight;
-
-      // Supplying viewHeight without an explicit unit scale selects the
-      // original fixed-height camera mode.
-      if (options.unitSizePixels === undefined) {
-        this.unitSizePixels = null;
-      }
-    }
-
-    if (options.unitSizePixels !== undefined) {
-      if (
-        options.unitSizePixels !== null &&
-          !(options.unitSizePixels > 0)
-      ) {
-        throw new RangeError("unitSizePixels must be greater than zero.");
-      }
-      this.unitSizePixels = options.unitSizePixels;
-    }
-
-    if (options.center !== undefined) {
-      this.center = options.center;
-    }
-
-    this.resizeCamera();
-    this.invalidate();
-    return this;
-  }
-
   setBackground(color: ColorRepresentation | null): this {
     if (color === null) {
       this.renderer.setClearColor(0x000000, 0);
@@ -234,104 +213,106 @@ export class MathScene2D {
     return this;
   }
 
-  /**
-   * Current visible mathematical rectangle. Positive padding moves each edge
-   * inward; negative padding gives an overscan rectangle.
-   */
-  getViewBounds(paddingPixels = 0): ViewBounds2D {
-    const rectangle = this.canvas.getBoundingClientRect();
-    const widthPixels = Math.max(1, rectangle.width);
-    const heightPixels = Math.max(1, rectangle.height);
-    const worldPerPixelX = (this.camera.right - this.camera.left) / widthPixels;
-    const worldPerPixelY = (this.camera.top - this.camera.bottom) / heightPixels;
+  setCamera(options: {
+    position?: Vec3Like;
+    target?: Vec3Like;
+    fovDegrees?: number;
+    near?: number;
+    far?: number;
+  }): this {
+    const nextNear = options.near ?? this.camera.near;
+    const nextFar = options.far ?? this.camera.far;
+    const nextFov = options.fovDegrees ?? this.camera.fov;
 
-    let left = this.camera.left + paddingPixels * worldPerPixelX;
-    let right = this.camera.right - paddingPixels * worldPerPixelX;
-    let bottom = this.camera.bottom + paddingPixels * worldPerPixelY;
-    let top = this.camera.top - paddingPixels * worldPerPixelY;
-
-    if (left > right) {
-      const centerX = (this.camera.left + this.camera.right) / 2;
-      left = centerX;
-      right = centerX;
+    if (!(nextFov > 0 && nextFov < 180)) {
+      throw new RangeError("fovDegrees must be between 0 and 180 degrees.");
+    }
+    if (!(nextNear > 0)) {
+      throw new RangeError("near must be greater than zero.");
+    }
+    if (!(nextFar > nextNear)) {
+      throw new RangeError("far must be greater than near.");
     }
 
-    if (bottom > top) {
-      const centerY = (this.camera.bottom + this.camera.top) / 2;
-      bottom = centerY;
-      top = centerY;
+    if (options.position !== undefined) {
+      assertFiniteVec3(options.position, "camera position");
+      const [x, y, z] = readVec3(options.position);
+      this.camera.position.set(x, y, z);
     }
 
+    if (options.target !== undefined) {
+      assertFiniteVec3(options.target, "camera target");
+      this.target = copyTuple(options.target);
+    }
+
+    this.camera.fov = nextFov;
+    this.camera.near = nextNear;
+    this.camera.far = nextFar;
+    this.camera.lookAt(...this.target);
+    this.camera.updateProjectionMatrix();
+    this.camera.updateMatrixWorld();
+    this.invalidate();
+    return this;
+  }
+
+  getCameraState(): CameraState3D {
     return {
-      left,
-      right,
-      bottom,
-      top,
-      width: right - left,
-      height: top - bottom,
+      position: [
+        this.camera.position.x,
+        this.camera.position.y,
+        this.camera.position.z,
+      ],
+      target: [...this.target] as Vec3Tuple,
+      fovDegrees: this.camera.fov,
+      near: this.camera.near,
+      far: this.camera.far,
     };
   }
 
-  /** Run whenever resizing or setView changes the visible world rectangle. */
-  onViewChange(
-    callback: ViewChangeCallback2D,
-    fireImmediately = true,
-  ): () => void {
-    this.viewChangeCallbacks.add(callback);
-
-    if (fireImmediately) {
-      callback(this.getViewBounds());
-    }
-
-    return () => {
-      this.viewChangeCallbacks.delete(callback);
-    };
-  }
-
-  /** Convert browser client coordinates to the z = worldZ math plane. */
-  clientToWorld(
-    clientX: number,
-    clientY: number,
-    worldZ = 0,
-  ): Vec2Tuple {
+  /** Convert browser client coordinates to normalized device coordinates. */
+  clientToNDC(clientX: number, clientY: number): readonly [number, number] {
     const rectangle = this.canvas.getBoundingClientRect();
 
     if (rectangle.width <= 0 || rectangle.height <= 0) {
       return [0, 0];
     }
 
-    const ndcX = ((clientX - rectangle.left) / rectangle.width) * 2 - 1;
-    const ndcY = -((clientY - rectangle.top) / rectangle.height) * 2 + 1;
-
-    this.camera.updateMatrixWorld();
-    const near = new Vector3(ndcX, ndcY, -1).unproject(this.camera);
-    const far = new Vector3(ndcX, ndcY, 1).unproject(this.camera);
-    const dz = far.z - near.z;
-
-    if (Math.abs(dz) < 1e-12) {
-      return [near.x, near.y];
-    }
-
-    const interpolation = (worldZ - near.z) / dz;
     return [
-      near.x + interpolation * (far.x - near.x),
-      near.y + interpolation * (far.y - near.y),
+      ((clientX - rectangle.left) / rectangle.width) * 2 - 1,
+      -((clientY - rectangle.top) / rectangle.height) * 2 + 1,
     ];
   }
 
-  /** Convert a mathematical point to browser client coordinates. */
-  worldToClient(point: Vec2Tuple, worldZ = 0): Vec2Tuple {
+  /** Convert a 3D world point to browser client coordinates. */
+  worldToClient(point: Vec3Like): readonly [number, number] {
     const rectangle = this.canvas.getBoundingClientRect();
-    this.camera.updateMatrixWorld();
+    const [x, y, z] = readVec3(point);
 
-    const projected = new Vector3(point[0], point[1], worldZ).project(
-      this.camera,
-    );
+    this.camera.updateMatrixWorld();
+    const projected = new Vector3(x, y, z).project(this.camera);
 
     return [
       rectangle.left + ((projected.x + 1) / 2) * rectangle.width,
       rectangle.top + ((1 - projected.y) / 2) * rectangle.height,
     ];
+  }
+
+  /**
+   * Raycast from a browser pointer position through the perspective camera.
+   * Reusable interaction controllers can build picking/dragging on top of this.
+   */
+  raycastFromClient(
+    clientX: number,
+    clientY: number,
+    objects: readonly Object3D[],
+    recursive = true,
+  ): Intersection<Object3D>[] {
+    const [x, y] = this.clientToNDC(clientX, clientY);
+    this.pointerNdc.set(x, y);
+    this.camera.updateMatrixWorld();
+    this.threeScene.updateMatrixWorld(true);
+    this.raycaster.setFromCamera(this.pointerNdc, this.camera);
+    return this.raycaster.intersectObjects([...objects], recursive);
   }
 
   /** Explicit redraw request for direct Three.js property changes. */
@@ -357,7 +338,7 @@ export class MathScene2D {
     this.resizeObserver.disconnect();
     this.intersectionObserver.disconnect();
     document.removeEventListener("visibilitychange", this.handleVisibility);
-    this.viewChangeCallbacks.clear();
+    this.frameCallbacks.clear();
 
     disposeObjectTree(this.threeScene);
     this.renderer.dispose();
@@ -382,38 +363,10 @@ export class MathScene2D {
     );
     this.renderer.setSize(width, height, false);
     this.labelRenderer.setSize(width, height);
-    this.resizeCamera();
-    this.invalidate();
-  }
 
-  private resizeCamera(): void {
-    const { width, height } = this.canvas.getBoundingClientRect();
-    if (width <= 0 || height <= 0) return;
-
-    let halfWidth: number;
-    let halfHeight: number;
-
-    if (this.unitSizePixels !== null) {
-      halfWidth = width / (2 * this.unitSizePixels);
-      halfHeight = height / (2 * this.unitSizePixels);
-    } else {
-      const aspect = width / height;
-      halfHeight = this.viewHeight / 2;
-      halfWidth = halfHeight * aspect;
-    }
-
-    const [centerX, centerY] = this.center;
-
-    this.camera.left = centerX - halfWidth;
-    this.camera.right = centerX + halfWidth;
-    this.camera.top = centerY + halfHeight;
-    this.camera.bottom = centerY - halfHeight;
+    this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
-
-    const bounds = this.getViewBounds();
-    for (const callback of this.viewChangeCallbacks) {
-      callback(bounds);
-    }
+    this.invalidate();
   }
 
   private requestFrame(): void {
@@ -459,9 +412,9 @@ export class MathScene2D {
   };
 }
 
-export function createMathScene2D(
+export function createMathScene3D(
   canvas: HTMLCanvasElement,
-  options?: MathScene2DOptions,
-): MathScene2D {
-  return new MathScene2D(canvas, options);
+  options?: MathScene3DOptions,
+): MathScene3D {
+  return new MathScene3D(canvas, options);
 }

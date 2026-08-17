@@ -1,49 +1,13 @@
-import { Group } from "three";
-import type { FrameCallback } from "./types";
-
-type FrameRegistrar = (callback: FrameCallback) => () => void;
+import { MathObject } from "./MathObject";
 
 /**
- * Common base for objects exposed by the math-graphics layer.
+ * Common base for 2D mathematical objects.
  *
- * Each object owns persistent geometry in local coordinates. These methods
- * alter the parent Object3D transform instead of rebuilding vertices, so a
- * complicated multipart object can later be manipulated exactly like a circle.
+ * Persistent geometry lives in local coordinates; the methods below manipulate
+ * the parent Object3D transform so multipart objects behave as one mathematical
+ * object without rebuilding GPU buffers.
  */
-export abstract class MathObject2D extends Group {
-  private requestRender: () => void = () => {};
-  private registerFrameCallback: FrameRegistrar | null = null;
-
-  /** Used internally by MathScene2D when this object joins a scene. */
-  bindSceneHooks(
-    requestRender: () => void,
-    registerFrameCallback: FrameRegistrar,
-  ): this {
-    this.requestRender = requestRender;
-    this.registerFrameCallback = registerFrameCallback;
-    return this;
-  }
-
-  protected changed(): this {
-    this.requestRender();
-    return this;
-  }
-
-  /**
-   * Register object-specific animation in the scene's shared frame loop.
-   * Keeping one loop per scene avoids spawning one requestAnimationFrame loop
-   * for every independently animated shape.
-   */
-  protected onFrame(callback: FrameCallback): () => void {
-    if (!this.registerFrameCallback) {
-      throw new Error(
-        `${this.name || "This MathObject2D"} must be added to a MathScene2D before starting an animation.`,
-      );
-    }
-
-    return this.registerFrameCallback(callback);
-  }
-
+export abstract class MathObject2D extends MathObject {
   moveTo(x: number, y: number): this {
     this.position.set(x, y, this.position.z);
     return this.changed();
@@ -83,16 +47,4 @@ export abstract class MathObject2D extends Group {
     this.rotation.z += angleRadians;
     return this.changed();
   }
-
-  show(): this {
-    this.visible = true;
-    return this.changed();
-  }
-
-  hide(): this {
-    this.visible = false;
-    return this.changed();
-  }
-
-  abstract dispose(): void;
 }
