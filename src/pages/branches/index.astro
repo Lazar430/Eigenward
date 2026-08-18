@@ -4,33 +4,16 @@ import { withBase } from "@/utils/paths";
 
 type GroupId =
   | "foundations"
-  | "algebra-number"
-  | "geometry-topology"
-  | "analysis-probability"
-  | "discrete-computation"
-  | "physics-applied";
-
-type GraphNode = {
-  id: string;
-  label: string;
-  group: GroupId | "root";
-  x: number;
-  y: number;
-  href: string;
-  kind: "root" | "hub" | "topic";
-};
-
-type GraphEdge = {
-  from: string;
-  to: string;
-  kind: "structural" | "bridge";
-};
-
-const STAGE_WIDTH = 2880;
-const STAGE_HEIGHT = 3260;
-const TOPIC_START_Y = 525;
-const ROW_GAP = 168;
-const COLUMN_OFFSET = 106;
+  | "algebra"
+  | "number-theory"
+  | "geometry"
+  | "topology"
+  | "analysis"
+  | "probability-statistics"
+  | "discrete-mathematics"
+  | "computing"
+  | "mathematical-physics"
+  | "applied-mathematics";
 
 const groups = [
   {
@@ -38,42 +21,77 @@ const groups = [
     "label": "Foundations & Logic",
     "shortLabel": "Foundations",
     "x": 240,
-    "description": "Logic, axioms, formal systems, semantics, and the foundations of mathematical reasoning."
+    "description": "Logic, formal systems, set-theoretic foundations, semantics, and the architecture of mathematical reasoning."
   },
   {
-    "id": "algebra-number",
-    "label": "Algebra & Number Theory",
-    "shortLabel": "Algebra / Number",
+    "id": "algebra",
+    "label": "Algebra",
+    "shortLabel": "Algebra",
+    "x": 480,
+    "description": "Algebraic structures, linear structure, symmetry, and the abstract study of operations and transformations."
+  },
+  {
+    "id": "number-theory",
+    "label": "Number Theory",
+    "shortLabel": "Number Theory",
     "x": 720,
-    "description": "Structure, symmetry, equations, arithmetic, and exact symbolic relationships."
+    "description": "Integers, divisibility, arithmetic structures, Diophantine problems, and the many faces of number."
   },
   {
-    "id": "geometry-topology",
-    "label": "Geometry & Topology",
-    "shortLabel": "Geometry / Topology",
+    "id": "geometry",
+    "label": "Geometry",
+    "shortLabel": "Geometry",
+    "x": 960,
+    "description": "Shape, distance, curvature, configuration, and the many geometric languages used to describe space."
+  },
+  {
+    "id": "topology",
+    "label": "Topology",
+    "shortLabel": "Topology",
     "x": 1200,
-    "description": "Shape, space, continuity, curvature, deformation, and geometric invariants."
+    "description": "Continuity, open sets, deformation, invariants, and the structural study of spaces beyond rigid measurement."
   },
   {
-    "id": "analysis-probability",
-    "label": "Analysis & Probability",
-    "shortLabel": "Analysis / Probability",
+    "id": "analysis",
+    "label": "Analysis",
+    "shortLabel": "Analysis",
+    "x": 1440,
+    "description": "Limits, continuity, differentiation, integration, infinite processes, and analytical methods across mathematics."
+  },
+  {
+    "id": "probability-statistics",
+    "label": "Probability & Statistics",
+    "shortLabel": "Probability",
     "x": 1680,
-    "description": "Limits, continuous change, infinite-dimensional methods, randomness, and differential equations."
+    "description": "Randomness, stochastic processes, inference, uncertainty, and quantitative reasoning from data."
   },
   {
-    "id": "discrete-computation",
-    "label": "Discrete Mathematics & Computing",
-    "shortLabel": "Discrete / Computing",
+    "id": "discrete-mathematics",
+    "label": "Discrete Mathematics",
+    "shortLabel": "Discrete Math",
+    "x": 1920,
+    "description": "Finite structures, combinatorial patterns, graphs, matroids, and other non-continuous mathematical worlds."
+  },
+  {
+    "id": "computing",
+    "label": "Computing & Information",
+    "shortLabel": "Computing",
     "x": 2160,
-    "description": "Finite structures, algorithms, complexity, information, optimization, and symbolic computation."
+    "description": "Algorithms, complexity, information, cryptography, symbolic computation, and theoretical computation."
   },
   {
-    "id": "physics-applied",
-    "label": "Mathematical Physics & Applications",
-    "shortLabel": "Physics / Applied",
+    "id": "mathematical-physics",
+    "label": "Mathematical Physics",
+    "shortLabel": "Math Physics",
+    "x": 2400,
+    "description": "Mathematical formulations of mechanics, fields, relativity, quantum theory, and physical structure."
+  },
+  {
+    "id": "applied-mathematics",
+    "label": "Applied Mathematics",
+    "shortLabel": "Applied Math",
     "x": 2640,
-    "description": "Mathematical models of physical systems and applications throughout science and society."
+    "description": "Mathematical modeling and methods used in engineering, biology, economics, finance, and related domains."
   }
 ] as const;
 
@@ -215,17 +233,17 @@ const topics = [
       "logic"
     ]
   },
-  {
-    "id": "homotopy-type-theory",
-    "label": "Homotopy Type Theory",
-    "group": "foundations",
-    "row": 6,
-    "col": 1,
-    "prerequisites": [
-      "type-theory",
-      "homotopy-theory"
-    ]
-  },
+  /*{
+  "id": "homotopy-type-theory",
+  "label": "Homotopy Type Theory",
+  "group": "foundations",
+  "row": 6,
+  "col": 1,
+  "prerequisites": [
+  "type-theory",
+  "homotopy-theory"
+  ]
+  },*/
   {
     "id": "universal-algebra",
     "label": "Universal Algebra",
@@ -338,27 +356,27 @@ const topics = [
   {
     "id": "elementary-algebra",
     "label": "Elementary Algebra",
-    "group": "algebra-number",
+    "group": "algebra",
     "row": 0,
     "col": 0,
     "prerequisites": [
-      "hub-algebra-number"
+      "hub-algebra"
     ]
   },
   {
     "id": "linear-algebra",
     "label": "Linear Algebra",
-    "group": "algebra-number",
+    "group": "algebra",
     "row": 0,
     "col": 1,
     "prerequisites": [
-      "hub-algebra-number"
+      "hub-algebra"
     ]
   },
   {
     "id": "abstract-algebra",
     "label": "Abstract Algebra",
-    "group": "algebra-number",
+    "group": "algebra",
     "row": 1,
     "col": 0,
     "prerequisites": [
@@ -369,7 +387,7 @@ const topics = [
   {
     "id": "elementary-number-theory",
     "label": "Elementary Number Theory",
-    "group": "algebra-number",
+    "group": "number-theory",
     "row": 1,
     "col": 1,
     "prerequisites": [
@@ -379,7 +397,7 @@ const topics = [
   {
     "id": "group-theory",
     "label": "Group Theory",
-    "group": "algebra-number",
+    "group": "algebra",
     "row": 2,
     "col": 0,
     "prerequisites": [
@@ -389,7 +407,7 @@ const topics = [
   {
     "id": "ring-theory",
     "label": "Ring Theory",
-    "group": "algebra-number",
+    "group": "algebra",
     "row": 2,
     "col": 1,
     "prerequisites": [
@@ -399,7 +417,7 @@ const topics = [
   {
     "id": "field-theory",
     "label": "Field Theory",
-    "group": "algebra-number",
+    "group": "algebra",
     "row": 3,
     "col": 0,
     "prerequisites": [
@@ -409,7 +427,7 @@ const topics = [
   {
     "id": "module-theory",
     "label": "Module Theory",
-    "group": "algebra-number",
+    "group": "algebra",
     "row": 3,
     "col": 1,
     "prerequisites": [
@@ -420,10 +438,11 @@ const topics = [
   {
     "id": "galois-theory",
     "label": "Galois Theory",
-    "group": "algebra-number",
+    "group": "algebra",
     "row": 4,
     "col": 0,
     "prerequisites": [
+      "ring-theory",
       "field-theory",
       "group-theory"
     ]
@@ -431,7 +450,7 @@ const topics = [
   {
     "id": "commutative-algebra",
     "label": "Commutative Algebra",
-    "group": "algebra-number",
+    "group": "algebra",
     "row": 4,
     "col": 1,
     "prerequisites": [
@@ -442,7 +461,7 @@ const topics = [
   {
     "id": "representation-theory",
     "label": "Representation Theory",
-    "group": "algebra-number",
+    "group": "algebra",
     "row": 5,
     "col": 0,
     "prerequisites": [
@@ -453,7 +472,7 @@ const topics = [
   {
     "id": "lie-theory",
     "label": "Lie Theory",
-    "group": "algebra-number",
+    "group": "algebra",
     "row": 5,
     "col": 1,
     "prerequisites": [
@@ -465,7 +484,7 @@ const topics = [
   {
     "id": "homological-algebra",
     "label": "Homological Algebra",
-    "group": "algebra-number",
+    "group": "algebra",
     "row": 6,
     "col": 0,
     "prerequisites": [
@@ -476,7 +495,7 @@ const topics = [
   {
     "id": "clifford-algebra",
     "label": "Clifford Algebra",
-    "group": "algebra-number",
+    "group": "algebra",
     "row": 6,
     "col": 1,
     "prerequisites": [
@@ -487,7 +506,7 @@ const topics = [
   {
     "id": "quadratic-forms",
     "label": "Quadratic Forms",
-    "group": "algebra-number",
+    "group": "algebra",
     "row": 7,
     "col": 0,
     "prerequisites": [
@@ -498,7 +517,7 @@ const topics = [
   {
     "id": "noncommutative-algebra",
     "label": "Noncommutative Algebra",
-    "group": "algebra-number",
+    "group": "algebra",
     "row": 7,
     "col": 1,
     "prerequisites": [
@@ -509,7 +528,7 @@ const topics = [
   {
     "id": "algebraic-number-theory",
     "label": "Algebraic Number Theory",
-    "group": "algebra-number",
+    "group": "number-theory",
     "row": 8,
     "col": 0,
     "prerequisites": [
@@ -521,7 +540,7 @@ const topics = [
   {
     "id": "analytic-number-theory",
     "label": "Analytic Number Theory",
-    "group": "algebra-number",
+    "group": "number-theory",
     "row": 8,
     "col": 1,
     "prerequisites": [
@@ -533,7 +552,7 @@ const topics = [
   {
     "id": "diophantine-equations",
     "label": "Diophantine Equations",
-    "group": "algebra-number",
+    "group": "number-theory",
     "row": 9,
     "col": 0,
     "prerequisites": [
@@ -544,7 +563,7 @@ const topics = [
   {
     "id": "p-adic-analysis",
     "label": "p-adic Analysis",
-    "group": "algebra-number",
+    "group": "number-theory",
     "row": 9,
     "col": 1,
     "prerequisites": [
@@ -555,7 +574,7 @@ const topics = [
   {
     "id": "modular-forms",
     "label": "Modular Forms",
-    "group": "algebra-number",
+    "group": "number-theory",
     "row": 10,
     "col": 0,
     "prerequisites": [
@@ -567,7 +586,7 @@ const topics = [
   {
     "id": "arithmetic-geometry",
     "label": "Arithmetic Geometry",
-    "group": "algebra-number",
+    "group": "number-theory",
     "row": 10,
     "col": 1,
     "prerequisites": [
@@ -579,7 +598,7 @@ const topics = [
   {
     "id": "computational-algebra",
     "label": "Computational Algebra",
-    "group": "algebra-number",
+    "group": "algebra",
     "row": 11,
     "col": 0,
     "prerequisites": [
@@ -590,7 +609,7 @@ const topics = [
   {
     "id": "computational-number-theory",
     "label": "Computational Number Theory",
-    "group": "algebra-number",
+    "group": "number-theory",
     "row": 11,
     "col": 1,
     "prerequisites": [
@@ -601,7 +620,7 @@ const topics = [
   {
     "id": "finite-fields",
     "label": "Finite Fields",
-    "group": "algebra-number",
+    "group": "algebra",
     "row": 12,
     "col": 0,
     "prerequisites": [
@@ -612,7 +631,7 @@ const topics = [
   {
     "id": "computer-algebra",
     "label": "Computer Algebra",
-    "group": "algebra-number",
+    "group": "algebra",
     "row": 12,
     "col": 1,
     "prerequisites": [
@@ -623,17 +642,17 @@ const topics = [
   {
     "id": "geometry",
     "label": "Geometry",
-    "group": "geometry-topology",
+    "group": "geometry",
     "row": 0,
     "col": 0,
     "prerequisites": [
-      "hub-geometry-topology"
+      "hub-geometry"
     ]
   },
   {
     "id": "trigonometry",
     "label": "Trigonometry",
-    "group": "geometry-topology",
+    "group": "geometry",
     "row": 0,
     "col": 1,
     "prerequisites": [
@@ -643,7 +662,7 @@ const topics = [
   {
     "id": "euclidean-geometry",
     "label": "Euclidean Geometry",
-    "group": "geometry-topology",
+    "group": "geometry",
     "row": 1,
     "col": 0,
     "prerequisites": [
@@ -653,7 +672,7 @@ const topics = [
   {
     "id": "affine-geometry",
     "label": "Affine Geometry",
-    "group": "geometry-topology",
+    "group": "geometry",
     "row": 1,
     "col": 1,
     "prerequisites": [
@@ -664,7 +683,7 @@ const topics = [
   {
     "id": "projective-geometry",
     "label": "Projective Geometry",
-    "group": "geometry-topology",
+    "group": "geometry",
     "row": 2,
     "col": 0,
     "prerequisites": [
@@ -675,7 +694,7 @@ const topics = [
   {
     "id": "convex-geometry",
     "label": "Convex Geometry",
-    "group": "geometry-topology",
+    "group": "geometry",
     "row": 2,
     "col": 1,
     "prerequisites": [
@@ -686,7 +705,7 @@ const topics = [
   {
     "id": "discrete-geometry",
     "label": "Discrete Geometry",
-    "group": "geometry-topology",
+    "group": "geometry",
     "row": 3,
     "col": 0,
     "prerequisites": [
@@ -697,7 +716,7 @@ const topics = [
   {
     "id": "computational-geometry",
     "label": "Computational Geometry",
-    "group": "geometry-topology",
+    "group": "geometry",
     "row": 3,
     "col": 1,
     "prerequisites": [
@@ -708,7 +727,7 @@ const topics = [
   {
     "id": "non-euclidean-geometry",
     "label": "Non-Euclidean Geometry",
-    "group": "geometry-topology",
+    "group": "geometry",
     "row": 4,
     "col": 0,
     "prerequisites": [
@@ -719,7 +738,7 @@ const topics = [
   {
     "id": "metric-geometry",
     "label": "Metric Geometry",
-    "group": "geometry-topology",
+    "group": "geometry",
     "row": 4,
     "col": 1,
     "prerequisites": [
@@ -730,7 +749,7 @@ const topics = [
   {
     "id": "general-topology",
     "label": "General Topology",
-    "group": "geometry-topology",
+    "group": "topology",
     "row": 5,
     "col": 0,
     "prerequisites": [
@@ -741,7 +760,7 @@ const topics = [
   {
     "id": "manifold-theory",
     "label": "Manifold Theory",
-    "group": "geometry-topology",
+    "group": "topology",
     "row": 5,
     "col": 1,
     "prerequisites": [
@@ -753,7 +772,7 @@ const topics = [
   {
     "id": "differential-geometry",
     "label": "Differential Geometry",
-    "group": "geometry-topology",
+    "group": "geometry",
     "row": 6,
     "col": 0,
     "prerequisites": [
@@ -764,7 +783,7 @@ const topics = [
   {
     "id": "riemannian-geometry",
     "label": "Riemannian Geometry",
-    "group": "geometry-topology",
+    "group": "geometry",
     "row": 6,
     "col": 1,
     "prerequisites": [
@@ -775,7 +794,7 @@ const topics = [
   {
     "id": "symplectic-geometry",
     "label": "Symplectic Geometry",
-    "group": "geometry-topology",
+    "group": "geometry",
     "row": 7,
     "col": 0,
     "prerequisites": [
@@ -786,7 +805,7 @@ const topics = [
   {
     "id": "complex-geometry",
     "label": "Complex Geometry",
-    "group": "geometry-topology",
+    "group": "geometry",
     "row": 7,
     "col": 1,
     "prerequisites": [
@@ -797,7 +816,7 @@ const topics = [
   {
     "id": "algebraic-geometry",
     "label": "Algebraic Geometry",
-    "group": "geometry-topology",
+    "group": "geometry",
     "row": 8,
     "col": 0,
     "prerequisites": [
@@ -808,7 +827,7 @@ const topics = [
   {
     "id": "algebraic-topology",
     "label": "Algebraic Topology",
-    "group": "geometry-topology",
+    "group": "topology",
     "row": 8,
     "col": 1,
     "prerequisites": [
@@ -819,7 +838,7 @@ const topics = [
   {
     "id": "homotopy-theory",
     "label": "Homotopy Theory",
-    "group": "geometry-topology",
+    "group": "topology",
     "row": 9,
     "col": 0,
     "prerequisites": [
@@ -830,7 +849,7 @@ const topics = [
   {
     "id": "homology-cohomology",
     "label": "Homology & Cohomology",
-    "group": "geometry-topology",
+    "group": "topology",
     "row": 9,
     "col": 1,
     "prerequisites": [
@@ -841,7 +860,7 @@ const topics = [
   {
     "id": "differential-topology",
     "label": "Differential Topology",
-    "group": "geometry-topology",
+    "group": "topology",
     "row": 10,
     "col": 0,
     "prerequisites": [
@@ -852,7 +871,7 @@ const topics = [
   {
     "id": "geometric-topology",
     "label": "Geometric Topology",
-    "group": "geometry-topology",
+    "group": "topology",
     "row": 10,
     "col": 1,
     "prerequisites": [
@@ -863,7 +882,7 @@ const topics = [
   {
     "id": "knot-theory",
     "label": "Knot Theory",
-    "group": "geometry-topology",
+    "group": "topology",
     "row": 11,
     "col": 0,
     "prerequisites": [
@@ -874,7 +893,7 @@ const topics = [
   {
     "id": "low-dimensional-topology",
     "label": "Low-Dimensional Topology",
-    "group": "geometry-topology",
+    "group": "topology",
     "row": 11,
     "col": 1,
     "prerequisites": [
@@ -882,21 +901,21 @@ const topics = [
       "knot-theory"
     ]
   },
-  {
-    "id": "geometric-group-theory",
-    "label": "Geometric Group Theory",
-    "group": "geometry-topology",
-    "row": 12,
-    "col": 0,
-    "prerequisites": [
-      "group-theory",
-      "metric-geometry"
-    ]
-  },
+  /*{
+  "id": "geometric-group-theory",
+  "label": "Geometric Group Theory",
+  "group": "geometry",
+  "row": 12,
+  "col": 0,
+  "prerequisites": [
+  "group-theory",
+  "metric-geometry"
+  ]
+  },*/
   {
     "id": "geometric-measure-theory",
     "label": "Geometric Measure Theory",
-    "group": "geometry-topology",
+    "group": "geometry",
     "row": 12,
     "col": 1,
     "prerequisites": [
@@ -907,7 +926,7 @@ const topics = [
   {
     "id": "fractal-geometry",
     "label": "Fractal Geometry",
-    "group": "geometry-topology",
+    "group": "geometry",
     "row": 13,
     "col": 0,
     "prerequisites": [
@@ -919,7 +938,7 @@ const topics = [
   {
     "id": "computational-topology",
     "label": "Computational Topology",
-    "group": "geometry-topology",
+    "group": "topology",
     "row": 13,
     "col": 1,
     "prerequisites": [
@@ -930,7 +949,7 @@ const topics = [
   {
     "id": "topological-data-analysis",
     "label": "Topological Data Analysis",
-    "group": "geometry-topology",
+    "group": "topology",
     "row": 14,
     "col": 0,
     "prerequisites": [
@@ -942,7 +961,7 @@ const topics = [
   {
     "id": "spherical-hyperbolic-geometry",
     "label": "Spherical & Hyperbolic Geometry",
-    "group": "geometry-topology",
+    "group": "geometry",
     "row": 14,
     "col": 1,
     "prerequisites": [
@@ -953,7 +972,7 @@ const topics = [
   {
     "id": "topology",
     "label": "Topology",
-    "group": "geometry-topology",
+    "group": "topology",
     "row": 15,
     "col": 0,
     "prerequisites": [
@@ -963,7 +982,7 @@ const topics = [
   {
     "id": "geometric-analysis",
     "label": "Geometric Analysis",
-    "group": "geometry-topology",
+    "group": "geometry",
     "row": 15,
     "col": 1,
     "prerequisites": [
@@ -974,27 +993,27 @@ const topics = [
   {
     "id": "calculus",
     "label": "Calculus",
-    "group": "analysis-probability",
+    "group": "analysis",
     "row": 0,
     "col": 0,
     "prerequisites": [
-      "hub-analysis-probability"
+      "hub-analysis"
     ]
   },
   {
     "id": "probability-theory",
     "label": "Probability Theory",
-    "group": "analysis-probability",
+    "group": "probability-statistics",
     "row": 0,
     "col": 1,
     "prerequisites": [
-      "hub-analysis-probability"
+      "hub-probability-statistics"
     ]
   },
   {
     "id": "real-analysis",
     "label": "Real Analysis",
-    "group": "analysis-probability",
+    "group": "analysis",
     "row": 1,
     "col": 0,
     "prerequisites": [
@@ -1005,7 +1024,7 @@ const topics = [
   {
     "id": "multivariable-calculus",
     "label": "Multivariable Calculus",
-    "group": "analysis-probability",
+    "group": "analysis",
     "row": 1,
     "col": 1,
     "prerequisites": [
@@ -1016,7 +1035,7 @@ const topics = [
   {
     "id": "complex-analysis",
     "label": "Complex Analysis",
-    "group": "analysis-probability",
+    "group": "analysis",
     "row": 2,
     "col": 0,
     "prerequisites": [
@@ -1027,7 +1046,7 @@ const topics = [
   {
     "id": "measure-theory",
     "label": "Measure Theory",
-    "group": "analysis-probability",
+    "group": "analysis",
     "row": 2,
     "col": 1,
     "prerequisites": [
@@ -1038,7 +1057,7 @@ const topics = [
   {
     "id": "functional-analysis",
     "label": "Functional Analysis",
-    "group": "analysis-probability",
+    "group": "analysis",
     "row": 3,
     "col": 0,
     "prerequisites": [
@@ -1050,7 +1069,7 @@ const topics = [
   {
     "id": "operator-theory",
     "label": "Operator Theory",
-    "group": "analysis-probability",
+    "group": "analysis",
     "row": 3,
     "col": 1,
     "prerequisites": [
@@ -1060,7 +1079,7 @@ const topics = [
   {
     "id": "fourier-analysis",
     "label": "Fourier Analysis",
-    "group": "analysis-probability",
+    "group": "analysis",
     "row": 4,
     "col": 0,
     "prerequisites": [
@@ -1071,7 +1090,7 @@ const topics = [
   {
     "id": "harmonic-analysis",
     "label": "Harmonic Analysis",
-    "group": "analysis-probability",
+    "group": "analysis",
     "row": 4,
     "col": 1,
     "prerequisites": [
@@ -1083,7 +1102,7 @@ const topics = [
   {
     "id": "distribution-theory",
     "label": "Distribution Theory",
-    "group": "analysis-probability",
+    "group": "analysis",
     "row": 5,
     "col": 0,
     "prerequisites": [
@@ -1094,7 +1113,7 @@ const topics = [
   {
     "id": "calculus-of-variations",
     "label": "Calculus of Variations",
-    "group": "analysis-probability",
+    "group": "analysis",
     "row": 5,
     "col": 1,
     "prerequisites": [
@@ -1105,7 +1124,7 @@ const topics = [
   {
     "id": "ordinary-differential-equations",
     "label": "Ordinary Differential Equations",
-    "group": "analysis-probability",
+    "group": "analysis",
     "row": 6,
     "col": 0,
     "prerequisites": [
@@ -1116,7 +1135,7 @@ const topics = [
   {
     "id": "partial-differential-equations",
     "label": "Partial Differential Equations",
-    "group": "analysis-probability",
+    "group": "analysis",
     "row": 6,
     "col": 1,
     "prerequisites": [
@@ -1128,7 +1147,7 @@ const topics = [
   {
     "id": "dynamical-systems",
     "label": "Dynamical Systems",
-    "group": "analysis-probability",
+    "group": "analysis",
     "row": 7,
     "col": 0,
     "prerequisites": [
@@ -1139,7 +1158,7 @@ const topics = [
   {
     "id": "ergodic-theory",
     "label": "Ergodic Theory",
-    "group": "analysis-probability",
+    "group": "analysis",
     "row": 7,
     "col": 1,
     "prerequisites": [
@@ -1151,7 +1170,7 @@ const topics = [
   {
     "id": "asymptotic-analysis",
     "label": "Asymptotic Analysis",
-    "group": "analysis-probability",
+    "group": "analysis",
     "row": 8,
     "col": 0,
     "prerequisites": [
@@ -1162,7 +1181,7 @@ const topics = [
   {
     "id": "convex-analysis",
     "label": "Convex Analysis",
-    "group": "analysis-probability",
+    "group": "analysis",
     "row": 8,
     "col": 1,
     "prerequisites": [
@@ -1174,7 +1193,7 @@ const topics = [
   {
     "id": "numerical-analysis",
     "label": "Numerical Analysis",
-    "group": "analysis-probability",
+    "group": "analysis",
     "row": 9,
     "col": 0,
     "prerequisites": [
@@ -1186,7 +1205,7 @@ const topics = [
   {
     "id": "optimization",
     "label": "Optimization",
-    "group": "analysis-probability",
+    "group": "analysis",
     "row": 9,
     "col": 1,
     "prerequisites": [
@@ -1195,21 +1214,21 @@ const topics = [
       "convex-analysis"
     ]
   },
-  {
-    "id": "computational-analysis",
-    "label": "Computational Analysis",
-    "group": "analysis-probability",
-    "row": 10,
-    "col": 0,
-    "prerequisites": [
-      "numerical-analysis",
-      "computability-theory"
-    ]
-  },
+  /*{
+  "id": "computational-analysis",
+  "label": "Computational Analysis",
+  "group": "analysis",
+  "row": 10,
+  "col": 0,
+  "prerequisites": [
+  "numerical-analysis",
+  "computability-theory"
+  ]
+  },*/
   {
     "id": "numerical-linear-algebra",
     "label": "Numerical Linear Algebra",
-    "group": "analysis-probability",
+    "group": "analysis",
     "row": 10,
     "col": 1,
     "prerequisites": [
@@ -1220,7 +1239,7 @@ const topics = [
   {
     "id": "stochastic-processes",
     "label": "Stochastic Processes",
-    "group": "analysis-probability",
+    "group": "probability-statistics",
     "row": 11,
     "col": 0,
     "prerequisites": [
@@ -1231,7 +1250,7 @@ const topics = [
   {
     "id": "markov-chains",
     "label": "Markov Chains",
-    "group": "analysis-probability",
+    "group": "probability-statistics",
     "row": 11,
     "col": 1,
     "prerequisites": [
@@ -1242,7 +1261,7 @@ const topics = [
   {
     "id": "stochastic-calculus",
     "label": "Stochastic Calculus",
-    "group": "analysis-probability",
+    "group": "probability-statistics",
     "row": 12,
     "col": 0,
     "prerequisites": [
@@ -1253,7 +1272,7 @@ const topics = [
   {
     "id": "stochastic-analysis",
     "label": "Stochastic Analysis",
-    "group": "analysis-probability",
+    "group": "probability-statistics",
     "row": 12,
     "col": 1,
     "prerequisites": [
@@ -1265,7 +1284,7 @@ const topics = [
   {
     "id": "statistics",
     "label": "Mathematical Statistics",
-    "group": "analysis-probability",
+    "group": "probability-statistics",
     "row": 13,
     "col": 0,
     "prerequisites": [
@@ -1277,7 +1296,7 @@ const topics = [
   {
     "id": "bayesian-statistics",
     "label": "Bayesian Statistics",
-    "group": "analysis-probability",
+    "group": "probability-statistics",
     "row": 13,
     "col": 1,
     "prerequisites": [
@@ -1288,7 +1307,7 @@ const topics = [
   {
     "id": "time-series",
     "label": "Time-Series Analysis",
-    "group": "analysis-probability",
+    "group": "probability-statistics",
     "row": 14,
     "col": 0,
     "prerequisites": [
@@ -1300,7 +1319,7 @@ const topics = [
   {
     "id": "queueing-theory",
     "label": "Queueing Theory",
-    "group": "analysis-probability",
+    "group": "probability-statistics",
     "row": 14,
     "col": 1,
     "prerequisites": [
@@ -1311,7 +1330,7 @@ const topics = [
   {
     "id": "analysis",
     "label": "Analysis",
-    "group": "analysis-probability",
+    "group": "analysis",
     "row": 15,
     "col": 0,
     "prerequisites": [
@@ -1322,7 +1341,7 @@ const topics = [
   {
     "id": "inverse-problem-theory",
     "label": "Inverse-Problem Theory",
-    "group": "analysis-probability",
+    "group": "analysis",
     "row": 15,
     "col": 1,
     "prerequisites": [
@@ -1334,27 +1353,27 @@ const topics = [
   {
     "id": "discrete-mathematics",
     "label": "Discrete Mathematics",
-    "group": "discrete-computation",
+    "group": "discrete-mathematics",
     "row": 0,
     "col": 0,
     "prerequisites": [
-      "hub-discrete-computation"
+      "hub-discrete-mathematics"
     ]
   },
   {
     "id": "algorithms",
     "label": "Algorithms",
-    "group": "discrete-computation",
+    "group": "computing",
     "row": 0,
     "col": 1,
     "prerequisites": [
-      "hub-discrete-computation"
+      "hub-computing"
     ]
   },
   {
     "id": "combinatorics",
     "label": "Combinatorics",
-    "group": "discrete-computation",
+    "group": "discrete-mathematics",
     "row": 1,
     "col": 0,
     "prerequisites": [
@@ -1364,7 +1383,7 @@ const topics = [
   {
     "id": "data-structures",
     "label": "Data Structures",
-    "group": "discrete-computation",
+    "group": "computing",
     "row": 1,
     "col": 1,
     "prerequisites": [
@@ -1375,7 +1394,7 @@ const topics = [
   {
     "id": "graph-theory",
     "label": "Graph Theory",
-    "group": "discrete-computation",
+    "group": "discrete-mathematics",
     "row": 2,
     "col": 0,
     "prerequisites": [
@@ -1385,7 +1404,7 @@ const topics = [
   {
     "id": "enumerative-combinatorics",
     "label": "Enumerative Combinatorics",
-    "group": "discrete-computation",
+    "group": "discrete-mathematics",
     "row": 2,
     "col": 1,
     "prerequisites": [
@@ -1396,7 +1415,7 @@ const topics = [
   {
     "id": "extremal-combinatorics",
     "label": "Extremal Combinatorics",
-    "group": "discrete-computation",
+    "group": "discrete-mathematics",
     "row": 3,
     "col": 0,
     "prerequisites": [
@@ -1407,7 +1426,7 @@ const topics = [
   {
     "id": "algebraic-combinatorics",
     "label": "Algebraic Combinatorics",
-    "group": "discrete-computation",
+    "group": "discrete-mathematics",
     "row": 3,
     "col": 1,
     "prerequisites": [
@@ -1419,7 +1438,7 @@ const topics = [
   {
     "id": "probabilistic-combinatorics",
     "label": "Probabilistic Combinatorics",
-    "group": "discrete-computation",
+    "group": "discrete-mathematics",
     "row": 4,
     "col": 0,
     "prerequisites": [
@@ -1430,7 +1449,7 @@ const topics = [
   {
     "id": "ramsey-theory",
     "label": "Ramsey Theory",
-    "group": "discrete-computation",
+    "group": "discrete-mathematics",
     "row": 4,
     "col": 1,
     "prerequisites": [
@@ -1441,7 +1460,7 @@ const topics = [
   {
     "id": "matroid-theory",
     "label": "Matroid Theory",
-    "group": "discrete-computation",
+    "group": "discrete-mathematics",
     "row": 5,
     "col": 0,
     "prerequisites": [
@@ -1450,20 +1469,9 @@ const topics = [
     ]
   },
   {
-    "id": "design-theory",
-    "label": "Design Theory",
-    "group": "discrete-computation",
-    "row": 5,
-    "col": 1,
-    "prerequisites": [
-      "combinatorics",
-      "finite-fields"
-    ]
-  },
-  {
     "id": "complexity-theory",
     "label": "Complexity Theory",
-    "group": "discrete-computation",
+    "group": "computing",
     "row": 6,
     "col": 0,
     "prerequisites": [
@@ -1474,7 +1482,7 @@ const topics = [
   {
     "id": "automata-theory",
     "label": "Automata Theory",
-    "group": "discrete-computation",
+    "group": "computing",
     "row": 6,
     "col": 1,
     "prerequisites": [
@@ -1485,7 +1493,7 @@ const topics = [
   {
     "id": "formal-languages",
     "label": "Formal Languages",
-    "group": "discrete-computation",
+    "group": "computing",
     "row": 7,
     "col": 0,
     "prerequisites": [
@@ -1496,7 +1504,7 @@ const topics = [
   {
     "id": "information-theory",
     "label": "Information Theory",
-    "group": "discrete-computation",
+    "group": "computing",
     "row": 7,
     "col": 1,
     "prerequisites": [
@@ -1507,7 +1515,7 @@ const topics = [
   {
     "id": "coding-theory",
     "label": "Coding Theory",
-    "group": "discrete-computation",
+    "group": "computing",
     "row": 8,
     "col": 0,
     "prerequisites": [
@@ -1519,7 +1527,7 @@ const topics = [
   {
     "id": "cryptography",
     "label": "Cryptography",
-    "group": "discrete-computation",
+    "group": "computing",
     "row": 8,
     "col": 1,
     "prerequisites": [
@@ -1531,7 +1539,7 @@ const topics = [
   {
     "id": "symbolic-computation",
     "label": "Symbolic Computation",
-    "group": "discrete-computation",
+    "group": "computing",
     "row": 9,
     "col": 0,
     "prerequisites": [
@@ -1542,7 +1550,7 @@ const topics = [
   {
     "id": "scientific-computing",
     "label": "Scientific Computing",
-    "group": "discrete-computation",
+    "group": "computing",
     "row": 9,
     "col": 1,
     "prerequisites": [
@@ -1553,7 +1561,7 @@ const topics = [
   {
     "id": "computational-combinatorics",
     "label": "Computational Combinatorics",
-    "group": "discrete-computation",
+    "group": "computing",
     "row": 10,
     "col": 0,
     "prerequisites": [
@@ -1564,7 +1572,7 @@ const topics = [
   {
     "id": "discrete-optimization",
     "label": "Discrete Optimization",
-    "group": "discrete-computation",
+    "group": "discrete-mathematics",
     "row": 10,
     "col": 1,
     "prerequisites": [
@@ -1576,7 +1584,7 @@ const topics = [
   {
     "id": "operations-research",
     "label": "Operations Research",
-    "group": "discrete-computation",
+    "group": "computing",
     "row": 11,
     "col": 0,
     "prerequisites": [
@@ -1588,7 +1596,7 @@ const topics = [
   {
     "id": "game-theory",
     "label": "Game Theory",
-    "group": "discrete-computation",
+    "group": "discrete-mathematics",
     "row": 11,
     "col": 1,
     "prerequisites": [
@@ -1600,7 +1608,7 @@ const topics = [
   {
     "id": "network-science",
     "label": "Network Science",
-    "group": "discrete-computation",
+    "group": "discrete-mathematics",
     "row": 12,
     "col": 0,
     "prerequisites": [
@@ -1612,7 +1620,7 @@ const topics = [
   {
     "id": "machine-learning-theory",
     "label": "Machine Learning Theory",
-    "group": "discrete-computation",
+    "group": "computing",
     "row": 12,
     "col": 1,
     "prerequisites": [
@@ -1625,7 +1633,7 @@ const topics = [
   {
     "id": "randomized-algorithms",
     "label": "Randomized Algorithms",
-    "group": "discrete-computation",
+    "group": "computing",
     "row": 13,
     "col": 0,
     "prerequisites": [
@@ -1636,7 +1644,7 @@ const topics = [
   {
     "id": "quantum-computing",
     "label": "Quantum Computing",
-    "group": "discrete-computation",
+    "group": "computing",
     "row": 13,
     "col": 1,
     "prerequisites": [
@@ -1648,7 +1656,7 @@ const topics = [
   {
     "id": "computational-complexity",
     "label": "Advanced Complexity Theory",
-    "group": "discrete-computation",
+    "group": "computing",
     "row": 14,
     "col": 0,
     "prerequisites": [
@@ -1660,7 +1668,7 @@ const topics = [
   {
     "id": "computational-mathematics",
     "label": "Computational Mathematics",
-    "group": "discrete-computation",
+    "group": "computing",
     "row": 14,
     "col": 1,
     "prerequisites": [
@@ -1672,7 +1680,7 @@ const topics = [
   {
     "id": "algorithmic-game-theory",
     "label": "Algorithmic Game Theory",
-    "group": "discrete-computation",
+    "group": "computing",
     "row": 15,
     "col": 0,
     "prerequisites": [
@@ -1684,7 +1692,7 @@ const topics = [
   {
     "id": "computational-information",
     "label": "Computational Information Theory",
-    "group": "discrete-computation",
+    "group": "computing",
     "row": 15,
     "col": 1,
     "prerequisites": [
@@ -1696,17 +1704,17 @@ const topics = [
   {
     "id": "mathematical-physics",
     "label": "Mathematical Physics",
-    "group": "physics-applied",
+    "group": "mathematical-physics",
     "row": 0,
     "col": 0,
     "prerequisites": [
-      "hub-physics-applied"
+      "hub-mathematical-physics"
     ]
   },
   {
     "id": "classical-mechanics",
     "label": "Classical Mechanics",
-    "group": "physics-applied",
+    "group": "mathematical-physics",
     "row": 0,
     "col": 1,
     "prerequisites": [
@@ -1718,7 +1726,7 @@ const topics = [
   {
     "id": "lagrangian-mechanics",
     "label": "Lagrangian Mechanics",
-    "group": "physics-applied",
+    "group": "mathematical-physics",
     "row": 1,
     "col": 0,
     "prerequisites": [
@@ -1729,7 +1737,7 @@ const topics = [
   {
     "id": "hamiltonian-mechanics",
     "label": "Hamiltonian Mechanics",
-    "group": "physics-applied",
+    "group": "mathematical-physics",
     "row": 1,
     "col": 1,
     "prerequisites": [
@@ -1740,10 +1748,11 @@ const topics = [
   {
     "id": "continuum-mechanics",
     "label": "Continuum Mechanics",
-    "group": "physics-applied",
+    "group": "mathematical-physics",
     "row": 2,
     "col": 0,
     "prerequisites": [
+      "mathematical-physics",
       "multivariable-calculus",
       "partial-differential-equations",
       "tensor-analysis"
@@ -1752,7 +1761,7 @@ const topics = [
   {
     "id": "fluid-dynamics",
     "label": "Fluid Dynamics",
-    "group": "physics-applied",
+    "group": "mathematical-physics",
     "row": 2,
     "col": 1,
     "prerequisites": [
@@ -1763,7 +1772,7 @@ const topics = [
   {
     "id": "electromagnetism",
     "label": "Electromagnetism",
-    "group": "physics-applied",
+    "group": "mathematical-physics",
     "row": 3,
     "col": 0,
     "prerequisites": [
@@ -1775,7 +1784,7 @@ const topics = [
   {
     "id": "tensor-analysis",
     "label": "Tensor Analysis",
-    "group": "physics-applied",
+    "group": "mathematical-physics",
     "row": 3,
     "col": 1,
     "prerequisites": [
@@ -1787,7 +1796,7 @@ const topics = [
   {
     "id": "special-relativity",
     "label": "Special Relativity",
-    "group": "physics-applied",
+    "group": "mathematical-physics",
     "row": 4,
     "col": 0,
     "prerequisites": [
@@ -1798,7 +1807,7 @@ const topics = [
   {
     "id": "general-relativity",
     "label": "General Relativity",
-    "group": "physics-applied",
+    "group": "mathematical-physics",
     "row": 4,
     "col": 1,
     "prerequisites": [
@@ -1810,7 +1819,7 @@ const topics = [
   {
     "id": "quantum-mechanics",
     "label": "Quantum Mechanics",
-    "group": "physics-applied",
+    "group": "mathematical-physics",
     "row": 5,
     "col": 0,
     "prerequisites": [
@@ -1823,7 +1832,7 @@ const topics = [
   {
     "id": "quantum-field-theory",
     "label": "Quantum Field Theory",
-    "group": "physics-applied",
+    "group": "mathematical-physics",
     "row": 5,
     "col": 1,
     "prerequisites": [
@@ -1835,7 +1844,7 @@ const topics = [
   {
     "id": "statistical-mechanics",
     "label": "Statistical Mechanics",
-    "group": "physics-applied",
+    "group": "mathematical-physics",
     "row": 6,
     "col": 0,
     "prerequisites": [
@@ -1847,7 +1856,7 @@ const topics = [
   {
     "id": "thermodynamics",
     "label": "Thermodynamics",
-    "group": "physics-applied",
+    "group": "mathematical-physics",
     "row": 6,
     "col": 1,
     "prerequisites": [
@@ -1858,7 +1867,7 @@ const topics = [
   {
     "id": "condensed-matter",
     "label": "Condensed-Matter Theory",
-    "group": "physics-applied",
+    "group": "mathematical-physics",
     "row": 7,
     "col": 0,
     "prerequisites": [
@@ -1869,10 +1878,11 @@ const topics = [
   {
     "id": "gauge-theory",
     "label": "Gauge Theory",
-    "group": "physics-applied",
+    "group": "mathematical-physics",
     "row": 7,
     "col": 1,
     "prerequisites": [
+      "quantum-mechanics",
       "differential-geometry",
       "lie-theory",
       "quantum-field-theory"
@@ -1881,7 +1891,7 @@ const topics = [
   {
     "id": "string-theory",
     "label": "String Theory",
-    "group": "physics-applied",
+    "group": "mathematical-physics",
     "row": 8,
     "col": 0,
     "prerequisites": [
@@ -1893,7 +1903,7 @@ const topics = [
   {
     "id": "integrable-systems",
     "label": "Integrable Systems",
-    "group": "physics-applied",
+    "group": "mathematical-physics",
     "row": 8,
     "col": 1,
     "prerequisites": [
@@ -1905,7 +1915,7 @@ const topics = [
   {
     "id": "control-theory",
     "label": "Control Theory",
-    "group": "physics-applied",
+    "group": "applied-mathematics",
     "row": 9,
     "col": 0,
     "prerequisites": [
@@ -1917,7 +1927,7 @@ const topics = [
   {
     "id": "signal-processing",
     "label": "Signal Processing",
-    "group": "physics-applied",
+    "group": "applied-mathematics",
     "row": 9,
     "col": 1,
     "prerequisites": [
@@ -1929,7 +1939,7 @@ const topics = [
   {
     "id": "inverse-problems",
     "label": "Inverse Problems",
-    "group": "physics-applied",
+    "group": "applied-mathematics",
     "row": 10,
     "col": 0,
     "prerequisites": [
@@ -1942,7 +1952,7 @@ const topics = [
   {
     "id": "mathematical-biology",
     "label": "Mathematical Biology",
-    "group": "physics-applied",
+    "group": "applied-mathematics",
     "row": 10,
     "col": 1,
     "prerequisites": [
@@ -1954,7 +1964,7 @@ const topics = [
   {
     "id": "mathematical-economics",
     "label": "Mathematical Economics",
-    "group": "physics-applied",
+    "group": "applied-mathematics",
     "row": 11,
     "col": 0,
     "prerequisites": [
@@ -1966,7 +1976,7 @@ const topics = [
   {
     "id": "mathematical-finance",
     "label": "Mathematical Finance",
-    "group": "physics-applied",
+    "group": "applied-mathematics",
     "row": 11,
     "col": 1,
     "prerequisites": [
@@ -1978,7 +1988,7 @@ const topics = [
   {
     "id": "mathematical-chemistry",
     "label": "Mathematical Chemistry",
-    "group": "physics-applied",
+    "group": "applied-mathematics",
     "row": 12,
     "col": 0,
     "prerequisites": [
@@ -1990,7 +2000,7 @@ const topics = [
   {
     "id": "materials-science",
     "label": "Mathematics of Materials",
-    "group": "physics-applied",
+    "group": "applied-mathematics",
     "row": 12,
     "col": 1,
     "prerequisites": [
@@ -2002,7 +2012,7 @@ const topics = [
   {
     "id": "geophysics",
     "label": "Mathematical Geophysics",
-    "group": "physics-applied",
+    "group": "applied-mathematics",
     "row": 13,
     "col": 0,
     "prerequisites": [
@@ -2014,7 +2024,7 @@ const topics = [
   {
     "id": "quantum-information",
     "label": "Quantum Information",
-    "group": "physics-applied",
+    "group": "mathematical-physics",
     "row": 13,
     "col": 1,
     "prerequisites": [
@@ -2026,7 +2036,7 @@ const topics = [
   {
     "id": "celestial-mechanics",
     "label": "Celestial Mechanics",
-    "group": "physics-applied",
+    "group": "mathematical-physics",
     "row": 14,
     "col": 0,
     "prerequisites": [
@@ -2038,7 +2048,7 @@ const topics = [
   {
     "id": "mathematical-engineering",
     "label": "Engineering Mathematics",
-    "group": "physics-applied",
+    "group": "applied-mathematics",
     "row": 14,
     "col": 1,
     "prerequisites": [
@@ -2050,7 +2060,7 @@ const topics = [
   {
     "id": "mathematical-ecology",
     "label": "Mathematical Ecology",
-    "group": "physics-applied",
+    "group": "applied-mathematics",
     "row": 15,
     "col": 0,
     "prerequisites": [
@@ -2062,7 +2072,7 @@ const topics = [
   {
     "id": "mathematical-epidemiology",
     "label": "Mathematical Epidemiology",
-    "group": "physics-applied",
+    "group": "applied-mathematics",
     "row": 15,
     "col": 1,
     "prerequisites": [
@@ -2216,77 +2226,687 @@ const bridgeEdges: GraphEdge[] = [
   }
 ];
 
-const groupMap = new Map(groups.map((group) => [group.id, group]));
-
-const rootNode: GraphNode = {
-  id: "mathematics",
-  label: "Mathematics",
-  group: "root",
-  x: STAGE_WIDTH / 2,
-  y: 88,
-  href: withBase("branches/"),
-  kind: "root",
+const GROUP_COLORS: Record<GroupId, string> = {
+  "foundations": "#8e7dff",
+  "algebra": "#ff7597",
+  "number-theory": "#ffb04f",
+  "geometry": "#52ddc7",
+  "topology": "#2fd6a3",
+  "analysis": "#65b7ff",
+  "probability-statistics": "#7fa0ff",
+  "discrete-mathematics": "#f4bd61",
+  "computing": "#ff9a63",
+  "mathematical-physics": "#d68cff",
+  "applied-mathematics": "#ff86c8",
 };
 
-const hubNodes: GraphNode[] = groups.map((group) => ({
-  id: `hub-${group.id}`,
-  label: group.label,
-  group: group.id,
-  x: group.x,
-  y: 278,
-  href: withBase(`branches/${group.id}/`),
-  kind: "hub",
-}));
+type TextOrientation = "radial" | "tangential";
 
-const topicNodes: GraphNode[] = topics.map((topic) => {
-  const group = groupMap.get(topic.group);
+type SunburstNode = {
+  id: string;
+  label: string;
+  group: GroupId;
+  prerequisites: string[];
+  href: string;
+  parent: SunburstNode | null;
+  children: SunburstNode[];
+  depth: number;
+  weight: number;
+  startAngle: number;
+  endAngle: number;
+  lines: string[];
+  textOrientation: TextOrientation;
+  fontSize: number;
+};
 
-  if (!group) throw new Error(`Unknown group: ${topic.group}`);
+type SunburstSector = {
+  id: string;
+  label: string;
+  labelLower: string;
+  href: string;
+  prerequisites: string[];
+  depth: number;
+  path: string;
+  fill: string;
+  fillOpacity: number;
+  stroke: string;
+  textX: number;
+  textY: number;
+  textRotation: number;
+  fontSize: number;
+  orientation: TextOrientation;
+  lines: {
+    text: string;
+    dy: string;
+  }[];
+};
+
+type SunburstChart = {
+  id: GroupId;
+  label: string;
+  shortLabel: string;
+  color: string;
+  sectors: SunburstSector[];
+  centerLines: string[];
+  topicCount: number;
+  labelFontSize: number;
+};
+
+const SUNBURST_SIZE = 1400;
+const SUNBURST_CENTER = SUNBURST_SIZE / 2;
+
+/*
+ * A slightly larger center gives the first ring more circumference, which
+ * matters for dense groups such as Mathematical Physics. It also matches the
+ * visual proportions of a conventional sunburst better than the earlier tiny
+ * center disc.
+ */
+const SUNBURST_INNER_RADIUS = 130;
+const SUNBURST_OUTER_RADIUS = 640;
+const SUNBURST_GAP = 0.008;
+
+const PREFERRED_LABEL_FONT_SIZE = 19;
+const MINIMUM_LABEL_FONT_SIZE = 14.5;
+const LABEL_FONT_STEP = 0.5;
+const LABEL_LINE_HEIGHT = 1.08;
+const LABEL_RADIAL_PADDING = 24;
+const LABEL_ANGULAR_PADDING = 20;
+const MAX_LABEL_LINES = 3;
+const MAX_ROOT_ANGULAR_LOAD = Math.PI * 2 * 0.985;
+
+function clamp(value: number, minimum: number, maximum: number) {
+  return Math.min(maximum, Math.max(minimum, value));
+}
+
+function hexToRgb(hex: string): [number, number, number] {
+  const value = hex.replace("#", "");
+  return [
+    Number.parseInt(value.slice(0, 2), 16),
+    Number.parseInt(value.slice(2, 4), 16),
+    Number.parseInt(value.slice(4, 6), 16),
+  ];
+}
+
+function mixHex(left: string, right: string, amount: number): string {
+  const a = hexToRgb(left);
+  const b = hexToRgb(right);
+  const t = clamp(amount, 0, 1);
+
+  const mixed = a.map((channel, index) =>
+    Math.round(channel + (b[index] - channel) * t),
+  );
+
+  return `rgb(${mixed[0]}, ${mixed[1]}, ${mixed[2]})`;
+}
+
+/*
+ * A deliberately conservative approximation of glyph widths.
+ *
+ * The old layout estimated a label from character count alone and then used a
+ * clip-path/textLength as a safety net. That is what produced both overflowing
+ * labels and the "partially erased" look.
+ *
+ * Here the sector allocation itself is based on an estimated rendered width.
+ * Wide letters such as M/W receive more space, narrow letters such as i/l less,
+ * and an additional safety factor is included.
+ */
+function estimatedGlyphWidthEm(character: string): number {
+  if (/\s/.test(character)) return 0.32;
+  if ("ilIjtfr.,:;|'`".includes(character)) return 0.28;
+  if ("mwMW@%&QO".includes(character)) return 0.82;
+  if ("-–—/()".includes(character)) return 0.42;
+  if (/[A-Z]/.test(character)) return 0.64;
+  if (/[0-9]/.test(character)) return 0.56;
+  return 0.53;
+}
+
+function estimateTextWidth(text: string, fontSize: number): number {
+  let emWidth = 0;
+
+  for (const character of text) {
+    emWidth += estimatedGlyphWidthEm(character);
+  }
+
+  return emWidth * fontSize * 1.10;
+}
+
+function lineBreakCandidates(
+  label: string,
+  maximumLines = MAX_LABEL_LINES,
+): string[][] {
+  const words = label.split(/\s+/).filter(Boolean);
+  const candidates: string[][] = [[label]];
+
+  if (words.length <= 1) {
+    return candidates;
+  }
+
+  for (let firstCut = 1; firstCut < words.length; firstCut += 1) {
+    candidates.push([
+      words.slice(0, firstCut).join(" "),
+      words.slice(firstCut).join(" "),
+    ]);
+  }
+
+  if (maximumLines >= 3) {
+    for (let firstCut = 1; firstCut < words.length - 1; firstCut += 1) {
+      for (
+        let secondCut = firstCut + 1;
+        secondCut < words.length;
+        secondCut += 1
+      ) {
+        candidates.push([
+          words.slice(0, firstCut).join(" "),
+          words.slice(firstCut, secondCut).join(" "),
+          words.slice(secondCut).join(" "),
+        ]);
+      }
+    }
+  }
+
+  return candidates.filter((candidate) => candidate.length <= maximumLines);
+}
+
+type TextLayoutChoice = {
+  orientation: TextOrientation;
+  lines: string[];
+  angularDemand: number;
+};
+
+/*
+ * Choose the cheaper of two legitimate ways of placing a label:
+ *
+ *   radial:
+ *     text runs outward from the center; available WIDTH is ring thickness,
+ *     while multiple rows consume angular room.
+ *
+ *   tangential:
+ *     text runs around the circle; available WIDTH is arc length, while
+ *     multiple rows consume ring thickness.
+ *
+ * This hybrid is important. Long one-word labels such as "Electromagnetism"
+ * are often better tangentially, while multi-word labels often fit beautifully
+ * in a radial sector. We therefore use the geometry of each individual label
+ * rather than forcing one orientation on the whole chart.
+ */
+function chooseTextLayout(
+  label: string,
+  fontSize: number,
+  innerRadius: number,
+  outerRadius: number,
+): TextLayoutChoice {
+  const ringThickness = outerRadius - innerRadius;
+  const usableRadialSpace = Math.max(
+    1,
+    ringThickness - LABEL_RADIAL_PADDING,
+  );
+
+  const midRadius = (innerRadius + outerRadius) / 2;
+  const lineHeight = fontSize * LABEL_LINE_HEIGHT;
+
+  const choices: TextLayoutChoice[] = [];
+
+  for (const lines of lineBreakCandidates(label)) {
+    const widths = lines.map((line) => estimateTextWidth(line, fontSize));
+    const widestLine = Math.max(...widths);
+    const blockHeight = lines.length * lineHeight;
+
+    /*
+     * Radial baseline:
+     * the literal text width must fit in the ring thickness.
+     */
+    if (widestLine <= usableRadialSpace) {
+      choices.push({
+        orientation: "radial",
+        lines,
+        angularDemand:
+          (blockHeight + LABEL_ANGULAR_PADDING) /
+            Math.max(midRadius, 1),
+      });
+    }
+
+    /*
+     * Tangential baseline:
+     * rows stack radially, so the full line block must fit inside the ring.
+     * Use the innermost radius touched by the text when estimating the arc
+     * length required, which is more conservative than using the midpoint.
+     */
+    if (blockHeight <= usableRadialSpace) {
+      const minimumTextRadius = Math.max(
+        innerRadius + LABEL_RADIAL_PADDING / 2,
+        midRadius - blockHeight / 2,
+      );
+
+      choices.push({
+        orientation: "tangential",
+        lines,
+        angularDemand:
+          (widestLine + LABEL_ANGULAR_PADDING) /
+            Math.max(minimumTextRadius, 1),
+      });
+    }
+  }
+
+  /*
+   * At the minimum font size every ring in the current data has at least one
+   * valid orientation. Keep a defensive fallback anyway so future subject
+   * names cannot crash the page.
+   */
+  if (choices.length === 0) {
+    return {
+      orientation: "tangential",
+      lines: [label],
+      angularDemand:
+        (estimateTextWidth(label, fontSize) + LABEL_ANGULAR_PADDING) /
+          Math.max((innerRadius + outerRadius) / 2, 1),
+    };
+  }
+
+  return choices.reduce((best, candidate) =>
+    candidate.angularDemand < best.angularDemand
+      ? candidate
+      : best,
+  );
+}
+
+function buildTree(groupId: GroupId): SunburstNode[] {
+  const groupTopics = topics.filter((topic) => topic.group === groupId);
+
+  const topicMap = new Map<string, SunburstNode>(
+    groupTopics.map((topic) => [
+      topic.id,
+      {
+        id: topic.id,
+        label: topic.label,
+        group: topic.group,
+        prerequisites: [...topic.prerequisites],
+        href: withBase(`branches/${topic.id}/`),
+        parent: null,
+        children: [],
+        depth: 1,
+        weight: 1,
+        startAngle: 0,
+        endAngle: 0,
+        lines: [topic.label],
+        textOrientation: "radial",
+        fontSize: PREFERRED_LABEL_FONT_SIZE,
+      },
+    ]),
+  );
+
+  const roots: SunburstNode[] = [];
+
+  for (const node of topicMap.values()) {
+    const parent = node.prerequisites
+      .map((id) => topicMap.get(id))
+      .find((candidate) => candidate !== undefined);
+
+    if (parent && parent !== node) {
+      node.parent = parent;
+      parent.children.push(node);
+    } else {
+      roots.push(node);
+    }
+  }
+
+  function assignDepth(
+    node: SunburstNode,
+    depth: number,
+    ancestors = new Set<string>(),
+  ) {
+    if (ancestors.has(node.id)) return;
+
+    const nextAncestors = new Set(ancestors);
+    nextAncestors.add(node.id);
+
+    node.depth = depth;
+
+    for (const child of node.children) {
+      assignDepth(child, depth + 1, nextAncestors);
+    }
+  }
+
+  for (const root of roots) {
+    assignDepth(root, 1);
+  }
+
+  return roots;
+}
+
+function flattenTree(roots: SunburstNode[]): SunburstNode[] {
+  const result: SunburstNode[] = [];
+  const visited = new Set<string>();
+
+  function visit(node: SunburstNode) {
+    if (visited.has(node.id)) return;
+
+    visited.add(node.id);
+    result.push(node);
+
+    for (const child of node.children) {
+      visit(child);
+    }
+  }
+
+  for (const root of roots) {
+    visit(root);
+  }
+
+  return result;
+}
+
+/*
+ * Equal-depth rings are much easier to reason about once labels can choose
+ * their orientation independently. Every ring therefore receives a predictable
+ * radial budget, and the label solver above decides how best to use it.
+ */
+function buildRadiusBoundaries(maximumDepth: number): number[] {
+  return Array.from({ length: maximumDepth + 1 }, (_, index) =>
+    SUNBURST_INNER_RADIUS +
+      ((SUNBURST_OUTER_RADIUS - SUNBURST_INNER_RADIUS) * index) /
+	maximumDepth,
+  );
+}
+
+function assignWeights(
+  node: SunburstNode,
+  radiusBoundaries: number[],
+  fontSize: number,
+  ancestors = new Set<string>(),
+): number {
+  if (ancestors.has(node.id)) {
+    node.weight = 1;
+    return node.weight;
+  }
+
+  const nextAncestors = new Set(ancestors);
+  nextAncestors.add(node.id);
+
+  const innerRadius = radiusBoundaries[node.depth - 1];
+  const outerRadius = radiusBoundaries[node.depth];
+
+  const layout = chooseTextLayout(
+    node.label,
+    fontSize,
+    innerRadius,
+    outerRadius,
+  );
+
+  node.lines = layout.lines;
+  node.textOrientation = layout.orientation;
+  node.fontSize = fontSize;
+
+  const childrenDemand = node.children.reduce(
+    (sum, child) =>
+      sum +
+	assignWeights(
+          child,
+          radiusBoundaries,
+          fontSize,
+          nextAncestors,
+	),
+    0,
+  );
+
+  /*
+   * A parent sector must be wide enough both for its own label and for every
+   * child sector contained inside it.
+   */
+  node.weight = Math.max(
+    layout.angularDemand,
+    childrenDemand,
+    0.055,
+  );
+
+  return node.weight;
+}
+
+function totalRootDemand(
+  roots: SunburstNode[],
+  radiusBoundaries: number[],
+  fontSize: number,
+): number {
+  return roots.reduce(
+    (sum, root) =>
+      sum +
+	assignWeights(
+          root,
+          radiusBoundaries,
+          fontSize,
+	),
+    0,
+  );
+}
+
+function chooseGroupFontSize(
+  roots: SunburstNode[],
+  radiusBoundaries: number[],
+): number {
+  let fontSize = PREFERRED_LABEL_FONT_SIZE;
+
+  while (fontSize > MINIMUM_LABEL_FONT_SIZE) {
+    const demand = totalRootDemand(
+      roots,
+      radiusBoundaries,
+      fontSize,
+    );
+
+    if (demand <= MAX_ROOT_ANGULAR_LOAD) {
+      return fontSize;
+    }
+
+    fontSize -= LABEL_FONT_STEP;
+  }
+
+  return MINIMUM_LABEL_FONT_SIZE;
+}
+
+function assignAngles(
+  nodes: SunburstNode[],
+  startAngle: number,
+  endAngle: number,
+) {
+  const totalWeight = nodes.reduce((sum, node) => sum + node.weight, 0);
+  let cursor = startAngle;
+
+  nodes.forEach((node, index) => {
+    const span =
+      index === nodes.length - 1
+        ? endAngle - cursor
+        : ((endAngle - startAngle) * node.weight) /
+          Math.max(totalWeight, 1);
+
+    node.startAngle = cursor;
+    node.endAngle = cursor + span;
+
+    if (node.children.length > 0) {
+      assignAngles(node.children, node.startAngle, node.endAngle);
+    }
+
+    cursor += span;
+  });
+}
+
+function polar(radius: number, angle: number): [number, number] {
+  return [
+    SUNBURST_CENTER + radius * Math.cos(angle),
+    SUNBURST_CENTER + radius * Math.sin(angle),
+  ];
+}
+
+function annularSectorPath(
+  innerRadius: number,
+  outerRadius: number,
+  startAngle: number,
+  endAngle: number,
+): string {
+  const start = startAngle + SUNBURST_GAP;
+  const end = endAngle - SUNBURST_GAP;
+
+  if (end <= start) return "";
+
+  const [outerStartX, outerStartY] = polar(outerRadius, start);
+  const [outerEndX, outerEndY] = polar(outerRadius, end);
+  const [innerEndX, innerEndY] = polar(innerRadius, end);
+  const [innerStartX, innerStartY] = polar(innerRadius, start);
+
+  const largeArc = end - start > Math.PI ? 1 : 0;
+
+  return [
+    `M ${outerStartX} ${outerStartY}`,
+    `A ${outerRadius} ${outerRadius} 0 ${largeArc} 1 ${outerEndX} ${outerEndY}`,
+    `L ${innerEndX} ${innerEndY}`,
+    `A ${innerRadius} ${innerRadius} 0 ${largeArc} 0 ${innerStartX} ${innerStartY}`,
+    "Z",
+  ].join(" ");
+}
+
+function makeSector(
+  node: SunburstNode,
+  groupId: GroupId,
+  radiusBoundaries: number[],
+): SunburstSector {
+  const innerRadius = radiusBoundaries[node.depth - 1];
+  const outerRadius = radiusBoundaries[node.depth];
+  const midRadius = (innerRadius + outerRadius) / 2;
+  const midAngle = (node.startAngle + node.endAngle) / 2;
+
+  const [textX, textY] = polar(midRadius, midAngle);
+
+  const angleDegrees = (midAngle * 180) / Math.PI;
+
+  /*
+   * Radial text follows the radius.
+   * Tangential text follows the local tangent, hence the additional 90°.
+   */
+  let textRotation =
+    angleDegrees +
+      (node.textOrientation === "tangential" ? 90 : 0);
+
+  const normalizedRotation = ((textRotation % 360) + 360) % 360;
+
+  if (normalizedRotation > 90 && normalizedRotation < 270) {
+    textRotation += 180;
+  }
+
+  const lineHeight = node.fontSize * LABEL_LINE_HEIGHT;
+
+  const lines = node.lines.map((line, index) => ({
+    text: line,
+    dy:
+      index === 0
+        ? node.lines.length === 1
+        ? "0"
+        : `${-((node.lines.length - 1) * lineHeight) / 2}px`
+        : `${lineHeight}px`,
+  }));
+
+  const baseColor = GROUP_COLORS[groupId];
+  const darkness = clamp(
+    0.1 + (node.depth - 1) * 0.05,
+    0.1,
+    0.34,
+  );
+  const fillOpacity = clamp(
+    0.86 - (node.depth - 1) * 0.03,
+    0.74,
+    0.86,
+  );
+  const stroke = mixHex(baseColor, "#120b24", 0.62);
 
   return {
-    id: topic.id,
-    label: topic.label,
-    group: topic.group,
-    x: group.x + (topic.col === 0 ? -COLUMN_OFFSET : COLUMN_OFFSET),
-    y: TOPIC_START_Y + topic.row * ROW_GAP,
-    href: withBase(`branches/${topic.id}/`),
-    kind: "topic",
+    id: node.id,
+    label: node.label,
+    labelLower: node.label.toLowerCase(),
+    href: node.href,
+    prerequisites: node.prerequisites,
+    depth: node.depth,
+    path: annularSectorPath(
+      innerRadius,
+      outerRadius,
+      node.startAngle,
+      node.endAngle,
+    ),
+    fill: mixHex(baseColor, "#1c1432", darkness),
+    fillOpacity,
+    stroke,
+    textX,
+    textY,
+    textRotation,
+    fontSize: node.fontSize,
+    orientation: node.textOrientation,
+    lines,
   };
-});
+}
 
-const allNodes = [rootNode, ...hubNodes, ...topicNodes];
-const nodeMap = new Map(allNodes.map((node) => [node.id, node]));
+function centerLines(label: string): string[] {
+  const words = label.split(/\s+/).filter(Boolean);
 
-const hubEdges: GraphEdge[] = groups.map((group) => ({
-  from: "mathematics",
-  to: `hub-${group.id}`,
-  kind: "structural",
-}));
+  if (words.length <= 2) {
+    return [label];
+  }
 
-const prerequisiteEdges: GraphEdge[] = topics.flatMap((topic) =>
-  topic.prerequisites.map((from) => ({
-    from,
-    to: topic.id,
-    kind: "structural" as const,
-  })),
-);
+  const midpoint = Math.ceil(words.length / 2);
 
-const allEdges = [...hubEdges, ...prerequisiteEdges, ...bridgeEdges].filter(
-  (edge, index, edges) =>
-    nodeMap.has(edge.from) &&
-    nodeMap.has(edge.to) &&
-    edges.findIndex(
-      (candidate) =>
-        candidate.from === edge.from &&
-        candidate.to === edge.to &&
-        candidate.kind === edge.kind,
-    ) === index,
-);
+  return [
+    words.slice(0, midpoint).join(" "),
+    words.slice(midpoint).join(" "),
+  ];
+}
 
-const groupForNode = (nodeId: string) => {
-  const node = nodeMap.get(nodeId);
-  return node?.group === "root" ? "root" : node?.group ?? "root";
-};
+function buildSunburst(group: (typeof groups)[number]): SunburstChart {
+  const roots = buildTree(group.id);
+  const nodes = flattenTree(roots);
+
+  const maximumDepth = Math.max(
+    1,
+    ...nodes.map((node) => node.depth),
+  );
+
+  const radiusBoundaries =
+    buildRadiusBoundaries(maximumDepth);
+
+  const labelFontSize =
+    chooseGroupFontSize(
+      roots,
+      radiusBoundaries,
+    );
+
+  /*
+   * Re-run once at the chosen final font. This stores the exact line breaks,
+   * orientations and subtree weights that will be rendered.
+   */
+  totalRootDemand(
+    roots,
+    radiusBoundaries,
+    labelFontSize,
+  );
+
+  assignAngles(
+    roots,
+    -Math.PI / 2,
+    Math.PI * 1.5,
+  );
+
+  return {
+    id: group.id,
+    label: group.label,
+    shortLabel: group.shortLabel,
+    color: GROUP_COLORS[group.id],
+    sectors: nodes.map((node) =>
+      makeSector(
+        node,
+        group.id,
+        radiusBoundaries,
+      ),
+    ),
+    centerLines: centerLines(group.label),
+    topicCount: nodes.length,
+    labelFontSize,
+  };
+}
+
+const sunbursts = groups.map(buildSunburst);
 ---
 
 <BaseLayout title="Branches">
@@ -2309,17 +2929,18 @@ const groupForNode = (nodeId: string) => {
       </p>
     </header>
 
+
+
     <section class="graph-panel" aria-labelledby="graph-heading">
       <div class="graph-panel-heading">
         <div>
           <p class="section-kicker">Interactive subject map</p>
-          <h2 id="graph-heading">Graph of all the subjects</h2>
+          <h2 id="graph-heading">Sunburst of the selected area</h2>
         </div>
 
-        <div class="graph-key" aria-label="Connection legend">
-          <span><i class="key-line structural"></i> prerequisite path</span>
-          <span><i class="key-line bridge"></i> cross-disciplinary bridge</span>
-        </div>
+        <p class="sunburst-key">
+          Move outward from the center into increasingly specialized subjects.
+        </p>
       </div>
 
       <div class="graph-controls">
@@ -2328,7 +2949,7 @@ const groupForNode = (nodeId: string) => {
           <input
             id="branch-search"
             type="search"
-            placeholder="Try “topology”, “quantum”, “computational”…"
+            placeholder="Highlight a subject…"
             autocomplete="off"
           />
         </label>
@@ -2336,21 +2957,16 @@ const groupForNode = (nodeId: string) => {
         <label class="group-control">
           <span>Area</span>
           <select id="group-filter">
-            <option value="all">All areas</option>
             {groups.map((group) => (
               <option value={group.id}>{group.label}</option>
-            ))}
+        ))}
           </select>
         </label>
 
-        <!--<button id="graph-reset" type="button">Reset view</button>-->
-
-        <output id="graph-result-count" aria-live="polite">
-          {topicNodes.length} subjects shown
-        </output>
+        <output id="graph-result-count" aria-live="polite"></output>
       </div>
 
-      <div class="group-legend" aria-label="Subject-area colors">
+      <div class="group-legend" aria-label="Choose a subject area">
         {groups.map((group) => (
           <button
             class={`group-chip group-${group.id}`}
@@ -2360,448 +2976,263 @@ const groupForNode = (nodeId: string) => {
             <span class="group-dot"></span>
             {group.shortLabel}
           </button>
-        ))}
+    ))}
       </div>
-
     </section>
 
-    <div class="graph-viewport" id="graph-viewport" tabindex="0">
-      <div
-        class="math-map-stage"
-        id="math-map-stage"
-        data-stage-width={STAGE_WIDTH}
-        data-stage-height={STAGE_HEIGHT}
-        style={`width:${STAGE_WIDTH}px; height:${STAGE_HEIGHT}px;`}
+    <div class="sunburst-viewport" id="sunburst-viewport">
+      <svg
+        id="sunburst-map"
+        class="sunburst-map"
+        viewBox={`0 0 ${SUNBURST_SIZE} ${SUNBURST_SIZE}`}
+        role="img"
+        aria-label="Sunburst diagram of the selected area of mathematics"
       >
-          <div
-            class="math-map"
-            id="math-map"
-            style={`width:${STAGE_WIDTH}px; height:${STAGE_HEIGHT}px;`}
-            role="list"
-            aria-label="Dependency graph of mathematical subjects"
-          >
-          {groups.map((group) => (
-            <div
-              class={`lane group-${group.id}`}
-              style={`left:${group.x - 218}px;`}
-              aria-hidden="true"
-            >
-              <span>{group.shortLabel}</span>
-            </div>
-          ))}
 
-          <svg
-            class="math-map-lines"
-            viewBox={`0 0 ${STAGE_WIDTH} ${STAGE_HEIGHT}`}
-            width={STAGE_WIDTH}
-            height={STAGE_HEIGHT}
-            aria-hidden="true"
+        {sunbursts.map((chart, chartIndex) => (
+          <g
+            class={`sunburst-group group-${chart.id}`}
+            data-sunburst-group={chart.id}
+            style={`display:${chartIndex === 0 ? "block" : "none"};`}
           >
-            <defs>
-              <marker
-                id="arrowhead"
-                markerWidth="8"
-                markerHeight="8"
-                refX="6"
-                refY="4"
-                orient="auto"
-                markerUnits="strokeWidth"
+            {chart.sectors.map((sector) => (
+              <a
+                class="sunburst-sector"
+                href={sector.href}
+                data-node-label={sector.labelLower}
+                data-node-id={sector.id}
+                data-text-orientation={sector.orientation}
+                aria-label={sector.label}
               >
-                <path d="M 0 0 L 8 4 L 0 8 z"></path>
-              </marker>
-            </defs>
+                <path
+                  class="sunburst-segment"
+                  d={sector.path}
+                  fill={sector.fill}
+                  fill-opacity={sector.fillOpacity}
+                  stroke={sector.stroke}
+                  stroke-width="2.4"
+                ></path>
 
-            {allEdges.map((edge) => {
-              const from = nodeMap.get(edge.from);
-              const to = nodeMap.get(edge.to);
+                <text
+                  class="sunburst-label"
+                  x={sector.textX}
+                  y={sector.textY}
+                  fill="#ffffff"
+                  stroke="rgba(8, 5, 20, 0.46)"
+                  stroke-width="1.5"
+                  paint-order="stroke"
+                  text-anchor="middle"
+                  dominant-baseline="middle"
+                  font-size={sector.fontSize}
+                  font-weight="760"
+                  transform={`rotate(${sector.textRotation} ${sector.textX} ${sector.textY})`}
+                >
+                  {sector.lines.map((line) => (
+                    <tspan
+                      x={sector.textX}
+                      dy={line.dy}
+                    >
+                      {line.text}
+                    </tspan>
+            ))}
+                </text>
+              </a>
+              ))}
 
-              if (!from || !to) return null;
+            <circle
+              class="sunburst-center-disc"
+              cx={SUNBURST_CENTER}
+              cy={SUNBURST_CENTER}
+              r={SUNBURST_INNER_RADIUS - 5}
+              fill={mixHex(chart.color, "#0d081d", 0.72)}
+              stroke={mixHex(chart.color, "#ffffff", 0.24)}
+              stroke-width="4"
+            ></circle>
 
-              return (
-                <line
-                  class:list={[
-                    "graph-edge",
-                    edge.kind,
-                    `edge-group-${groupForNode(edge.to)}`,
-                  ]}
-                  x1={from.x}
-                  y1={from.y}
-                  x2={to.x}
-                  y2={to.y}
-                  data-from={edge.from}
-                  data-to={edge.to}
-                  marker-end="url(#arrowhead)"
-                />
-              );
-            })}
-          </svg>
-
-          {allNodes.map((node) => (
-            <a
-              id={`node-${node.id}`}
-              class:list={[
-                "math-node",
-                `group-${node.group}`,
-                `kind-${node.kind}`,
-                node.id === "linear-algebra" && "is-live",
-              ]}
-              href={node.href}
-              style={`left:${node.x}px; top:${node.y}px;`}
-              data-node-id={node.id}
-              data-node-label={node.label.toLowerCase()}
-              data-node-group={node.group}
-              role="listitem"
+            <text
+              class="sunburst-center-label"
+              x={SUNBURST_CENTER}
+              y={SUNBURST_CENTER}
+              fill="#ffffff"
+              text-anchor="middle"
+              dominant-baseline="middle"
+              font-size="22"
+              font-weight="820"
             >
-              <span class="node-label">{node.label}</span>
-              {node.id === "linear-algebra" && (
-                <span class="node-status">available</span>
-              )}
-            </a>
-          ))}
-        </div>
-      </div>
+              {chart.centerLines.map((line, index) => (
+                <tspan
+                  x={SUNBURST_CENTER}
+                  dy={
+                      index === 0
+                      ? chart.centerLines.length === 1
+                      ? "0"
+                      : "-0.55em"
+                      : "1.1em"
+                  }
+                >
+                  {line}
+                </tspan>
+      ))}
+            </text>
+          </g>
+))}
+      </svg>
     </div>
   </main>
 </BaseLayout>
 
 <script>
-  const viewport = document.querySelector<HTMLDivElement>("#graph-viewport");
-  const mapStage = document.querySelector<HTMLDivElement>("#math-map-stage");
-  const map = document.querySelector<HTMLDivElement>("#math-map");
-  const stageWidth = Number(mapStage?.dataset.stageWidth ?? 0);
-  const stageHeight = Number(mapStage?.dataset.stageHeight ?? 0);
-  const search = document.querySelector<HTMLInputElement>("#branch-search");
-  const groupFilter =
-    document.querySelector<HTMLSelectElement>("#group-filter");
-  const bridgeToggle =
-    document.querySelector<HTMLInputElement>("#bridge-toggle");
-  const resetButton =
-    document.querySelector<HTMLButtonElement>("#graph-reset");
-  const resultCount =
-    document.querySelector<HTMLOutputElement>("#graph-result-count");
-  const nodes = Array.from(
-    document.querySelectorAll<HTMLAnchorElement>(".math-node"),
-  );
-  const edges = Array.from(
-    document.querySelectorAll<SVGLineElement>(".graph-edge"),
-  );
-  const groupButtons = Array.from(
-    document.querySelectorAll<HTMLButtonElement>("[data-group-jump]"),
-  );
+    const svg =
+    document.querySelector<SVGSVGElement>("#sunburst-map");
 
-  const MIN_SCALE = 0.28;
-  const MAX_SCALE = 2.2;
-  const ZOOM_SENSITIVITY = 0.0011;
-  const ZOOM_RESPONSE = 18;
-  const DRAG_THRESHOLD = 5;
+  const search =
+    document.querySelector<HTMLInputElement>("#branch-search");
 
-  let scale = 1;
-  let targetScale = 1;
-  let zoomFrame: number | null = null;
-  let previousZoomTime = 0;
+    const groupFilter =
+      document.querySelector<HTMLSelectElement>("#group-filter");
 
-  let zoomAnchorGraphX = 0;
-  let zoomAnchorGraphY = 0;
-  let zoomAnchorViewportX = 0;
-  let zoomAnchorViewportY = 0;
+    const resultCount =
+      document.querySelector<HTMLOutputElement>("#graph-result-count");
 
-  let isDragging = false;
-  let dragStartX = 0;
-  let dragStartY = 0;
-  let dragStartScrollLeft = 0;
-  let dragStartScrollTop = 0;
+    const charts = Array.from(
+      document.querySelectorAll<SVGGElement>("[data-sunburst-group]"),
+    );
 
-  function clamp(value: number, minimum: number, maximum: number) {
-    return Math.min(maximum, Math.max(minimum, value));
-  }
+    const groupButtons = Array.from(
+      document.querySelectorAll<HTMLButtonElement>("[data-group-jump]"),
+    );
 
-  function applyScale(nextScale: number) {
-    if (!map || !mapStage || stageWidth <= 0 || stageHeight <= 0) return;
-
-    scale = clamp(nextScale, MIN_SCALE, MAX_SCALE);
-
-    map.style.transform = `translate3d(0, 0, 0) scale(${scale})`;
-    mapStage.style.width = `${stageWidth * scale}px`;
-    mapStage.style.height = `${stageHeight * scale}px`;
-  }
-
-  function centerGraph() {
-    if (!viewport) return;
-
-    const root = document.querySelector<HTMLElement>("#node-mathematics");
-    if (!root) return;
-
-    viewport.scrollLeft =
-      root.offsetLeft * scale -
-      viewport.clientWidth / 2 +
-      (root.offsetWidth * scale) / 2;
-
-    viewport.scrollTop = 0;
-  }
-
-  function keepZoomAnchorFixed() {
-    if (!viewport) return;
-
-    viewport.scrollLeft =
-      zoomAnchorGraphX * scale - zoomAnchorViewportX;
-
-    viewport.scrollTop =
-      zoomAnchorGraphY * scale - zoomAnchorViewportY;
-  }
-
-  function animateZoom(timestamp: number) {
-    if (!viewport) {
-      zoomFrame = null;
-      previousZoomTime = 0;
-      return;
+    if (!svg || !groupFilter) {
+      throw new Error("The branches sunburst could not be initialized.");
     }
 
-    const elapsed =
-      previousZoomTime === 0
-        ? 1 / 60
-        : Math.min((timestamp - previousZoomTime) / 1000, 0.05);
-
-    previousZoomTime = timestamp;
-
-    // Time-based exponential smoothing gives approximately the same motion
-    // regardless of monitor refresh rate.
-    const easing = 1 - Math.exp(-ZOOM_RESPONSE * elapsed);
-    const nextScale = scale + (targetScale - scale) * easing;
-
-    applyScale(nextScale);
-    keepZoomAnchorFixed();
-
-    if (Math.abs(targetScale - scale) < 0.0005) {
-      applyScale(targetScale);
-      keepZoomAnchorFixed();
-
-      zoomFrame = null;
-      previousZoomTime = 0;
-      return;
+    function currentChart(): SVGGElement | undefined {
+      return charts.find(
+	(chart) =>
+          chart.dataset.sunburstGroup ===
+            groupFilter.value,
+      );
     }
 
-    zoomFrame = requestAnimationFrame(animateZoom);
-  }
+    function applySearch() {
+      const chart = currentChart();
+      if (!chart) return;
 
-  function requestZoom(
-    clientX: number,
-    clientY: number,
-    requestedScale: number,
-  ) {
-    if (!viewport) return;
+      const query =
+	(search?.value ?? "")
+          .trim()
+          .toLowerCase();
 
-    const rect = viewport.getBoundingClientRect();
-
-    zoomAnchorViewportX = clientX - rect.left;
-    zoomAnchorViewportY = clientY - rect.top;
-
-    // Store the graph-space point underneath the cursor. During the animation
-    // the viewport is repositioned so this exact point remains under it.
-    zoomAnchorGraphX =
-      (viewport.scrollLeft + zoomAnchorViewportX) / scale;
-
-    zoomAnchorGraphY =
-      (viewport.scrollTop + zoomAnchorViewportY) / scale;
-
-    targetScale = clamp(requestedScale, MIN_SCALE, MAX_SCALE);
-
-    if (zoomFrame === null) {
-      previousZoomTime = 0;
-      zoomFrame = requestAnimationFrame(animateZoom);
-    }
-  }
-
-  viewport?.addEventListener(
-    "wheel",
-    (event) => {
-      event.preventDefault();
-
-      if (!viewport) return;
-
-      // Firefox and some touchpads report wheel values in lines or pages,
-      // while most browsers report pixels. Normalize all three cases.
-      const deltaMultiplier =
-        event.deltaMode === WheelEvent.DOM_DELTA_LINE
-          ? 16
-          : event.deltaMode === WheelEvent.DOM_DELTA_PAGE
-            ? viewport.clientHeight
-            : 1;
-
-      const normalizedDelta = event.deltaY * deltaMultiplier;
-      const zoomFactor = Math.exp(
-        -normalizedDelta * ZOOM_SENSITIVITY,
+      const sectors = Array.from(
+	chart.querySelectorAll<SVGAElement>(".sunburst-sector"),
       );
 
-      requestZoom(
-        event.clientX,
-        event.clientY,
-        targetScale * zoomFactor,
-      );
-    },
-    { passive: false },
-  );
+      let matches = 0;
 
-  viewport?.addEventListener("pointerdown", (event) => {
-    if (event.button !== 0) return;
+      for (const sector of sectors) {
+	const label =
+          sector.dataset.nodeLabel ??
+            "";
 
-    const target = event.target as HTMLElement | null;
+	const isMatch =
+          query.length === 0 ||
+            label.includes(query);
 
-    // Links and controls retain their ordinary click behavior.
-    if (target?.closest("a, button, input, select, textarea, label")) {
-      return;
-    }
+	sector.style.opacity =
+        query.length > 0 && !isMatch
+          ? "0.16"
+          : "1";
 
-    isDragging = true;
-    dragStartX = event.clientX;
-    dragStartY = event.clientY;
-    dragStartScrollLeft = viewport.scrollLeft;
-    dragStartScrollTop = viewport.scrollTop;
+	if (query.length > 0 && isMatch) {
+          matches += 1;
+	}
+      }
 
-    viewport.setPointerCapture(event.pointerId);
-    viewport.classList.add("is-dragging");
-  });
+      if (!resultCount) return;
 
-  viewport?.addEventListener("pointermove", (event) => {
-    if (!isDragging) return;
-
-    const deltaX = event.clientX - dragStartX;
-    const deltaY = event.clientY - dragStartY;
-
-    if (
-      Math.abs(deltaX) < DRAG_THRESHOLD &&
-      Math.abs(deltaY) < DRAG_THRESHOLD
-    ) {
-      return;
-    }
-
-    viewport.scrollLeft = dragStartScrollLeft - deltaX;
-    viewport.scrollTop = dragStartScrollTop - deltaY;
-  });
-
-  function stopDragging(event: PointerEvent) {
-    if (!viewport || !isDragging) return;
-
-    isDragging = false;
-    viewport.classList.remove("is-dragging");
-
-    if (viewport.hasPointerCapture(event.pointerId)) {
-      viewport.releasePointerCapture(event.pointerId);
-    }
-  }
-
-  viewport?.addEventListener("pointerup", stopDragging);
-  viewport?.addEventListener("pointercancel", stopDragging);
-
-  function applyFilters() {
-    const query = (search?.value ?? "").trim().toLowerCase();
-    const selectedGroup = groupFilter?.value ?? "all";
-    const visibleIds = new Set<string>();
-    let visibleTopicCount = 0;
-
-    for (const node of nodes) {
-      const id = node.dataset.nodeId ?? "";
-      const label = node.dataset.nodeLabel ?? "";
-      const group = node.dataset.nodeGroup ?? "";
-      const structural =
-        node.classList.contains("kind-root") ||
-        node.classList.contains("kind-hub");
-
-      const matchesQuery =
-        query.length === 0 ||
-        label.includes(query) ||
-        group.includes(query);
-
-      const matchesGroup =
-        selectedGroup === "all" ||
-        group === selectedGroup ||
-        structural;
-
-      const visible = matchesQuery && matchesGroup;
-
-      node.classList.toggle("is-muted", !visible);
-      node.classList.toggle("is-match", query.length > 0 && visible);
-
-      if (visible) {
-        visibleIds.add(id);
-        if (node.classList.contains("kind-topic")) visibleTopicCount += 1;
+      if (query.length === 0) {
+	resultCount.textContent =
+        `${sectors.length} ${
+          sectors.length === 1
+            ? "subject"
+            : "subjects"
+        }`;
+      } else {
+	resultCount.textContent =
+        `${matches} ${
+          matches === 1
+            ? "match"
+            : "matches"
+        } · ${sectors.length} subjects`;
       }
     }
 
-    for (const edge of edges) {
-      const from = edge.dataset.from ?? "";
-      const to = edge.dataset.to ?? "";
-      const isBridge = edge.classList.contains("bridge");
-      const bridgeEnabled = bridgeToggle?.checked ?? true;
-      const filtered = query.length > 0 || selectedGroup !== "all";
-      const connected = visibleIds.has(from) || visibleIds.has(to);
-      const show = (!isBridge || bridgeEnabled) && (!filtered || connected);
+    function selectGroup(groupId: string) {
+      groupFilter.value = groupId;
 
-      edge.classList.toggle("is-muted", !show);
-      edge.classList.toggle("is-hidden", isBridge && !bridgeEnabled);
+      for (const chart of charts) {
+	chart.style.display =
+        chart.dataset.sunburstGroup === groupId
+          ? "block"
+          : "none";
+      }
+
+      for (const button of groupButtons) {
+	button.classList.toggle(
+          "is-active",
+          button.dataset.groupJump === groupId,
+	);
+      }
+
+      applySearch();
     }
 
-    if (resultCount) {
-      resultCount.textContent = `${visibleTopicCount} ${
-        visibleTopicCount === 1 ? "subject" : "subjects"
-      } shown`;
-    }
-  }
+    groupFilter.addEventListener(
+      "change",
+      () => {
+	selectGroup(groupFilter.value);
+      },
+    );
 
-  search?.addEventListener("input", applyFilters);
-  groupFilter?.addEventListener("change", applyFilters);
-  bridgeToggle?.addEventListener("change", applyFilters);
-
-  resetButton?.addEventListener("click", () => {
-    if (search) search.value = "";
-    if (groupFilter) groupFilter.value = "all";
-    if (bridgeToggle) bridgeToggle.checked = true;
-    targetScale = 1;
-    applyScale(1);
-    applyFilters();
-    centerGraph();
-    search?.focus();
-  });
+    search?.addEventListener(
+      "input",
+      applySearch,
+    );
 
   for (const button of groupButtons) {
-    button.addEventListener("click", () => {
-      const group = button.dataset.groupJump;
-      if (!group || !groupFilter) return;
+    button.addEventListener(
+      "click",
+      () => {
+        const group =
+          button.dataset.groupJump;
 
-      groupFilter.value = group;
-      applyFilters();
+        if (!group) return;
 
-      const hub = document.querySelector<HTMLElement>(`#node-hub-${group}`);
-      if (hub && viewport) {
-        viewport.scrollTo({
-          left:
-            hub.offsetLeft * scale -
-            viewport.clientWidth / 2 +
-            (hub.offsetWidth * scale) / 2,
-          top: Math.max(0, hub.offsetTop * scale - 90),
+        selectGroup(group);
+
+        svg.scrollIntoView({
           behavior: "smooth",
+          block: "center",
         });
-      }
-    });
+      },
+    );
   }
 
-  requestAnimationFrame(() => {
-    targetScale = 1;
-    applyScale(1);
-    centerGraph();
-  });
+  selectGroup(groupFilter.value);
 </script>
 
 <style>
   .branches-page {
     width: min(100% - 2rem, 1500px);
     margin: 0 auto;
-    padding: clamp(2.5rem, 6vw, 6rem) 0 6rem;
-  }
+    padding: clamp(1.15rem, 2.4vw, 2.2rem) 0 1.8rem;
+    overflow-x: clip;
+    }
 
   .branches-hero {
     max-width: 980px;
-    margin-bottom: 2.5rem;
-  }
+    margin-bottom: 1.2rem;
+    }
 
   .eyebrow,
   .section-kicker {
@@ -2811,29 +3242,29 @@ const groupForNode = (nodeId: string) => {
     font-weight: 800;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-  }
+    }
 
   .branches-hero h1 {
     margin: 0;
     font-size: clamp(2.7rem, 7vw, 6rem);
     line-height: 0.94;
     letter-spacing: -0.055em;
-  }
+    }
 
   .branches-intro {
     max-width: 900px;
-    margin: 1.6rem 0 0;
+    margin: 1.2rem 0 0;
     color: var(--ink, #f4efff);
     font-size: clamp(1.02rem, 1.7vw, 1.24rem);
     line-height: 1.75;
-  }
+    }
 
   .branches-note {
     max-width: 850px;
-    margin: 1rem 0 0;
+    margin: 0.75rem 0 0;
     color: color-mix(in srgb, var(--ink, #f4efff) 68%, transparent);
     line-height: 1.65;
-  }
+    }
 
   .graph-panel {
     border: 1px solid color-mix(in srgb, var(--accent, #71e6ff) 24%, transparent);
@@ -2841,68 +3272,47 @@ const groupForNode = (nodeId: string) => {
     background: linear-gradient(180deg, rgba(17, 10, 37, 0.91), rgba(9, 6, 23, 0.94));
     box-shadow: 0 30px 90px rgba(0, 0, 0, 0.32);
     overflow: hidden;
-  }
+    }
 
   .graph-panel-heading {
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
     gap: 1.5rem;
-    padding: 1.6rem 1.7rem 1.2rem;
+    padding: 1.35rem 1.55rem 1rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  }
+    }
 
   .graph-panel-heading h2 {
     margin: 0;
     font-size: clamp(1.45rem, 3vw, 2.4rem);
     letter-spacing: -0.035em;
-  }
+    }
 
-  .graph-key {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    gap: 0.85rem 1.2rem;
-    color: rgba(241, 236, 255, 0.72);
+  .sunburst-key {
+    max-width: 420px;
+    margin: 0;
+    color: rgba(241, 236, 255, 0.62);
     font-size: 0.82rem;
-  }
-
-  .graph-key span {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-  }
-
-  .key-line {
-    display: inline-block;
-    width: 2rem;
-    border-top: 2px solid rgba(206, 196, 255, 0.78);
-  }
-
-  .key-line.bridge {
-    border-top-style: dashed;
-    border-color: rgba(255, 135, 164, 0.88);
-  }
+    line-height: 1.55;
+    text-align: right;
+    }
 
   .graph-controls {
-    position: sticky;
-    top: 0;
-    z-index: 15;
     display: grid;
-    grid-template-columns: minmax(230px, 1fr) minmax(190px, 0.55fr) auto auto auto;
+    grid-template-columns: minmax(230px, 1fr) minmax(250px, 0.72fr) auto;
     gap: 0.85rem;
     align-items: end;
-    padding: 1rem 1.2rem;
+    padding: 0.9rem 1.15rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.07);
     background: rgba(9, 6, 23, 0.92);
-    backdrop-filter: blur(16px);
-  }
+    }
 
   .search-control,
   .group-control {
     display: grid;
     gap: 0.35rem;
-  }
+    }
 
   .search-control span,
   .group-control span {
@@ -2911,54 +3321,29 @@ const groupForNode = (nodeId: string) => {
     font-weight: 750;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-  }
+    }
 
   .search-control input,
-  .group-control select,
-  #graph-reset {
+  .group-control select {
     height: 2.7rem;
     border: 1px solid rgba(255, 255, 255, 0.13);
     border-radius: 0.75rem;
     padding: 0 0.85rem;
     color: #f7f3ff;
     background: rgba(255, 255, 255, 0.055);
-  }
+    }
 
   .search-control input:focus,
   .group-control select:focus {
     border-color: var(--accent, #71e6ff);
     outline: none;
     box-shadow: 0 0 0 3px rgba(113, 230, 255, 0.12);
-  }
+    }
 
   .group-control select option {
     color: #171021;
     background: white;
-  }
-
-  .toggle-control {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.55rem;
-    min-height: 2.7rem;
-    white-space: nowrap;
-    color: rgba(241, 236, 255, 0.8);
-    font-size: 0.84rem;
-  }
-
-  .toggle-control input {
-    accent-color: var(--accent, #71e6ff);
-  }
-
-  #graph-reset {
-    padding-inline: 1rem;
-    cursor: pointer;
-  }
-
-  #graph-reset:hover {
-    border-color: var(--accent, #71e6ff);
-    background: rgba(113, 230, 255, 0.09);
-  }
+    }
 
   #graph-result-count {
     align-self: center;
@@ -2966,15 +3351,14 @@ const groupForNode = (nodeId: string) => {
     color: rgba(241, 236, 255, 0.63);
     font-size: 0.8rem;
     white-space: nowrap;
-  }
+    }
 
   .group-legend {
     display: flex;
     flex-wrap: wrap;
     gap: 0.55rem;
-    padding: 0.9rem 1.2rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-  }
+    padding: 0.75rem 1.15rem;
+    }
 
   .group-chip {
     display: inline-flex;
@@ -2988,7 +3372,15 @@ const groupForNode = (nodeId: string) => {
     font: inherit;
     font-size: 0.77rem;
     cursor: pointer;
-  }
+    }
+
+  .group-chip:hover,
+  .group-chip:focus-visible,
+  .group-chip.is-active {
+    border-color: color-mix(in srgb, var(--group-color) 82%, white);
+    background: color-mix(in srgb, var(--group-color) 15%, rgba(255, 255, 255, 0.04));
+    outline: none;
+    }
 
   .group-dot {
     width: 0.55rem;
@@ -2996,209 +3388,75 @@ const groupForNode = (nodeId: string) => {
     border-radius: 50%;
     background: var(--group-color);
     box-shadow: 0 0 12px color-mix(in srgb, var(--group-color) 70%, transparent);
-  }
+    }
 
-  .graph-viewport {
-    position: relative;
-    height: min(78vh, 940px);
-    min-height: 620px;
-    margin-top: 1.25rem;
+  .sunburst-viewport {
+    width: min(100%, 1400px);
+    margin: 0.35rem auto 0;
     overflow: hidden;
-    border: 0;
-    overscroll-behavior: contain;
-    cursor: grab;
-    touch-action: none;
-    user-select: none;
-    background: transparent;
-  }
+    contain: layout paint;
+    }
 
-  .graph-viewport.is-dragging {
-    cursor: grabbing;
-  }
+  .sunburst-map {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    }
 
-  .math-map-stage {
-    position: relative;
-  }
-
-  .math-map {
-    position: absolute;
-    inset: 0 auto auto 0;
-    isolation: isolate;
-    transform-origin: 0 0;
-    will-change: transform;
-  }
-
-  .math-node {
-    user-select: none;
-    -webkit-user-drag: none;
-  }
-
-  .lane {
-    position: absolute;
-    z-index: -2;
-    top: 198px;
-    width: 436px;
-    height: calc(100% - 244px);
-    border-inline: 1px solid color-mix(in srgb, var(--group-color) 14%, transparent);
-    background: linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--group-color) 8%, transparent),
-      transparent 14%,
-      transparent 92%,
-      color-mix(in srgb, var(--group-color) 4%, transparent)
-    );
-  }
-
-  .lane > span {
-    position: sticky;
-    top: 0.6rem;
-    display: inline-block;
-    margin: 0.65rem;
-    color: color-mix(in srgb, var(--group-color) 55%, transparent);
-    font-size: 0.66rem;
-    font-weight: 800;
-    letter-spacing: 0.13em;
-    text-transform: uppercase;
-  }
-
-  .math-map-lines {
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    overflow: visible;
-    pointer-events: none;
-  }
-
-  .graph-edge {
-    stroke: rgba(185, 173, 223, 0.34);
-    stroke-width: 1.4;
-    vector-effect: non-scaling-stroke;
-    transition: opacity 180ms ease;
-  }
-
-  .graph-edge.bridge {
-    stroke: rgba(255, 113, 151, 0.34);
-    stroke-width: 1.2;
-    stroke-dasharray: 7 8;
-  }
-
-  .graph-edge.is-muted {
-    opacity: 0.055;
-  }
-
-  .graph-edge.is-hidden {
-    display: none;
-  }
-
-  #arrowhead path {
-    fill: rgba(202, 192, 235, 0.44);
-  }
-
-  .math-node {
-    position: absolute;
-    z-index: 3;
-    display: grid;
-    place-items: center;
-    width: 186px;
-    min-height: 58px;
-    transform: translate(-50%, -50%);
-    border: 1px solid color-mix(in srgb, var(--group-color) 48%, transparent);
-    border-radius: 0.85rem;
-    padding: 0.65rem 0.78rem;
-    color: #f7f3ff;
-    background: linear-gradient(
-      145deg,
-      color-mix(in srgb, var(--group-color) 15%, rgba(22, 15, 45, 0.94)),
-      rgba(13, 9, 29, 0.96)
-    );
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
-    text-align: center;
+  .sunburst-sector {
+    cursor: pointer;
     text-decoration: none;
-    transition: opacity 180ms ease, transform 180ms ease, border-color 180ms ease;
-  }
+    transition: opacity 140ms ease;
+    }
 
-  .math-node:hover,
-  .math-node:focus-visible {
-    z-index: 8;
-    transform: translate(-50%, -50%) translateY(-3px) scale(1.035);
-    border-color: color-mix(in srgb, var(--group-color) 86%, white);
+  .sunburst-sector:hover .sunburst-segment,
+  .sunburst-sector:focus-visible .sunburst-segment {
+    filter: brightness(1.12) saturate(1.03);
+    }
+
+  .sunburst-sector:focus-visible {
     outline: none;
-  }
+    }
 
-  .math-node.is-muted {
-    opacity: 0.14;
-  }
+  .sunburst-segment {
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    transition: filter 140ms ease, opacity 140ms ease;
+    }
 
-  .math-node.is-match {
-    z-index: 9;
-    border-color: white;
-    box-shadow: 0 0 30px color-mix(in srgb, var(--group-color) 35%, transparent);
-  }
+  .sunburst-label,
+  .sunburst-center-label {
+    font-family: inherit;
+    pointer-events: none;
+    }
 
-  .node-label {
-    font-size: 0.82rem;
-    font-weight: 720;
-    line-height: 1.18;
-  }
-
-  .node-status {
-    margin-top: 0.28rem;
-    border-radius: 999px;
-    padding: 0.12rem 0.38rem;
-    color: #bff6ff;
-    background: rgba(113, 230, 255, 0.12);
-    font-size: 0.58rem;
-    font-weight: 850;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  .kind-root {
-    width: 250px;
-    min-height: 76px;
-    border-width: 2px;
-    border-radius: 1.2rem;
-    background: radial-gradient(circle at top, rgba(113, 230, 255, 0.2), transparent 70%), rgba(21, 12, 48, 0.97);
-  }
-
-  .kind-root .node-label {
-    font-size: 1.35rem;
-  }
-
-  .kind-hub {
-    width: 270px;
-    min-height: 80px;
-    border-width: 2px;
-    border-radius: 1.05rem;
-  }
-
-  .kind-hub .node-label {
-    font-size: 1rem;
-  }
-
-  .is-live {
-    border-color: #71e6ff;
-    box-shadow: 0 0 26px rgba(113, 230, 255, 0.17);
-  }
-
-  .graph-help {
-    margin: 0;
-    padding: 0.95rem 1.2rem 1.15rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.07);
-    color: rgba(241, 236, 255, 0.58);
-    font-size: 0.78rem;
-    line-height: 1.55;
-  }
+  .sunburst-label {
+    letter-spacing: -0.015em;
+    stroke-linejoin: round;
+    }
 
   .group-foundations { --group-color: #8e7dff; }
-  .group-algebra-number { --group-color: #ff7597; }
-  .group-geometry-topology { --group-color: #52ddc7; }
-  .group-analysis-probability { --group-color: #65b7ff; }
-  .group-discrete-computation { --group-color: #f4bd61; }
-  .group-physics-applied { --group-color: #d68cff; }
-  .group-root { --group-color: #71e6ff; }
+  .group-algebra { --group-color: #ff7597; }
+  .group-number-theory { --group-color: #ffb04f; }
+  .group-geometry { --group-color: #52ddc7; }
+  .group-topology { --group-color: #2fd6a3; }
+  .group-analysis { --group-color: #65b7ff; }
+  .group-probability-statistics { --group-color: #7fa0ff; }
+  .group-discrete-mathematics { --group-color: #f4bd61; }
+  .group-computing { --group-color: #ff9a63; }
+  .group-mathematical-physics { --group-color: #d68cff; }
+  .group-applied-mathematics { --group-color: #ff86c8; }
+  @media (max-width: 900px) {
+    .graph-panel-heading {
+      display: grid;
+      align-items: start;
+    }
 
-  @media (max-width: 1050px) {
+    .sunburst-key {
+      text-align: left;
+    }
+
     .graph-controls {
       grid-template-columns: 1fr 1fr;
     }
@@ -3206,12 +3464,13 @@ const groupForNode = (nodeId: string) => {
     #graph-result-count {
       justify-self: start;
     }
-  }
+    }
 
-  @media (max-width: 720px) {
+  @media (max-width: 620px) {
     .branches-page {
       width: min(100% - 1rem, 1500px);
-      padding-top: 2rem;
+      padding-top: 0.9rem;
+      padding-bottom: 1.25rem;
     }
 
     .graph-panel {
@@ -3219,36 +3478,22 @@ const groupForNode = (nodeId: string) => {
     }
 
     .graph-panel-heading {
-      display: grid;
-      align-items: start;
-      padding: 1.2rem;
-    }
-
-    .graph-key {
-      justify-content: flex-start;
+      padding: 1.1rem;
     }
 
     .graph-controls {
-      position: static;
       grid-template-columns: 1fr;
     }
 
-    .toggle-control,
-    #graph-result-count {
-      justify-self: start;
+    .group-legend {
+      padding-inline: 1rem;
     }
-
-    .graph-viewport {
-      height: 72vh;
-      min-height: 520px;
-      margin-inline: -0.5rem;
     }
-  }
 
   @media (prefers-reduced-motion: reduce) {
-    .math-node,
-    .graph-edge {
+    .sunburst-sector,
+    .sunburst-segment {
       transition: none;
     }
-  }
+    }
 </style>
