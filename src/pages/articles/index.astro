@@ -2,6 +2,7 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { withBase } from "@/utils/paths";
 import ArticlesSidebar from "../../components/ArticlesSidebar.astro";
+import MathCanvas2D from "../../components/math-graphics/MathCanvas2D.astro";
 ---
 
 <BaseLayout title="Articles">
@@ -70,13 +71,34 @@ import ArticlesSidebar from "../../components/ArticlesSidebar.astro";
             <h3>Inequalities: The Ins And Outs </h3>
           </header>
 
-          <div
-            class="article-canvas"
-            role="img"
-            aria-label="An animated simulation of collecting eight different coupon types"
-          >
-            
-          </div>
+          <p class="article-description">
+	    A comprehensive overview of the dirty tricks galore subject of mathematical inequalities. From classic staples such as the triangle inequality, AM-GM and
+            Cauchy-Schwarz, to bangers like Jensen, Young, Holder and Minkowski, to elite ball knowledge like Hardy, Poincare and Gronwall.
+          </p>
+
+          <span class="read-label" aria-hidden="true">
+            Read article <span>→</span>
+          </span>
+        </a>
+
+	<a
+          class="article-card"
+          href={withBase("articles/analysis/fourier-epicycles/")}
+          aria-label="Read The Mathematical Inequalities Guided Tour"
+        >
+          <header class="article-card-header">
+            <span class="article-branch">
+              Algebra · Mathematical Techniques
+            </span>
+
+            <h3>Inequalities: The Ins And Outs </h3>
+          </header>
+
+          <MathCanvas2D
+	    id="fourier-epicycles"
+	    label="idk."
+	    aspectRatio="16 / 9"
+	  />
 
           <p class="article-description">
 	    A comprehensive overview of the dirty tricks galore subject of mathematical inequalities. From classic staples such as the triangle inequality, AM-GM and
@@ -94,6 +116,7 @@ import ArticlesSidebar from "../../components/ArticlesSidebar.astro";
 
 <script>
   import "../../scripts/animations/couponCollectorCard";
+  import "../../scripts/demos/fourierEpicycles";
 </script>
 
 <style>

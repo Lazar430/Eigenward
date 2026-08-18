@@ -1,0 +1,55 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import RealAnalysisSidebar from "../../../../components/RealAnalysisSidebar.astro";
+import Math from "../../../components/Math.astro";
+import Equation from "../../../components/Equation.astro";
+import MathCanvas2D from "../../../../components/math-graphics/MathCanvas2D.astro";
+---
+
+<BaseLayout
+  title="Fourier Epicycles"
+>
+  <section class="la-page">
+    <RealAnalysisSidebar />
+
+    <article class="topic-article">
+      <header class="topic-hero">
+        <span class="eyebrow">Real Analysis · Discrete Mathematics</span>
+        <h1>Fourier Epicycles</h1>
+
+        <p>
+          idk.
+        </p>
+      </header>
+
+      <nav class="topic-toc" aria-label="Page sections">
+        <a href="#broad-stroke">Broad Stroke</a>
+        <a href="#quick-examples">Quick Examples</a>
+        <a href="#a-deeper-look">A Deeper Look</a>
+      </nav>
+
+      <section class="topic-section" id="broad-stroke">
+        <h2>Broad Stroke</h2>
+	
+	<p>
+	</p>
+	  
+      </section>
+
+      <section class="topic-section" id="a-deeper-look">
+        <h2>A Deeper Look</h2>
+
+	<MathCanvas2D
+	  id="fourier-epicycles"
+	  label="idk."
+	  aspectRatio="16 / 9"
+	/>
+	
+      </section>
+    </article>
+  </section>
+</BaseLayout>
+
+<script>
+  import "../../../../scripts/demos/fourierEpicycles";
+</script>

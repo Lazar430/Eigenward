@@ -35,6 +35,55 @@ export type {
 } from "./core/types";
 
 export { sampleParametricCurve2D } from "./geometry/sampleParametricCurve2D";
+export {
+  FOURIER_DRAWING_ASSET_VERSION_2D,
+  applyPointNormalizationTransform2D,
+  buildFourierEpicycleChain2D,
+  calculateFourierRmsError2D,
+  calculatePolylineLength2D,
+  computeFourierCoefficients2D,
+  createFourierFrequencySequence2D,
+  createPeriodicFourierSamples2D,
+  evaluateFourierCoefficient2D,
+  getFourierCoefficientAmplitude2D,
+  getFourierCoefficientPhase2D,
+  getPointBounds2D,
+  normalizePointSamples2D,
+  orderFourierCoefficients2D,
+  reconstructFourierPoint2D,
+  resamplePolylineByArcLength2D,
+  sampleFourierReconstruction2D,
+  sampleFourierReconstructionRange2D,
+  type FourierCoefficient2D,
+  type FourierCoefficientComputation2DOptions,
+  type FourierCoefficientOrder2D,
+  type FourierDrawing2DAsset,
+  type FourierEpicycleLink2D,
+  type FourierStroke2DAsset,
+  type NormalizePointSamples2DOptions,
+  type NormalizedPointSamples2D,
+  type PointBounds2D,
+  type PointNormalizationTransform2D,
+} from "./geometry/fourierSeries2D";
+export {
+  compileSvgFileToFourierDrawing2D,
+  compileSvgTextToFourierDrawing2D,
+  downloadFourierDrawingAsset2D,
+  parseSvgTransform2D,
+  serializeFourierDrawingAsset2D,
+  type CompileFourierSvg2DOptions,
+  type CompileFourierSvg2DResult,
+  type FourierOpenStrokeMode2D,
+  type FourierSvgDiagnostic2D,
+  type FourierSvgDiagnosticSeverity2D,
+  type FourierSvgGeometryTag2D,
+  type SerializeFourierDrawingAsset2DOptions,
+} from "./assets/fourierSvgAsset2D";
+export {
+  loadFourierDrawingAsset2D,
+  parseFourierDrawingAsset2D,
+  type LoadFourierDrawingAsset2DOptions,
+} from "./io/fourierDrawingAsset2D";
 export { sampleExplicitShape2D } from "./geometry/sampleExplicitShape2D";
 export {
   createPolygonCurve2D,
@@ -51,6 +100,12 @@ export {
   createParametricShape2D,
 } from "./primitives/ParametricShape2D";
 export { createExplicitShape2D } from "./primitives/ExplicitShape2D";
+export {
+  FourierEpicycles2D,
+  createFourierEpicycles2D,
+  type FourierEpicycles2DOptions,
+  type FourierEpicycles2DStyle,
+} from "./primitives/FourierEpicycles2D";
 export { createPolygon2D } from "./primitives/Polygon2D";
 
 export {
@@ -178,6 +233,13 @@ export {
   easeInOutSine,
   type EasingFunction,
 } from "./animation/easing";
+export {
+  FourierDrawingPlayer2D,
+  createFourierDrawingPlayer2D,
+  type FourierDrawingPlaybackState2D,
+  type FourierDrawingPlayer2DOptions,
+  type FourierDrawingReducedMotionMode2D,
+} from "./animation/FourierDrawingPlayer2D";
 
 export {
   MorphCycle,

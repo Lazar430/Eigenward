@@ -47,58 +47,192 @@ const featuredPosts = [
   }
 ];
 
-const branches = [
+/*
+ * This is deliberately a one-ring version of the sunbursts used on the
+ * Branches page. The colors below are exactly the same group palette.
+ */
+const overviewBranches = [
   {
     label: "Logic",
-    className: "logic",
-    href: withBase("branches/")
+    href: withBase("branches/logic/"),
+    color: "#8e7dff"
   },
   {
     label: "Set Theory",
-    className: "sets",
-    href: withBase("branches/")
+    href: withBase("branches/set-theory/"),
+    color: "#8e7dff"
   },
   {
-    label: "Algebra",
-    className: "algebra",
-    href: withBase("branches/linear-algebra/")
+    label: "Linear Algebra",
+    href: withBase("branches/linear-algebra/"),
+    color: "#ff7597"
   },
   {
-    label: "Geometry",
-    className: "geometry",
-    href: withBase("branches/")
-  },
-  {
-    label: "Analysis",
-    className: "analysis",
-    href: withBase("branches/")
-  },
-  {
-    label: "Topology",
-    className: "topology",
-    href: withBase("branches/")
+    label: "Abstract Algebra",
+    href: withBase("branches/abstract-algebra/"),
+    color: "#ff7597"
   },
   {
     label: "Number Theory",
-    className: "number",
-    href: withBase("branches/")
+    href: withBase("branches/number-theory/"),
+    color: "#ffb04f"
+  },
+  {
+    label: "Geometry",
+    href: withBase("branches/geometry/"),
+    color: "#52ddc7"
+  },
+  {
+    label: "Topology",
+    href: withBase("branches/topology/"),
+    color: "#2fd6a3"
+  },
+  {
+    label: "Analysis",
+    href: withBase("branches/analysis/"),
+    color: "#65b7ff"
+  },
+  {
+    label: "Probability",
+    href: withBase("branches/probability-theory/"),
+    color: "#7fa0ff"
   },
   {
     label: "Combinatorics",
-    className: "combinatorics",
-    href: withBase("branches/")
-  },
-  {
-    label: "Computing",
-    className: "computing",
-    href: withBase("branches/")
+    href: withBase("branches/combinatorics/"),
+    color: "#f4bd61"
   },
   {
     label: "Mathematical Physics",
-    className: "physics",
-    href: withBase("branches/")
+    href: withBase("branches/mathematical-physics/"),
+    color: "#d68cff"
   }
 ];
+
+const OVERVIEW_SIZE = 900;
+const OVERVIEW_CENTER = OVERVIEW_SIZE / 2;
+const OVERVIEW_INNER_RADIUS = 145;
+const OVERVIEW_OUTER_RADIUS = 335;
+const OVERVIEW_GAP = 0.008;
+
+function clamp(value: number, minimum: number, maximum: number) {
+  return Math.min(maximum, Math.max(minimum, value));
+}
+
+function hexToRgb(hex: string): [number, number, number] {
+  const value = hex.replace("#", "");
+  return [
+    Number.parseInt(value.slice(0, 2), 16),
+    Number.parseInt(value.slice(2, 4), 16),
+    Number.parseInt(value.slice(4, 6), 16)
+  ];
+}
+
+function mixHex(left: string, right: string, amount: number): string {
+  const a = hexToRgb(left);
+  const b = hexToRgb(right);
+  const t = clamp(amount, 0, 1);
+
+  const mixed = a.map((channel, index) =>
+    Math.round(channel + (b[index] - channel) * t)
+  );
+
+  return `rgb(${mixed[0]}, ${mixed[1]}, ${mixed[2]})`;
+}
+
+function polar(radius: number, angle: number): [number, number] {
+  return [
+    OVERVIEW_CENTER + radius * Math.cos(angle),
+    OVERVIEW_CENTER + radius * Math.sin(angle)
+  ];
+}
+
+function annularSectorPath(
+  innerRadius: number,
+  outerRadius: number,
+  startAngle: number,
+  endAngle: number
+): string {
+  const start = startAngle + OVERVIEW_GAP;
+  const end = endAngle - OVERVIEW_GAP;
+
+  const [outerStartX, outerStartY] = polar(outerRadius, start);
+  const [outerEndX, outerEndY] = polar(outerRadius, end);
+  const [innerEndX, innerEndY] = polar(innerRadius, end);
+  const [innerStartX, innerStartY] = polar(innerRadius, start);
+
+  const largeArc = end - start > Math.PI ? 1 : 0;
+
+  return [
+    `M ${outerStartX} ${outerStartY}`,
+    `A ${outerRadius} ${outerRadius} 0 ${largeArc} 1 ${outerEndX} ${outerEndY}`,
+    `L ${innerEndX} ${innerEndY}`,
+    `A ${innerRadius} ${innerRadius} 0 ${largeArc} 0 ${innerStartX} ${innerStartY}`,
+    "Z"
+  ].join(" ");
+}
+
+function splitLabel(label: string): string[] {
+  const words = label.split(/\s+/).filter(Boolean);
+
+  if (words.length <= 1) return [label];
+  if (words.length === 2) return words;
+
+  const midpoint = Math.ceil(words.length / 2);
+
+  return [
+    words.slice(0, midpoint).join(" "),
+    words.slice(midpoint).join(" ")
+  ];
+}
+
+const overviewSectorAngle = (Math.PI * 2) / overviewBranches.length;
+const overviewTextRadius =
+  (OVERVIEW_INNER_RADIUS + OVERVIEW_OUTER_RADIUS) / 2;
+
+const overviewSectors = overviewBranches.map((branch, index) => {
+  const startAngle = -Math.PI / 2 + index * overviewSectorAngle;
+  const endAngle = startAngle + overviewSectorAngle;
+  const midAngle = (startAngle + endAngle) / 2;
+  const [textX, textY] = polar(overviewTextRadius, midAngle);
+
+  let rotation = (midAngle * 180) / Math.PI + 90;
+  const normalized = ((rotation % 360) + 360) % 360;
+
+  if (normalized > 90 && normalized < 270) {
+    rotation += 180;
+  }
+
+  const lines = splitLabel(branch.label);
+  const fontSize = lines.length === 1 ? 19 : 17;
+  const lineHeight = fontSize * 1.08;
+
+  return {
+    ...branch,
+    path: annularSectorPath(
+      OVERVIEW_INNER_RADIUS,
+      OVERVIEW_OUTER_RADIUS,
+      startAngle,
+      endAngle
+    ),
+    fill: mixHex(branch.color, "#1c1432", 0.10),
+    fillOpacity: 0.86,
+    stroke: mixHex(branch.color, "#120b24", 0.62),
+    textX,
+    textY,
+    rotation,
+    fontSize,
+    lines: lines.map((line, lineIndex) => ({
+      text: line,
+      dy:
+        lineIndex === 0
+          ? lines.length === 1
+          ? "0"
+          : `${-lineHeight / 2}px`
+          : `${lineHeight}px`
+    }))
+  };
+});
 ---
 
 <BaseLayout
@@ -137,39 +271,85 @@ const branches = [
     </div>
 
     <div
-      class="math-graph"
-      aria-label="Graph map of mathematical branches"
+      class="home-sunburst-viewport"
+      aria-label="Overview of the main branches of mathematics"
     >
       <svg
-        class="math-graph-lines"
-        viewBox="0 0 1000 560"
-        aria-hidden="true"
+        class="home-sunburst-map"
+        viewBox={`0 0 ${OVERVIEW_SIZE} ${OVERVIEW_SIZE}`}
+        role="img"
+        aria-label="Sunburst overview of the main mathematical subjects"
       >
-        <line x1="500" y1="92" x2="210" y2="205" />
-        <line x1="500" y1="92" x2="500" y2="220" />
-        <line x1="500" y1="92" x2="790" y2="205" />
-
-        <line x1="210" y1="205" x2="225" y2="380" />
-        <line x1="500" y1="220" x2="390" y2="385" />
-        <line x1="500" y1="220" x2="610" y2="385" />
-        <line x1="790" y1="205" x2="775" y2="380" />
-
-        <line x1="390" y1="385" x2="225" y2="380" />
-        <line x1="610" y1="385" x2="775" y2="380" />
-        <line x1="390" y1="385" x2="500" y2="500" />
-        <line x1="610" y1="385" x2="500" y2="500" />
-      </svg>
-
-      {
-        branches.map((branch) => (
+        {overviewSectors.map((sector) => (
           <a
-            class={`math-node ${branch.className}`}
-            href={branch.href}
+            class="home-sunburst-sector"
+            href={sector.href}
+            aria-label={sector.label}
           >
-            {branch.label}
+            <path
+              class="home-sunburst-segment"
+              d={sector.path}
+              fill={sector.fill}
+              fill-opacity={sector.fillOpacity}
+              stroke={sector.stroke}
+              stroke-width="2.4"
+            ></path>
+
+            <text
+              class="home-sunburst-label"
+              x={sector.textX}
+              y={sector.textY}
+              fill="#ffffff"
+              stroke="rgba(8, 5, 20, 0.46)"
+              stroke-width="1.5"
+              paint-order="stroke"
+              text-anchor="middle"
+              dominant-baseline="middle"
+              font-size={sector.fontSize}
+              font-weight="760"
+              transform={`rotate(${sector.rotation} ${sector.textX} ${sector.textY})`}
+            >
+              {sector.lines.map((line) => (
+                <tspan
+                  x={sector.textX}
+                  dy={line.dy}
+                >
+                  {line.text}
+                </tspan>
+              ))}
+            </text>
           </a>
-        ))
-      }
+        ))}
+
+        <a
+          class="home-sunburst-center-link"
+          href={withBase("branches/")}
+          aria-label="Open the full Branches page"
+        >
+          <circle
+            class="home-sunburst-center-disc"
+            cx={OVERVIEW_CENTER}
+            cy={OVERVIEW_CENTER}
+            r={OVERVIEW_INNER_RADIUS - 5}
+            fill={mixHex("#8e7dff", "#0d081d", 0.72)}
+            stroke={mixHex("#8e7dff", "#ffffff", 0.24)}
+            stroke-width="4"
+          ></circle>
+
+          <text
+            class="home-sunburst-center-label"
+            x={OVERVIEW_CENTER}
+            y={OVERVIEW_CENTER}
+            fill="#ffffff"
+            text-anchor="middle"
+            dominant-baseline="middle"
+            font-size="29"
+            font-weight="820"
+          >
+            Branches
+          </text>
+        </a>
+      </svg>
     </div>
   </section>
 
@@ -323,3 +503,77 @@ const branches = [
     });
   </script>
 </BaseLayout>
+
+<style>
+  /*
+   * These rules intentionally mirror the Branches-page sunburst styling:
+  * transparent solid sectors, dark group-tinted boundaries, white labels,
+   * rounded joins, and the same restrained hover brightening.
+   */
+  .home-sunburst-viewport {
+    width: min(100%, 900px);
+    margin: 0.35rem auto 0;
+    overflow: hidden;
+    contain: layout paint;
+  }
+
+  .home-sunburst-map {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+  }
+
+  .home-sunburst-sector {
+    cursor: pointer;
+    text-decoration: none;
+    transition: opacity 140ms ease;
+  }
+
+  .home-sunburst-sector:hover .home-sunburst-segment,
+  .home-sunburst-sector:focus-visible .home-sunburst-segment,
+  .home-sunburst-center-link:hover .home-sunburst-center-disc,
+  .home-sunburst-center-link:focus-visible .home-sunburst-center-disc {
+    filter: brightness(1.12) saturate(1.03);
+  }
+
+  .home-sunburst-sector:focus-visible,
+  .home-sunburst-center-link:focus-visible {
+    outline: none;
+  }
+
+  .home-sunburst-segment {
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    transition: filter 140ms ease, opacity 140ms ease;
+  }
+
+  .home-sunburst-label,
+  .home-sunburst-center-label {
+    font-family: inherit;
+    pointer-events: none;
+  }
+
+  .home-sunburst-label {
+    letter-spacing: -0.015em;
+    stroke-linejoin: round;
+  }
+
+  .home-sunburst-center-disc {
+    transition: filter 140ms ease;
+  }
+
+  @media (max-width: 700px) {
+    .home-sunburst-viewport {
+      width: min(100%, 760px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .home-sunburst-sector,
+    .home-sunburst-segment,
+    .home-sunburst-center-disc {
+      transition: none;
+    }
+  }
+</style>
