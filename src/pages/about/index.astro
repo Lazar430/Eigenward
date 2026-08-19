@@ -9,84 +9,64 @@ import MathCanvas2D from "../../components/math-graphics/MathCanvas2D.astro";
       <p class="eyebrow">Math graphics laboratory</p>
       <h1>About</h1>
       <section class="topic-section" id="broad-stroke">
-      <p>
-	There's no grand point to this page, I just wanted to share some thoughts about the philosophy behind this website. I created Eigenward mainly as a way of dealing with the
-seemingly insurmountable task of making sense of the things I seek to understand on a deeper level, for sheer knowledge's sake. I also happen to be someone with a
-knack for trying WAY too hard to find a pleasing and fulfilling aesthetic for my personal notes before I even bother to read them through (which is ironically at odds with my
-inherent lack of practical skills, and is why I prefer to digitalize all my stuff). So this place is the result of my desire to unify what I learn and tie it all up with a
-pretty bow.
-      </p>
-
-      <p>
-	Besides, look, I love 3Blue1Brown and the like as much as the next guy (this project is, more or less, the fruit of worshiping that kind of content), but over time I've grown
-somewhat
-frustrated with how little I actually retain from the exponentially increasing pool of visually stimulating and intuitive explanations of abstract topics out there on the internet.
-That kind of content can be inspiring and oftentimes enlightening; it's just that it's also a rather passive and fickle way of supposedly wrapping your head around difficult subjects, and
-at the end of the day it usually only scratches the surface of the insane number of bizarre or challenging conceptual ideas one can stumble upon. Most of the accessible presentations
-I've seen have this introductory quality to them, and by the end they leave you staring at the untamed behemoth of pure, unadulterated theory that you still have to fully comprehend.
-So on one hand I want to occasionally entertain you with what I hope are cool and elegant ways of looking at things you may have encountered in school or university—things you might
-try explaining to a friend who's confused about them, only to realize you didn't actually remember any of the explanation yourself because, well... it just looked neat at the time and scratched
-your brain in a satisfying way. So you might end up sending them the link to the page instead, only for you to most likely never reread it yourself, and for them to most likely never
-read it in the first place. And on the other hand, I also want to get into the weeds with everything I explore here and provide textbook definitions, motivations for them, proofs,
-problems, solutions, open questions, all the funny jazz fusion.
-      </p>
-
-      <p>
-	Notice how I've purposely avoided using the term "Mathematics" so far. That's because of the somewhat pejorative, or perhaps foreboding, aura surrounding the word. It's such a
-broad
-field condensed into such a... controversial name that I'd rather refrain from using it as the primary way to describe what I'm doing here, simply because I know from experience that
-it tends to have a Rorschach-test effect on people. And yet, on closer inspection, this is indeed where you'll find most of my attention directed, as it's what usually intrigues me the most.
-      </p>
-
-      <p>
-	So this is partly an educational platform, if you choose to look at it that way, and partly an eclectic hodgepodge of all things abstract. Just keep in mind, as you explore,
-that
-I am by no means an authoritative figure on the topics I discuss, so please don't hesitate to let me know if you come across something profoundly stupid or simply incorrect. Enjoy!
-      </p>
+      <p> Idk, man. </p>
       </section>
     </header>
+
+    <MathCanvas2D
+      id="riemann-sums"
+      label="Riemann sum approximation of area under a curve"
+      aspectRatio="16 / 9"
+    />
 
     <MathCanvas2D
       id="about-function-graph-scene"
       label="An explicit function graph with exact axis intersections and a draggable point"
       aspectRatio="16 / 9"
     />
-
+    
     <MathCanvas2D
+      id="parallelogram-proof-scene"
+      label="Step-by-step geometry proof with staged constructions"
+      aspectRatio="16 / 9"
+    />
+
+
+    <!--MathCanvas2D
       id="about-trig-scene"
       label="Trig elements"
       aspectRatio="16 / 9"
-    />
+    /-->
     
-    <MathCanvas2D
+    <!--MathCanvas2D
       id="about-primitives-scene"
       label="Animated circles and polygons"
       aspectRatio="16 / 9"
-    />
+    /-->
 
-    <MathCanvas2D
+    <!--MathCanvas2D
       id="about-curve-scene"
       label="Trigonometry elements"
       aspectRatio="16 / 9"
-    />
+    /-->
 
-    <MathCanvas2D
+    <!--MathCanvas2D
       id="about-vector-drag-scene"
       label="Draggable vectors"
       aspectRatio="16 / 9"
-    />
+    /-->
 
-    <MathCanvas2D
+    <!--MathCanvas2D
       id="about-determinant-interactive-scene"
       label="Interactive determinant"
       aspectRatio="16 / 9"
-    />
+    /-->
 
-    <MathCanvas2D
+    <!--MathCanvas2D
       id="about-determinant-transformation-scene"
       label="Matrix transformation"
       aspectRatio="16 / 9"
-    />
+    /-->
 
     <p class="scene-note">
       Every object is persistent geometry inside the Three.js scene graph.
@@ -97,12 +77,14 @@ I am by no means an authoritative figure on the topics I discuss, so please don'
 </BaseLayout>
 
 <script>
-  import "../../scripts/demos/aboutTrigScene";
-  import "../../scripts/demos/aboutPrimitivesScene";
-  import "../../scripts/demos/aboutCurveScene";
-  import "../../scripts/demos/aboutVectorDragScene";
-  import "../../scripts/demos/aboutDeterminantInteractiveScene";
-  import "../../scripts/demos/aboutDeterminantTransformationScene";
+  import "../../scripts/demos/riemannSums";
+  import "../../scripts/demos/parallelogramProofStages";
+  //import "../../scripts/demos/aboutTrigScene";
+  //import "../../scripts/demos/aboutPrimitivesScene";
+  //import "../../scripts/demos/aboutCurveScene";
+  //import "../../scripts/demos/aboutVectorDragScene";
+  //import "../../scripts/demos/aboutDeterminantInteractiveScene";
+  //import "../../scripts/demos/aboutDeterminantTransformationScene";
   import "../../scripts/demos/aboutFunctionGraphScene";
 </script>
 

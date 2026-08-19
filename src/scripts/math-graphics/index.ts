@@ -266,3 +266,62 @@ export {
   type MorphState3D,
 } from "./primitives/MorphableSurface3D";
 
+export {
+  altitudeToLine2D,
+  angleBisectorRay2D,
+  distance2D,
+  extendSegment2D,
+  internalAngleBisectorDirection2D,
+  lineDirection2D,
+  lineIntersection2D,
+  medianToSegment2D,
+  midpoint2D,
+  minorAngleSector2D,
+  perpendicularDirection2D,
+  pointOnLine2D,
+  projectPointOntoLine2D,
+  rayLineIntersection2D,
+  type AltitudeConstruction2D,
+  type AngleBisectorRay2D,
+  type LineIntersection2D,
+  type MinorAngleSector2D,
+  type PointProjection2D,
+  type RayLineIntersection2D,
+  type SegmentEndpoints2D,
+} from "./geometry/euclideanConstructions2D";
+
+export {
+  Segment2D,
+  createSegment2D,
+  type Segment2DOptions,
+  type Segment2DStyle,
+  type SegmentDashStyle2D,
+} from "./primitives/Segment2D";
+export {
+  RightAngleMarker2D,
+  createRightAngleMarker2D,
+  type RightAngleMarker2DOptions,
+} from "./primitives/RightAngleMarker2D";
+
+export {
+  boundsFromPoints2D,
+  currentSceneView2D,
+  fitPointsView2D,
+  sceneContainsPoints2D,
+  type FitPointsView2DOptions,
+  type SceneView2D,
+} from "./geometry/viewport2D";
+
+export {
+  PanZoomController2D,
+  type PanZoomController2DOptions,
+} from "./interaction/PanZoomController2D";
+
+export {
+  ProofStageController2D,
+  type ProofStage2D,
+  type ProofStageController2DOptions,
+  type SegmentDrawAnimation2DOptions,
+  type RevealAnimation2DOptions,
+  type StageEasing2D,
+} from "./animation/ProofStageController2D";
