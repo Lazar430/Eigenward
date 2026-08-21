@@ -325,3 +325,132 @@ export {
   type RevealAnimation2DOptions,
   type StageEasing2D,
 } from "./animation/ProofStageController2D";
+
+export * from "./animation/proofHelpers2D";
+
+export {
+  add3D,
+  subtract3D,
+  scale3D,
+  dot3D,
+  cross3D,
+  length3D,
+  normalize3D,
+  distance3D,
+  midpoint3D,
+  centroid3D,
+  pointOnLine3D,
+  lineDirection3D,
+  projectPointOntoLine3D,
+  altitudeToLine3D,
+  closestPointsBetweenLines3D,
+  lineIntersection3D,
+  planeFromPoints3D,
+  projectPointOntoPlane3D,
+  linePlaneIntersection3D,
+  parallelLineThroughPoint3D,
+  angleBetweenRays3D,
+  extendSegment3D,
+  type PointProjection3D,
+  type AltitudeToLine3D,
+  type ClosestLinePoints3D,
+  type LineIntersection3D,
+  type Plane3D,
+  type PointPlaneProjection3D,
+  type LinePlaneIntersection3D,
+  type Line3D,
+} from "./geometry/euclideanConstructions3D";
+
+export {
+  sceneContainsPoints3D,
+  fitPointsCamera3D,
+  copyCameraState3D,
+  type FitPointsCamera3DOptions,
+  type CameraTarget3D,
+} from "./geometry/viewport3D";
+
+export {
+  Segment3D,
+  createSegment3D,
+  type Segment3DOptions,
+  type Segment3DStyle,
+  type SegmentDashStyle3D,
+} from "./primitives/Segment3D";
+
+export {
+  PointMarker3D,
+  createPointMarker3D,
+  type PointMarker3DOptions,
+} from "./primitives/PointMarker3D";
+
+export {
+  Polygon3D,
+  createPolygon3D,
+  type Polygon3DOptions,
+  type Polygon3DStyle,
+} from "./primitives/Polygon3D";
+
+export {
+  AngleSector3D,
+  createAngleSector3D,
+  type AngleSector3DOptions,
+  type AngleSectorShape3D,
+} from "./primitives/AngleSector3D";
+
+export {
+  ProofStageController3D,
+  type ProofStage3D,
+  type ProofStageController3DOptions,
+  type SegmentDrawAnimation3DOptions,
+  type RevealAnimation3DOptions,
+  type StageEasing3D,
+} from "./animation/ProofStageController3D";
+
+export * from "./animation/proofHelpers3D";
+
+export {
+  projectPointToSphere3D,
+  spherePointFromLatitudeLongitude3D,
+  sphericalAngleRadians3D,
+  sampleGreatCircleArc3D,
+  sampleSpherePlaneCircle3D,
+  sampleGreatCircle3D,
+  sampleSphericalParallel3D,
+  pointOnMinorGreatCircleArc3D,
+  sphericalTangentDirection3D,
+  sphericalAltitudeFoot3D,
+  sphericalOrthocenter3D,
+  sphericalAngleBisector3D,
+  type SphereCircle3D,
+  type SphericalAltitude3D,
+  type SphericalOrthocenter3D,
+  type SphericalAngleBisector3D,
+} from "./geometry/sphericalConstructions3D";
+
+export {
+  Polyline3D,
+  createPolyline3D,
+  type Polyline3DOptions,
+  type Polyline3DStyle,
+} from "./primitives/Polyline3D";
+
+export {
+  SphericalAngleSector3D,
+  createSphericalAngleSector3D,
+  type SphericalAngleSector3DOptions,
+} from "./primitives/SphericalAngleSector3D";
+
+export {
+  SphericalLune3D,
+  createSphericalLune3D,
+  type SphericalLune3DOptions,
+  type SphericalLuneSweep3D,
+} from "./primitives/SphericalLune3D";
+export {
+  SphericalWedge3D,
+  createSphericalWedge3D,
+  type SphericalWedge3DOptions,
+  type SphericalWedgeSweep3D,
+} from "./primitives/SphericalWedge3D";
+
+

@@ -1,38 +1,43 @@
-import type { MathScene2D } from "../core/MathScene2D";
-import type { Vec2Tuple } from "../core/types";
-import type { Segment2D } from "../primitives/Segment2D";
-import type { AngleSector2D } from "../primitives/AngleSector2D";
+import type { MathScene3D } from "../core/MathScene3D";
+import type { Vec3Tuple } from "../core/types3D";
+import type { AngleSector3D } from "../primitives/AngleSector3D";
+import type { Polygon3D } from "../primitives/Polygon3D";
+import type { Segment3D } from "../primitives/Segment3D";
 import {
-  currentSceneView2D,
-  fitPointsView2D,
-  sceneContainsPoints2D,
-  type FitPointsView2DOptions,
-  type SceneView2D,
-} from "../geometry/viewport2D";
+  fitPointsCamera3D,
+  sceneContainsPoints3D,
+  type CameraTarget3D,
+  type FitPointsCamera3DOptions,
+} from "../geometry/viewport3D";
 
-export type StageEasing2D = (progress: number) => number;
+export type StageEasing3D = (progress: number) => number;
 
-export interface ProofStage2D {
+export interface ProofStage3D {
   title: string;
   description: string;
-  run: (controller: ProofStageController2D) => void | Promise<void>;
+  run: (controller: ProofStageController3D) => void | Promise<void>;
 }
 
-export interface ProofStageController2DOptions {
-  stages: readonly ProofStage2D[];
+export interface ProofStageController3DOptions {
+  stages: readonly ProofStage3D[];
   reset: () => void;
   startVisibilityRatio?: number;
   nextButtonPosition?: "top-right" | "bottom-right";
+  /**
+   * Call this after programmatic camera motion if another interaction controller
+   * (typically OrbitController3D) caches camera state.
+   */
+  syncCameraController?: () => void;
 }
 
-export interface SegmentDrawAnimation2DOptions {
+export interface SegmentDrawAnimation3DOptions {
   durationSeconds?: number;
-  easing?: StageEasing2D;
+  easing?: StageEasing3D;
 }
 
-export interface RevealAnimation2DOptions {
+export interface RevealAnimation3DOptions {
   durationSeconds?: number;
-  easing?: StageEasing2D;
+  easing?: StageEasing3D;
 }
 
 function clamp01(value: number): number {
@@ -48,18 +53,29 @@ function lerp(a: number, b: number, progress: number): number {
   return a + (b - a) * progress;
 }
 
+function lerpVec3(
+  a: Vec3Tuple,
+  b: Vec3Tuple,
+  progress: number,
+): Vec3Tuple {
+  return [
+    lerp(a[0], b[0], progress),
+    lerp(a[1], b[1], progress),
+    lerp(a[2], b[2], progress),
+  ];
+}
+
 /**
- * Reusable staged-proof controller:
- * - starts only once the canvas enters the viewport;
- * - serializes stage changes;
- * - exposes small geometry-animation helpers;
- * - owns a Next/Reset button;
- * - owns a deliberately subdued hover/focus "i" control for stage details.
+ * 3D counterpart of ProofStageController2D.
+ *
+ * It owns proof progression/UI and generic 3D reveal choreography, but leaves
+ * the actual geometry and simultaneity choices in the scene file.
  */
-export class ProofStageController2D {
-  private readonly stages: readonly ProofStage2D[];
+export class ProofStageController3D {
+  private readonly stages: readonly ProofStage3D[];
   private readonly resetScene: () => void;
   private readonly visibilityRatio: number;
+  private readonly syncCameraController: () => void;
 
   private currentStageIndex = -1;
   private busy = false;
@@ -76,13 +92,14 @@ export class ProofStageController2D {
   private readonly infoDescription: HTMLDivElement;
 
   constructor(
-    readonly scene: MathScene2D,
+    readonly scene: MathScene3D,
     {
       stages,
       reset,
       startVisibilityRatio = 0.15,
       nextButtonPosition = "bottom-right",
-    }: ProofStageController2DOptions,
+      syncCameraController = () => {},
+    }: ProofStageController3DOptions,
   ) {
     if (stages.length === 0) {
       throw new RangeError("A staged proof requires at least one stage.");
@@ -91,19 +108,19 @@ export class ProofStageController2D {
     this.stages = stages;
     this.resetScene = reset;
     this.visibilityRatio = clamp01(startVisibilityRatio);
+    this.syncCameraController = syncCameraController;
 
     /*
-     * Reset synchronously during construction, before the browser gets a chance
-     * to paint the scene's construction-time geometry. This prevents the
-     * one-frame "final stage flash" that otherwise appears on reload when the
-     * canvas is already inside the viewport.
+     * Important: reset before the browser can paint construction-time geometry.
+     * This is the same anti-flash rule used by the corrected 2D controller.
      */
     this.resetScene();
 
     const shell = scene.canvas.parentElement;
-
     if (!shell) {
-      throw new Error("ProofStageController2D requires a canvas parent element.");
+      throw new Error(
+        "ProofStageController3D requires a canvas parent element.",
+      );
     }
 
     this.nextButton = document.createElement("button");
@@ -134,7 +151,10 @@ export class ProofStageController2D {
     this.infoButton = document.createElement("button");
     this.infoButton.type = "button";
     this.infoButton.textContent = "i";
-    this.infoButton.setAttribute("aria-label", "Show current proof-stage details");
+    this.infoButton.setAttribute(
+      "aria-label",
+      "Show current proof-stage details",
+    );
 
     Object.assign(this.infoButton.style, {
       position: "absolute",
@@ -226,9 +246,7 @@ export class ProofStageController2D {
                 void this.start();
               }
             },
-            {
-              threshold: [0, this.visibilityRatio, 1],
-            },
+            { threshold: [0, this.visibilityRatio, 1] },
           );
 
     if (this.visibilityObserver) {
@@ -257,6 +275,7 @@ export class ProofStageController2D {
     if (this.currentStageIndex >= this.stages.length - 1) {
       this.cancelAnimations();
       this.resetScene();
+      this.syncCameraController();
       this.currentStageIndex = 0;
       this.updateOverlay();
       await this.runCurrentStage();
@@ -271,7 +290,7 @@ export class ProofStageController2D {
   animate(
     durationSeconds: number,
     update: (progress: number) => void,
-    easing: StageEasing2D = easeOutCubic,
+    easing: StageEasing3D = easeOutCubic,
   ): Promise<void> {
     if (this.destroyed) return Promise.resolve();
 
@@ -307,13 +326,13 @@ export class ProofStageController2D {
   }
 
   drawSegment(
-    segment: Segment2D,
-    start: Vec2Tuple,
-    end: Vec2Tuple,
+    segment: Segment3D,
+    start: Vec3Tuple,
+    end: Vec3Tuple,
     {
       durationSeconds = 0.55,
       easing = easeOutCubic,
-    }: SegmentDrawAnimation2DOptions = {},
+    }: SegmentDrawAnimation3DOptions = {},
   ): Promise<void> {
     segment.show();
     segment.setEndpoints(start, start);
@@ -321,22 +340,19 @@ export class ProofStageController2D {
     return this.animate(
       durationSeconds,
       (progress) => {
-        segment.setEndpoints(start, [
-          lerp(start[0], end[0], progress),
-          lerp(start[1], end[1], progress),
-        ]);
+        segment.setEndpoints(start, lerpVec3(start, end, progress));
       },
       easing,
     );
   }
 
   revealAngleSector(
-    sector: AngleSector2D,
+    sector: AngleSector3D,
     finalRadius: number,
     {
       durationSeconds = 0.42,
       easing = easeOutCubic,
-    }: RevealAnimation2DOptions = {},
+    }: RevealAnimation3DOptions = {},
   ): Promise<void> {
     sector.show();
     sector.setRadius(0);
@@ -348,44 +364,61 @@ export class ProofStageController2D {
     );
   }
 
-
-  animateViewTo(
-    target: SceneView2D,
-    durationSeconds = 0.65,
+  revealPolygon(
+    polygon: Polygon3D,
+    finalOpacity: number,
+    {
+      durationSeconds = 0.42,
+      easing = easeOutCubic,
+    }: RevealAnimation3DOptions = {},
   ): Promise<void> {
-    const start = currentSceneView2D(this.scene);
+    polygon.show();
+    polygon.setFillOpacity(0);
 
-    return this.animate(durationSeconds, (progress) => {
-      this.scene.setView({
-        viewHeight: lerp(start.viewHeight, target.viewHeight, progress),
-        center: [
-          lerp(start.center[0], target.center[0], progress),
-          lerp(start.center[1], target.center[1], progress),
-        ],
-        unitSizePixels: null,
+    return this.animate(
+      durationSeconds,
+      (progress) => polygon.setFillOpacity(finalOpacity * progress),
+      easing,
+    );
+  }
+
+  async animateCameraTo(
+    target: CameraTarget3D,
+    durationSeconds = 0.7,
+  ): Promise<void> {
+    const start = this.scene.getCameraState();
+    const finalFov = target.fovDegrees ?? start.fovDegrees;
+
+    await this.animate(durationSeconds, (progress) => {
+      this.scene.setCamera({
+        position: lerpVec3(start.position, target.position, progress),
+        target: lerpVec3(start.target, target.target, progress),
+        fovDegrees: lerp(start.fovDegrees, finalFov, progress),
       });
     });
+
+    this.syncCameraController();
   }
 
   ensurePointsVisible(
-    points: readonly Vec2Tuple[],
-    options: FitPointsView2DOptions & {
-      paddingPixels?: number;
+    points: readonly Vec3Tuple[],
+    options: FitPointsCamera3DOptions & {
+      paddingNdc?: number;
       durationSeconds?: number;
     } = {},
   ): Promise<void> {
     if (
-      sceneContainsPoints2D(
+      sceneContainsPoints3D(
         this.scene,
         points,
-        options.paddingPixels ?? 34,
+        options.paddingNdc ?? 0.08,
       )
     ) {
       return Promise.resolve();
     }
 
-    const target = fitPointsView2D(this.scene, points, options);
-    return this.animateViewTo(target, options.durationSeconds ?? 0.7);
+    const target = fitPointsCamera3D(this.scene, points, options);
+    return this.animateCameraTo(target, options.durationSeconds ?? 0.7);
   }
 
   cancelAnimations(): void {

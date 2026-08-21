@@ -29,8 +29,19 @@ export interface CoordinatePlane2DOptions {
   xRange?: Domain;
   /** Fixed-range compatibility mode for older scenes. */
   yRange?: Domain;
-  /** Keeps positive arrow tips and axis names this many CSS pixels from edges. */
+  /**
+   * Screen-space safety margin for numeric tick labels near the viewport edge.
+   *
+   * IMPORTANT: this does NOT inset or shorten the axes. Axis arrow tips always
+   * terminate at the literal visible camera bounds.
+   */
   edgePaddingPixels?: number;
+  /** Screen-space arrow length. Responsive scene mode keeps this pixel-constant. */
+  arrowLengthPixels?: number;
+  /** Screen-space arrow half-width. Responsive scene mode keeps this pixel-constant. */
+  arrowHalfWidthPixels?: number;
+  /** Pixel gap between an arrowhead and its x/y axis-name label. */
+  axisNameGapPixels?: number;
   gridStep?: number;
   integerStep?: number;
   gridColor?: ColorRepresentation;
@@ -53,13 +64,28 @@ function clamp(value: number, minimum: number, maximum: number): number {
 
 function makeTriangleGeometry(): BufferGeometry {
   const geometry = new BufferGeometry();
+
+  /*
+   * Unit arrowhead pointing in +x:
+   *
+   *          (-1, 1)
+   *             |\
+   *             | \
+   *             |  > (0, 0)  <- tip
+   *             | /
+   *             |/
+   *          (-1,-1)
+   *
+   * World-space scale is assigned dynamically so its apparent size remains
+   * constant in CSS pixels regardless of the mathematical unit scale.
+   */
   geometry.setAttribute(
     "position",
     new Float32BufferAttribute(
       [
         0, 0, 0,
-        -0.22, -0.11, 0,
-        -0.22, 0.11, 0,
+        -1, -1, 0,
+        -1, 1, 0,
       ],
       3,
     ),
@@ -83,6 +109,9 @@ function boundsFromRanges(xRange: Domain, yRange: Domain): ViewBounds2D {
 export class CoordinatePlane2D extends MathObject2D {
   private readonly scene: MathScene2D | null;
   private readonly edgePaddingPixels: number;
+  private readonly arrowLengthPixels: number;
+  private readonly arrowHalfWidthPixels: number;
+  private readonly axisNameGapPixels: number;
   private readonly gridStep: number;
   private readonly integerStep: number;
   private readonly tickLength: number;
@@ -125,7 +154,10 @@ export class CoordinatePlane2D extends MathObject2D {
     scene,
     xRange,
     yRange,
-    edgePaddingPixels = 18,
+    edgePaddingPixels = 0,
+    arrowLengthPixels = 12,
+    arrowHalfWidthPixels = 6,
+    axisNameGapPixels = 4,
     gridStep = 1,
     integerStep = 1,
     gridColor = 0x6f6882,
@@ -172,6 +204,9 @@ export class CoordinatePlane2D extends MathObject2D {
     this.name = name;
     this.scene = scene ?? null;
     this.edgePaddingPixels = Math.max(0, edgePaddingPixels);
+    this.arrowLengthPixels = Math.max(1, arrowLengthPixels);
+    this.arrowHalfWidthPixels = Math.max(0.5, arrowHalfWidthPixels);
+    this.axisNameGapPixels = Math.max(0, axisNameGapPixels);
     this.gridStep = gridStep;
     this.integerStep = integerStep;
     this.tickLength = Math.max(0, tickLength);
@@ -185,9 +220,13 @@ export class CoordinatePlane2D extends MathObject2D {
       ? boundsFromRanges(xRange, yRange)
       : scene!.getViewBounds();
     this.viewBounds = fixedBounds;
-    this.axisBounds = scene
-      ? scene.getViewBounds(this.edgePaddingPixels)
-      : fixedBounds;
+
+    /*
+     * Axis geometry always occupies the true visible mathematical rectangle.
+     * Never inset this rectangle: the positive arrow tips are definitive axis
+     * endpoints and must sit exactly on the viewport edges.
+     */
+    this.axisBounds = fixedBounds;
 
     this.gridGeometry = new BufferGeometry();
     this.gridGeometry.setAttribute(
@@ -273,9 +312,12 @@ export class CoordinatePlane2D extends MathObject2D {
     if (this.scene) {
       this.stopViewChange = this.scene.onViewChange(() => {
         this.viewBounds = this.scene!.getViewBounds();
-        this.axisBounds = this.scene!.getViewBounds(
-          this.edgePaddingPixels,
-        );
+
+        /*
+         * Keep the arrow tips locked to the literal camera bounds even when a
+         * scene supplies edgePaddingPixels for label safety.
+         */
+        this.axisBounds = this.viewBounds;
         this.rebuildVisiblePlane();
         this.changed();
       }, false);
@@ -330,10 +372,70 @@ export class CoordinatePlane2D extends MathObject2D {
     this.axisLabels.length = 0;
   }
 
+  private screenMetrics(): {
+    worldPerPixelX: number;
+    worldPerPixelY: number;
+    arrowLengthX: number;
+    arrowLengthY: number;
+    arrowHalfWidthX: number;
+    arrowHalfWidthY: number;
+    axisNameGapX: number;
+    axisNameGapY: number;
+  } {
+    /*
+     * Responsive mode has access to the canvas, so every decorative dimension
+     * can be expressed in CSS pixels and converted to mathematical world units.
+     *
+     * Fixed-range compatibility mode has no canvas reference; preserve roughly
+     * the historical world-space dimensions there.
+     */
+    if (!this.scene) {
+      return {
+        worldPerPixelX: 1,
+        worldPerPixelY: 1,
+        arrowLengthX: 0.22,
+        arrowLengthY: 0.22,
+        arrowHalfWidthX: 0.11,
+        arrowHalfWidthY: 0.11,
+        axisNameGapX: 0.08,
+        axisNameGapY: 0.08,
+      };
+    }
+
+    const rectangle = this.scene.canvas.getBoundingClientRect();
+    const widthPixels = Math.max(1, rectangle.width);
+    const heightPixels = Math.max(1, rectangle.height);
+
+    const worldPerPixelX = this.viewBounds.width / widthPixels;
+    const worldPerPixelY = this.viewBounds.height / heightPixels;
+
+    return {
+      worldPerPixelX,
+      worldPerPixelY,
+      arrowLengthX: this.arrowLengthPixels * worldPerPixelX,
+      arrowLengthY: this.arrowLengthPixels * worldPerPixelY,
+      arrowHalfWidthX: this.arrowHalfWidthPixels * worldPerPixelX,
+      arrowHalfWidthY: this.arrowHalfWidthPixels * worldPerPixelY,
+      axisNameGapX: this.axisNameGapPixels * worldPerPixelX,
+      axisNameGapY: this.axisNameGapPixels * worldPerPixelY,
+    };
+  }
+
   private rebuildVisiblePlane(): void {
     this.clearLabels();
 
     const { left, right, bottom, top } = this.viewBounds;
+
+    /*
+     * Geometry reaches the exact viewport edges. CSS text, however, has a
+     * screen-space footprint and can visually overflow the canvas. Use the
+     * configured edge padding only to decide which numeric labels are safe to
+     * instantiate.
+     */
+    const labelBounds = this.scene
+      ? this.scene.getViewBounds(this.edgePaddingPixels)
+      : this.viewBounds;
+
     const gridPositions: number[] = [];
     const firstGridX = Math.ceil(left / this.gridStep) * this.gridStep;
     const firstGridY = Math.ceil(bottom / this.gridStep) * this.gridStep;
@@ -373,18 +475,20 @@ export class CoordinatePlane2D extends MathObject2D {
           x, this.tickLength / 2, 0.01,
         );
 
-        this.integerLabels.push(
-          new TextLabel2D({
-            name: `${this.name}:x-label-${x}`,
-            text: String(Number(x.toFixed(8))),
-            position: [x, -0.2],
-            anchor: [0.5, 0],
-            color: this.labelColor,
-            fontSizePx: this.labelFontSizePx,
-            fontWeight: 540,
-            opacity: this.integerReveal,
-          }),
-        );
+        if (x >= labelBounds.left && x <= labelBounds.right) {
+          this.integerLabels.push(
+            new TextLabel2D({
+              name: `${this.name}:x-label-${x}`,
+              text: String(Number(x.toFixed(8))),
+              position: [x, -0.2],
+              anchor: [0.5, 0],
+              color: this.labelColor,
+              fontSizePx: this.labelFontSizePx,
+              fontWeight: 540,
+              opacity: this.integerReveal,
+            }),
+          );
+        }
       }
     }
 
@@ -401,18 +505,20 @@ export class CoordinatePlane2D extends MathObject2D {
           this.tickLength / 2, y, 0.01,
         );
 
-        this.integerLabels.push(
-          new TextLabel2D({
-            name: `${this.name}:y-label-${y}`,
-            text: String(Number(y.toFixed(8))),
-            position: [-0.16, y],
-            anchor: [1, 0.5],
-            color: this.labelColor,
-            fontSizePx: this.labelFontSizePx,
-            fontWeight: 540,
-            opacity: this.integerReveal,
-          }),
-        );
+        if (y >= labelBounds.bottom && y <= labelBounds.top) {
+          this.integerLabels.push(
+            new TextLabel2D({
+              name: `${this.name}:y-label-${y}`,
+              text: String(Number(y.toFixed(8))),
+              position: [-0.16, y],
+              anchor: [1, 0.5],
+              color: this.labelColor,
+              fontSizePx: this.labelFontSizePx,
+              fontWeight: 540,
+              opacity: this.integerReveal,
+            }),
+          );
+        }
       }
     }
 
@@ -432,15 +538,34 @@ export class CoordinatePlane2D extends MathObject2D {
     }
 
     if (this.showAxisNames) {
+      const metrics = this.screenMetrics();
+      const axisNameFontSizePx = this.labelFontSizePx + 2;
+
       if (xAxisVisible && this.axisBounds.right > 0) {
+        /*
+         * "x" sits slightly left of the arrowhead center and clearly above it.
+         * Every offset is expressed in CSS pixels, so its visual placement is
+         * invariant under unit-size / camera-scale changes.
+         */
+        const xNameLeftFromTipPixels =
+          this.arrowLengthPixels * 0.72;
+        const xNameAboveAxisPixels =
+          this.arrowHalfWidthPixels +
+          this.axisNameGapPixels +
+          axisNameFontSizePx * 0.55;
+
         this.axisLabels.push(
           new TextLabel2D({
             name: `${this.name}:x-name`,
             text: "x",
-            position: [this.axisBounds.right - 0.28, -0.09],
-            anchor: [1, 0.5],
+            position: [
+              this.axisBounds.right -
+                xNameLeftFromTipPixels * metrics.worldPerPixelX,
+              xNameAboveAxisPixels * metrics.worldPerPixelY,
+            ],
+            anchor: [0.5, 0.5],
             color: this.labelColor,
-            fontSizePx: this.labelFontSizePx + 2,
+            fontSizePx: axisNameFontSizePx,
             fontWeight: 700,
             opacity: this.axisReveal,
           }),
@@ -448,14 +573,30 @@ export class CoordinatePlane2D extends MathObject2D {
       }
 
       if (yAxisVisible && this.axisBounds.top > 0) {
+        /*
+         * "y" sits a little farther to the right and a little higher than the
+         * previous placement, while remaining inside the canvas.
+         */
+        const yNameRightOfAxisPixels =
+          this.arrowHalfWidthPixels +
+          this.axisNameGapPixels +
+          axisNameFontSizePx * 0.62;
+
+        const yNameDownFromTipPixels =
+          this.arrowLengthPixels * 0.27;
+
         this.axisLabels.push(
           new TextLabel2D({
             name: `${this.name}:y-name`,
             text: "y",
-            position: [0.08, this.axisBounds.top - 0.27],
-            anchor: [0, 0],
+            position: [
+              yNameRightOfAxisPixels * metrics.worldPerPixelX,
+              this.axisBounds.top -
+                yNameDownFromTipPixels * metrics.worldPerPixelY,
+            ],
+            anchor: [0.5, 0.5],
             color: this.labelColor,
-            fontSizePx: this.labelFontSizePx + 2,
+            fontSizePx: axisNameFontSizePx,
             fontWeight: 700,
             opacity: this.axisReveal,
           }),
@@ -476,33 +617,94 @@ export class CoordinatePlane2D extends MathObject2D {
 
   private updateAxisGeometry(): void {
     const { left, right, bottom, top } = this.axisBounds;
+    const metrics = this.screenMetrics();
+
+    /*
+     * Reveal still grows symmetrically outward from the mathematical origin.
+     * At full reveal, the positive arrow tips land exactly at axisBounds.right
+     * and axisBounds.top. axisBounds is always the true visible camera rectangle,
+     * so those are the literal canvas edges regardless of edgePaddingPixels.
+     */
     const xMinimum = left * this.axisReveal;
-    const xMaximum = right * this.axisReveal;
+    const xTip = right * this.axisReveal;
     const yMinimum = bottom * this.axisReveal;
-    const yMaximum = top * this.axisReveal;
-    const xAxisVisible = this.viewBounds.bottom <= 0 && this.viewBounds.top >= 0;
-    const yAxisVisible = this.viewBounds.left <= 0 && this.viewBounds.right >= 0;
+    const yTip = top * this.axisReveal;
+
+    const xAxisVisible =
+      this.viewBounds.bottom <= 0 && this.viewBounds.top >= 0;
+    const yAxisVisible =
+      this.viewBounds.left <= 0 && this.viewBounds.right >= 0;
+
+    /*
+     * The Line2 body ends at the BASE of each arrowhead instead of continuing
+     * underneath it. The triangle therefore becomes the actual terminal piece
+     * of the axis rather than a decoration pasted on top of an overlong line.
+     */
+    const xLineMaximum =
+      xTip > 0
+        ? Math.max(0, xTip - metrics.arrowLengthX)
+        : xTip;
+
+    const yLineMaximum =
+      yTip > 0
+        ? Math.max(0, yTip - metrics.arrowLengthY)
+        : yTip;
 
     this.xAxisGeometry.setPositions([
       xMinimum, 0, 0,
-      xMaximum, 0, 0,
+      xLineMaximum, 0, 0,
     ]);
+
     this.yAxisGeometry.setPositions([
       0, yMinimum, 0,
-      0, yMaximum, 0,
+      0, yLineMaximum, 0,
     ]);
 
-    this.axisMaterial.opacity = this.axisOpacity * this.axisReveal;
-    this.xAxis.visible = xAxisVisible && this.axisReveal > 0;
-    this.yAxis.visible = yAxisVisible && this.axisReveal > 0;
+    this.axisMaterial.opacity =
+      this.axisOpacity * this.axisReveal;
 
-    this.xArrow.position.set(xMaximum, 0, 0.005);
-    this.yArrow.position.set(0, yMaximum, 0.005);
-    this.arrowMaterial.opacity = this.axisOpacity * this.axisReveal;
+    this.xAxis.visible =
+      xAxisVisible && this.axisReveal > 0;
+
+    this.yAxis.visible =
+      yAxisVisible && this.axisReveal > 0;
+
+    /*
+     * Arrowhead dimensions are screen-space constants in responsive mode.
+     *
+     * x arrow:
+     *   local x -> world x (length)
+     *   local y -> world y (half-width)
+     *
+     * y arrow is the same unit geometry rotated by 90 degrees.
+     */
+    this.xArrow.scale.set(
+      metrics.arrowLengthX,
+      metrics.arrowHalfWidthY,
+      1,
+    );
+
+    this.yArrow.scale.set(
+      metrics.arrowLengthY,
+      metrics.arrowHalfWidthX,
+      1,
+    );
+
+    this.xArrow.position.set(xTip, 0, 0.005);
+    this.yArrow.position.set(0, yTip, 0.005);
+
+    this.arrowMaterial.opacity =
+      this.axisOpacity * this.axisReveal;
+
     this.xArrow.visible =
-      xAxisVisible && xMaximum > 0 && this.axisReveal > 0.02;
+      xAxisVisible &&
+      xTip > 0 &&
+      this.axisReveal > 0.02;
+
     this.yArrow.visible =
-      yAxisVisible && yMaximum > 0 && this.axisReveal > 0.02;
+      yAxisVisible &&
+      yTip > 0 &&
+      this.axisReveal > 0.02;
 
     for (const label of this.axisLabels) {
       label.setOpacity(this.axisReveal);
