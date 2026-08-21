@@ -12,26 +12,73 @@ import {
 
 const TAU = Math.PI * 2;
 const UNIT_RADIUS = 1;
+const UNIT_SIZE_PIXELS = 120;
 const ORIGIN: Vec2Tuple = [0, 0];
+
+/* -------------------------------------------------------------------------- */
+/* Measurement display                                                        */
+/* -------------------------------------------------------------------------- */
+
+type MeasurementDisplayMode = "raw" | "platonic";
+
+const DEFAULT_MEASUREMENT_DISPLAY_MODE: MeasurementDisplayMode = "platonic";
+
+const MEASUREMENT_DISPLAY = {
+  raw: {
+    angleDecimals: 1,
+  },
+
+  platonic: {
+    /**
+     * Display angles as multiples of this many degrees.
+     *
+     * 1 -> whole degrees
+     * 5 -> multiples of 5°
+     * 10 -> multiples of 10°
+     */
+    angleStepDegrees: 1,
+  },
+} as const;
+
+let measurementDisplayMode: MeasurementDisplayMode =
+  DEFAULT_MEASUREMENT_DISPLAY_MODE;
+
+/* -------------------------------------------------------------------------- */
+/* Scene                                                                      */
+/* -------------------------------------------------------------------------- */
 
 const canvas = document.querySelector<HTMLCanvasElement>(
   "#about-trig-scene",
 );
 
 if (!canvas) {
-  throw new Error("The trigonometric demonstration canvas could not be found.");
+  throw new Error(
+    "The trigonometric demonstration canvas could not be found.",
+  );
 }
 
+/*
+ * Keep the trigonometric circle mathematically unit-sized (radius = 1), but
+ * make one mathematical unit occupy more screen space.
+ *
+ * Increase/decrease UNIT_SIZE_PIXELS to zoom the mathematical scale without
+ * changing any coordinates or the meaning of the unit circle.
+ */
 const scene = createMathScene2D(canvas, {
-  viewHeight: 5.2,
-  center: [0.25, 0],
+  unitSizePixels: UNIT_SIZE_PIXELS,
+  center: [0, 0],
   background: null,
 });
 
 const coordinatePlane = createCoordinatePlane2D({
   name: "trigonometric-coordinate-plane",
-  xRange: [-4.1, 4.1],
-  yRange: [-2.35, 2.35],
+  /*
+   * Responsive mode: derive the visible grid/axes from the scene camera.
+   * This is important when unitSizePixels is used; fixed xRange/yRange would
+   * leave axis arrowheads outside a zoomed-in viewport.
+   */
+  scene,
+  edgePaddingPixels: 20,
   gridStep: 1,
   integerStep: 1,
   gridColor: 0x777087,
@@ -66,6 +113,16 @@ const unitCircle = createParametricShape2D({
   },
 });
 
+/* -------------------------------------------------------------------------- */
+/* Angle state                                                                */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * This always stores the real geometric angle.
+ *
+ * Platonic mode affects only what the user sees in labels;
+ * the vector itself remains perfectly smooth while dragging.
+ */
 let currentAngle = Math.PI / 6;
 
 const angleSector = createAngleSector2D({
@@ -85,7 +142,10 @@ const angleSector = createAngleSector2D({
 const unitVector = createVector2D({
   name: "trigonometric-unit-vector",
   start: ORIGIN,
-  end: [Math.cos(currentAngle), Math.sin(currentAngle)],
+  end: [
+    Math.cos(currentAngle),
+    Math.sin(currentAngle),
+  ],
   style: {
     color: HUES.cyan.light,
     opacity: 1,
@@ -132,21 +192,82 @@ scene.add(
   coordinateLabel,
 );
 
+/* -------------------------------------------------------------------------- */
+/* Angle formatting                                                           */
+/* -------------------------------------------------------------------------- */
+
 function normalizeAngle(angle: number): number {
   const normalized = ((angle % TAU) + TAU) % TAU;
-  return Math.abs(normalized - TAU) < 1e-10 ? 0 : normalized;
+
+  return Math.abs(normalized - TAU) < 1e-10
+    ? 0
+    : normalized;
 }
 
-function formatDegrees(angleRadians: number): string {
-  const degrees = normalizeAngle(angleRadians) * 180 / Math.PI;
-  const rounded = Math.round(degrees * 10) / 10;
+function radiansToDegrees(angleRadians: number): number {
+  return normalizeAngle(angleRadians) * 180 / Math.PI;
+}
+
+function quantizeDegrees(
+  degrees: number,
+  stepDegrees: number,
+): number {
+  if (!(stepDegrees > 0) || !Number.isFinite(stepDegrees)) {
+    return degrees;
+  }
+
+  const quantized =
+    Math.round(degrees / stepDegrees) * stepDegrees;
+
+  /**
+   * 359.8° should reasonably become 360° in Platonic mode.
+   *
+   * Unlike the geometric angle, this is only display text, so showing
+   * 360° here is preferable to wrapping it immediately to 0°.
+   */
+  return Math.max(0, Math.min(360, quantized));
+}
+
+function getDisplayedDegrees(angleRadians: number): number {
+  const rawDegrees = radiansToDegrees(angleRadians);
+
+  if (measurementDisplayMode === "raw") {
+    return rawDegrees;
+  }
+
+  return quantizeDegrees(
+    rawDegrees,
+    MEASUREMENT_DISPLAY.platonic.angleStepDegrees,
+  );
+}
+
+function formatDisplayedDegrees(
+  angleRadians: number,
+): string {
+  const degrees = getDisplayedDegrees(angleRadians);
+
+  if (measurementDisplayMode === "platonic") {
+    return String(Math.round(degrees));
+  }
+
+  const decimals = MEASUREMENT_DISPLAY.raw.angleDecimals;
+  const factor = 10 ** decimals;
+
+  const rounded =
+    Math.round(degrees * factor) / factor;
 
   return Number.isInteger(rounded)
     ? String(rounded)
-    : rounded.toFixed(1);
+    : rounded.toFixed(decimals);
 }
 
-function updateCoordinateLabelPosition(tip: Vec2Tuple): void {
+/* -------------------------------------------------------------------------- */
+/* Labels                                                                     */
+/* -------------------------------------------------------------------------- */
+
+function updateCoordinateLabelPosition(
+  tip: Vec2Tuple,
+): void {
   const horizontalSign = tip[0] >= 0 ? 1 : -1;
   const verticalSign = tip[1] >= 0 ? 1 : -1;
   const offset = 0.14;
@@ -162,45 +283,79 @@ function updateCoordinateLabelPosition(tip: Vec2Tuple): void {
     ]);
 }
 
+/* -------------------------------------------------------------------------- */
+/* Scene update                                                               */
+/* -------------------------------------------------------------------------- */
+
 function displayAngle(angleRadians: number): void {
   currentAngle = normalizeAngle(angleRadians);
 
+  /*
+   * Geometry always follows the real angle.
+   */
   const tip: Vec2Tuple = [
     Math.cos(currentAngle),
     Math.sin(currentAngle),
   ];
-  const degreesText = formatDegrees(currentAngle);
+
+  /*
+   * Labels may instead show the idealized Platonic angle.
+   */
+  const degreesText =
+    formatDisplayedDegrees(currentAngle);
 
   unitVector.setEnd(tip);
   angleSector.setAngles(0, currentAngle);
 
-  const angleLabelPosition = angleSector.getLabelPosition(0.66);
+  const angleLabelPosition =
+    angleSector.getLabelPosition(0.66);
+
   angleLabel
     .setText(`${degreesText}°`)
-    .moveTo(angleLabelPosition[0], angleLabelPosition[1]);
+    .moveTo(
+      angleLabelPosition[0],
+      angleLabelPosition[1],
+    );
 
   coordinateLabel.setText(
     `(cos ${degreesText}°, sin ${degreesText}°)`,
   );
+
   updateCoordinateLabelPosition(tip);
 }
 
 displayAngle(currentAngle);
 
+/* -------------------------------------------------------------------------- */
+/* Dragging                                                                   */
+/* -------------------------------------------------------------------------- */
+
 const dragging = new PointDragController2D(scene);
 
 dragging.registerPoint({
   getPosition: () => unitVector.getEnd(),
-  onDrag: (pointerPosition) => {
-    const dx = pointerPosition[0] - ORIGIN[0];
-    const dy = pointerPosition[1] - ORIGIN[1];
 
-    if (Math.hypot(dx, dy) < 1e-8) return;
+  onDrag: (pointerPosition) => {
+    const dx =
+      pointerPosition[0] - ORIGIN[0];
+
+    const dy =
+      pointerPosition[1] - ORIGIN[1];
+
+    if (Math.hypot(dx, dy) < 1e-8) {
+      return;
+    }
+
     displayAngle(Math.atan2(dy, dx));
   },
+
   hitRadiusPixels: 26,
   hoverCursor: "grab",
 });
+
+/* -------------------------------------------------------------------------- */
+/* Intro animation                                                            */
+/* -------------------------------------------------------------------------- */
 
 function clamp01(value: number): number {
   return Math.min(1, Math.max(0, value));
@@ -216,18 +371,30 @@ let stopIntro = (): void => {};
 
 stopIntro = scene.onFrame(({ time }) => {
   introStartTime ??= time;
-  const elapsed = (time - introStartTime) / 1000;
 
-  const axisProgress = easeOutCubic(elapsed / 1.15);
-  const integerProgress = easeOutCubic((elapsed - 0.95) / 0.9);
+  const elapsed =
+    (time - introStartTime) / 1000;
+
+  const axisProgress =
+    easeOutCubic(elapsed / 1.15);
+
+  const integerProgress =
+    easeOutCubic((elapsed - 0.95) / 0.9);
 
   coordinatePlane.setAxisReveal(axisProgress);
   coordinatePlane.setIntegerReveal(integerProgress);
 
-  if (axisProgress >= 1 && integerProgress >= 1) {
+  if (
+    axisProgress >= 1 &&
+    integerProgress >= 1
+  ) {
     stopIntro();
   }
 });
+
+/* -------------------------------------------------------------------------- */
+/* Public API                                                                 */
+/* -------------------------------------------------------------------------- */
 
 Object.assign(window, {
   mathTrigDemo: {
@@ -238,11 +405,31 @@ Object.assign(window, {
     angleSector,
     angleLabel,
     coordinateLabel,
+
     setAngleDegrees(degrees: number) {
       displayAngle(degrees * Math.PI / 180);
     },
+
+    measurements: {
+      getMode(): MeasurementDisplayMode {
+        return measurementDisplayMode;
+      },
+
+      setMode(mode: MeasurementDisplayMode) {
+        measurementDisplayMode = mode;
+
+        /*
+         * Geometry does not change. Only regenerate the annotations.
+         */
+        displayAngle(currentAngle);
+      },
+    },
   },
 });
+
+/* -------------------------------------------------------------------------- */
+/* Cleanup                                                                    */
+/* -------------------------------------------------------------------------- */
 
 const destroy = (): void => {
   stopIntro();
@@ -250,5 +437,14 @@ const destroy = (): void => {
   scene.destroy();
 };
 
-window.addEventListener("pagehide", destroy, { once: true });
-document.addEventListener("astro:before-swap", destroy, { once: true });
+window.addEventListener(
+  "pagehide",
+  destroy,
+  { once: true },
+);
+
+document.addEventListener(
+  "astro:before-swap",
+  destroy,
+  { once: true },
+);

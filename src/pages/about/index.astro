@@ -26,17 +26,40 @@ import MathCanvas2D from "../../components/math-graphics/MathCanvas2D.astro";
     />
     
     <MathCanvas2D
-      id="parallelogram-proof-scene"
-      label="Step-by-step geometry proof with staged constructions"
+      id="circle-chords-proof-scene"
+      label="Step-by-step mock geometry proof of a problem involving perpendicular circle chords"
+      aspectRatio="16 / 9"
+    />
+
+    <MathCanvas2D
+      id="prism-proof-scene"
+      label="Proof diagram for a right prism with a square base."
+      aspectRatio="16 / 9"
+    />
+
+    <MathCanvas2D
+      id="sphere-proof-scene"
+      label="Staged spherical geometry scene"
+      aspectRatio="16 / 9"
+    />
+
+    <MathCanvas2D
+      id="parallel-secant-angles-scene"
       aspectRatio="16 / 9"
     />
 
 
-    <!--MathCanvas2D
-      id="about-trig-scene"
+    <MathCanvas2D
+      id="about-reference-angles-scene"
       label="Trig elements"
       aspectRatio="16 / 9"
-    /-->
+    />
+
+    <MathCanvas2D
+      id="about-trig-all-functions-scene"
+      label="Trig elements"
+      aspectRatio="16 / 9"
+    />
     
     <!--MathCanvas2D
       id="about-primitives-scene"
@@ -50,11 +73,11 @@ import MathCanvas2D from "../../components/math-graphics/MathCanvas2D.astro";
       aspectRatio="16 / 9"
     /-->
 
-    <!--MathCanvas2D
+    <MathCanvas2D
       id="about-vector-drag-scene"
       label="Draggable vectors"
       aspectRatio="16 / 9"
-    /-->
+    />
 
     <!--MathCanvas2D
       id="about-determinant-interactive-scene"
@@ -78,11 +101,15 @@ import MathCanvas2D from "../../components/math-graphics/MathCanvas2D.astro";
 
 <script>
   import "../../scripts/demos/riemannSums";
-  import "../../scripts/demos/parallelogramProofStages";
-  //import "../../scripts/demos/aboutTrigScene";
+  import "../../scripts/demos/circleChordsProofStages";
+  import "../../scripts/demos/prismProofStages";
+  import "../../scripts/demos/sphereProofStages";
+  import "../../scripts/demos/parallelSecantAngles";
+  import "../../scripts/demos/aboutReferenceAnglesScene";
+  import "../../scripts/demos/aboutTrigAllFunctionsScene";
   //import "../../scripts/demos/aboutPrimitivesScene";
   //import "../../scripts/demos/aboutCurveScene";
-  //import "../../scripts/demos/aboutVectorDragScene";
+  import "../../scripts/demos/aboutVectorDragScene";
   //import "../../scripts/demos/aboutDeterminantInteractiveScene";
   //import "../../scripts/demos/aboutDeterminantTransformationScene";
   import "../../scripts/demos/aboutFunctionGraphScene";

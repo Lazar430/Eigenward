@@ -39,9 +39,9 @@ const MEASUREMENT_DISPLAY = {
   platonic: {
     ratioMaxDenominator: 2,
     lengthDensity: 2,
-    minimumAngleDegrees: 1,
   },
 } as const;
+const MIN_LEG_LENGTH = 0.52;
 
 const VIEW_HEIGHT = 7.4;
 const VIEW_CENTER: Vec2Tuple = [0.2, 0.05];
@@ -51,29 +51,29 @@ const BIG_CENTER: Vec2Tuple = [-2.75, 0.2];
 const SMALL_CENTER: Vec2Tuple = [3.15, 0.35];
 
 /*
-  The two copies occupy separate invisible half-planes. Nothing is rendered at
-  the divider: it only constrains dragging so the triangles can never overlap.
+  This is deliberately not drawn. It is an interaction boundary only: the
+  canonical triangle remains in the left half-plane and its mirrored similar
+  copy remains in the right half-plane.
 */
 const SEPARATION_X = 0.2;
 const SEPARATION_HALF_GAP = 0.6;
 const LEFT_REGION_MAX_X = SEPARATION_X - SEPARATION_HALF_GAP;
 const RIGHT_REGION_MIN_X = SEPARATION_X + SEPARATION_HALF_GAP;
 
-/*
-  bigVertices are the canonical geometry. Because bigToSmall mirrors x, this
-  upper bound simultaneously keeps the large triangle left of the gap and its
-  generated small copy right of the gap.
-*/
 const CANONICAL_MAX_X = Math.min(
   LEFT_REGION_MAX_X,
   BIG_CENTER[0] +
     (SMALL_CENTER[0] - RIGHT_REGION_MIN_X) / SIMILARITY_RATIO,
 );
 
-const canvas = document.querySelector<HTMLCanvasElement>("#similar-triangles");
+const canvas = document.querySelector<HTMLCanvasElement>(
+  "#similar-right-triangles",
+);
 
 if (!canvas) {
-  throw new Error("The similar-triangles demonstration canvas could not be found.");
+  throw new Error(
+    "The similar-right-triangles demonstration canvas could not be found.",
+  );
 }
 
 const scene = createMathScene2D(canvas, {
@@ -104,10 +104,20 @@ type AngleStyle = {
   labelBorder: string;
 };
 
+/*
+  Vertex order is A, B, C, with the right angle at A.
+
+  Only B and C are direct user controls. A is always reconstructed as
+
+      A = (B_x, C_y),
+
+  so AB is vertical and AC is horizontal. Consequently AB ⟂ AC for every
+  permitted drag, while the two acute vertices can still move independently.
+*/
 const bigVertices: [MutablePoint2D, MutablePoint2D, MutablePoint2D] = [
-  [BIG_CENTER[0] - 1.9, BIG_CENTER[1] - 1.35],
-  [BIG_CENTER[0] + 1.8, BIG_CENTER[1] - 1.15],
-  [BIG_CENTER[0] + 0.15, BIG_CENTER[1] + 1.8],
+  [0, 0],
+  [BIG_CENTER[0] - 1.55, BIG_CENTER[1] - 1.4],
+  [BIG_CENTER[0] + 1.35, BIG_CENTER[1] + 1.25],
 ];
 
 const smallVertices: [MutablePoint2D, MutablePoint2D, MutablePoint2D] = [
@@ -275,77 +285,6 @@ function triangleInteriorAnglesDegrees(
   ];
 }
 
-function triangleAnglesFromSideLengths(
-  lengths: readonly [number, number, number],
-): [number, number, number] {
-  const [ab, bc, ca] = lengths;
-
-  const lawOfCosines = (
-    adjacent1: number,
-    adjacent2: number,
-    opposite: number,
-  ): number => {
-    const denominator = 2 * adjacent1 * adjacent2;
-    if (denominator <= EPSILON) return Number.NaN;
-
-    const cosine = clamp(
-      (adjacent1 ** 2 + adjacent2 ** 2 - opposite ** 2) / denominator,
-      -1,
-      1,
-    );
-
-    return Math.acos(cosine) * 180 / Math.PI;
-  };
-
-  return [
-    lawOfCosines(ab, ca, bc),
-    lawOfCosines(ab, bc, ca),
-    lawOfCosines(bc, ca, ab),
-  ];
-}
-
-function quantizeTriangleAngles(
-  degrees: readonly [number, number, number],
-): [number, number, number] {
-  if (degrees.some((value) => !Number.isFinite(value))) {
-    return [60, 60, 60];
-  }
-
-  const total = degrees[0] + degrees[1] + degrees[2];
-  const normalized = total <= EPSILON
-    ? [60, 60, 60]
-    : degrees.map((value) => value * 180 / total);
-
-  const integers = normalized.map((value) => Math.floor(value));
-  let remainder = 180 - integers.reduce((sum, value) => sum + value, 0);
-
-  const byFraction = [0, 1, 2].sort((left, right) => {
-    const leftFraction = normalized[left] - Math.floor(normalized[left]);
-    const rightFraction = normalized[right] - Math.floor(normalized[right]);
-    return rightFraction - leftFraction;
-  });
-
-  for (let index = 0; remainder > 0; index += 1) {
-    integers[byFraction[index % 3]] += 1;
-    remainder -= 1;
-  }
-
-  const minimum = MEASUREMENT_DISPLAY.platonic.minimumAngleDegrees;
-  for (let index = 0; index < 3; index += 1) {
-    while (integers[index] < minimum) {
-      const donor = [0, 1, 2]
-        .filter((candidate) => candidate !== index)
-        .sort((left, right) => integers[right] - integers[left])[0];
-
-      if (integers[donor] <= minimum) break;
-      integers[index] += 1;
-      integers[donor] -= 1;
-    }
-  }
-
-  return [integers[0], integers[1], integers[2]];
-}
-
 function distance(a: Vec2Tuple, b: Vec2Tuple): number {
   return Math.hypot(b[0] - a[0], b[1] - a[1]);
 }
@@ -367,7 +306,11 @@ function quantizeTriangleLengthMultipliers(
     Math.max(1, Math.round(length * density)),
   ) as [number, number, number];
 
-  /* Keep the idealized integer side labels themselves a valid triangle. */
+  /*
+    Keep the three displayed side labels triangle-like, but deliberately do not
+    force them onto a Pythagorean triple. Independent integer approximation is
+    much smoother while dragging and avoids discontinuous jumps between triples.
+  */
   const longestIndex = multipliers.indexOf(Math.max(...multipliers));
   const otherIndices = [0, 1, 2].filter((index) => index !== longestIndex);
   const otherSum =
@@ -418,12 +361,14 @@ function buildMeasurementPresentation(): MeasurementPresentation {
   ) as [number, number, number];
 
   /*
-    Derive angle labels from the idealized integer sides, then perform a
-    sum-preserving integer rounding. Thus the displayed lengths and angles form
-    one internally coherent ideal triangle rather than unrelated roundings.
+    The geometry itself is exactly right-angled. For display, keep A at 90° and
+    round one acute angle from the live geometry; define the other as its exact
+    complement. This keeps all labels integral and guarantees a 180° total
+    without tying the side labels to discrete Pythagorean triples.
   */
-  const idealAngles = triangleAnglesFromSideLengths(bigIntegerLengths);
-  const integerAngles = quantizeTriangleAngles(idealAngles);
+  const rawAngles = triangleInteriorAnglesDegrees(bigVertices);
+  const angleB = clamp(Math.round(rawAngles[1]), 1, 89);
+  const integerAngles: [number, number, number] = [90, angleB, 90 - angleB];
   const fractions = smallIntegerLengths.map(
     (smallLength, index) => `${smallLength}/${bigIntegerLengths[index]}`,
   );
@@ -468,11 +413,6 @@ function getViewportBounds(): ViewportBounds2D {
   };
 }
 
-/*
-  Convert viewport limits for both copies back into the canonical big-triangle
-  coordinate system. The returned rectangle is exactly the set of canonical
-  points whose large and transformed-small positions both remain on-canvas.
-*/
 function getCanonicalDragBounds(): ViewportBounds2D {
   const viewport = getViewportBounds();
   const smallMinX = Math.max(viewport.minX, RIGHT_REGION_MIN_X);
@@ -499,10 +439,6 @@ function getCanonicalDragBounds(): ViewportBounds2D {
   };
 }
 
-/*
-  The smaller triangle is a horizontally mirrored and uniformly scaled copy
-  of the larger one. The inverse transform lets either triangle drive the other.
-*/
 function bigToSmall(point: Vec2Tuple): Vec2Tuple {
   const localX = point[0] - BIG_CENTER[0];
   const localY = point[1] - BIG_CENTER[1];
@@ -523,26 +459,11 @@ function smallToBig(point: Vec2Tuple): Vec2Tuple {
   ];
 }
 
-function constrainCanonicalPoint(point: Vec2Tuple): Vec2Tuple {
-  const bounds = getCanonicalDragBounds();
-  return [
-    clamp(point[0], bounds.minX, bounds.maxX),
-    clamp(point[1], bounds.minY, bounds.maxY),
-  ];
-}
-
-function constrainAllCanonicalVerticesToViewport(): void {
-  for (let index = 0; index < bigVertices.length; index += 1) {
-    const constrained = constrainCanonicalPoint(bigVertices[index]);
-    bigVertices[index][0] = constrained[0];
-    bigVertices[index][1] = constrained[1];
-  }
-}
-
-function setCanonicalVertex(index: number, point: Vec2Tuple): void {
-  const constrained = constrainCanonicalPoint(point);
-  bigVertices[index][0] = constrained[0];
-  bigVertices[index][1] = constrained[1];
+function reconstructRightAngleVertex(): void {
+  const b = bigVertices[1];
+  const c = bigVertices[2];
+  bigVertices[0][0] = b[0];
+  bigVertices[0][1] = c[1];
 }
 
 function synchronizeSmallVertices(): void {
@@ -551,6 +472,69 @@ function synchronizeSmallVertices(): void {
     smallVertices[index][0] = mapped[0];
     smallVertices[index][1] = mapped[1];
   }
+}
+
+/*
+  Preserve the initial orientation B_x < C_x and B_y < C_y. Besides avoiding
+  degenerate triangles, these inequalities make the derived right-angle corner
+  stable and predictable while dragging.
+*/
+function constrainAcuteVertex(
+  index: 1 | 2,
+  candidate: Vec2Tuple,
+): Vec2Tuple {
+  const b = bigVertices[1];
+  const c = bigVertices[2];
+  const bounds = getCanonicalDragBounds();
+
+  if (index === 1) {
+    return [
+      clamp(
+        candidate[0],
+        bounds.minX,
+        Math.min(bounds.maxX, c[0] - MIN_LEG_LENGTH),
+      ),
+      clamp(
+        candidate[1],
+        bounds.minY,
+        Math.min(bounds.maxY, c[1] - MIN_LEG_LENGTH),
+      ),
+    ];
+  }
+
+  return [
+    clamp(
+      candidate[0],
+      Math.max(bounds.minX, b[0] + MIN_LEG_LENGTH),
+      bounds.maxX,
+    ),
+    clamp(
+      candidate[1],
+      Math.max(bounds.minY, b[1] + MIN_LEG_LENGTH),
+      bounds.maxY,
+    ),
+  ];
+}
+
+function constrainRightTriangleToViewport(): void {
+  const bounds = getCanonicalDragBounds();
+  const b = bigVertices[1];
+  const c = bigVertices[2];
+
+  b[0] = clamp(b[0], bounds.minX, bounds.maxX - MIN_LEG_LENGTH);
+  c[0] = clamp(c[0], b[0] + MIN_LEG_LENGTH, bounds.maxX);
+
+  b[1] = clamp(b[1], bounds.minY, bounds.maxY - MIN_LEG_LENGTH);
+  c[1] = clamp(c[1], b[1] + MIN_LEG_LENGTH, bounds.maxY);
+
+  reconstructRightAngleVertex();
+}
+
+function setAcuteVertex(index: 1 | 2, point: Vec2Tuple): void {
+  const constrained = constrainAcuteVertex(index, point);
+  bigVertices[index][0] = constrained[0];
+  bigVertices[index][1] = constrained[1];
+  reconstructRightAngleVertex();
 }
 
 function createSegment(name: string, color: string, opacity = 1) {
@@ -609,7 +593,6 @@ function createDimensionBrace(name: string, style: BraceStyle) {
       label
         .setText("0")
         .moveTo(start[0], start[1] + style.offset + style.labelOffset);
-
       return;
     }
 
@@ -621,8 +604,6 @@ function createDimensionBrace(name: string, style: BraceStyle) {
 
     const midpointX = (start[0] + end[0]) / 2;
     const midpointY = (start[1] + end[1]) / 2;
-
-    // Keep the measurement brace on the exterior side of the triangle.
     const towardOppositeX = opposite[0] - midpointX;
     const towardOppositeY = opposite[1] - midpointY;
 
@@ -641,7 +622,6 @@ function createDimensionBrace(name: string, style: BraceStyle) {
     ];
 
     const kinkHalfWidth = Math.min(style.kinkHalfWidth, length * 0.16);
-
     const leftShoulder: Vec2Tuple = [
       midpointX - ux * kinkHalfWidth + nx * style.offset,
       midpointY - uy * kinkHalfWidth + ny * style.offset,
@@ -690,24 +670,29 @@ function createDimensionBrace(name: string, style: BraceStyle) {
   return { segments, label, update };
 }
 
-function createAngleDecoration(name: string, style: AngleStyle) {
+function createAngleDecoration(
+  name: string,
+  style: AngleStyle,
+  shape: "sector" | "right-angle" = "sector",
+) {
   const sector = createAngleSector2D({
     name: `${name}:sector`,
     center: [0, 0],
     startAngle: 0,
-    endAngle: Math.PI / 3,
+    endAngle: Math.PI / 2,
     direction: "counterclockwise",
     radius: 0.45,
     segments: 144,
+    shape,
     fill: style.fill,
-    fillOpacity: 0.22,
+    fillOpacity: shape === "right-angle" ? 0.16 : 0.22,
     outline: style.outline,
-    outlineOpacity: 0.82,
+    outlineOpacity: 0.86,
   });
 
   const label = createTextLabel2D({
     name: `${name}:label`,
-    text: "0°",
+    text: shape === "right-angle" ? "90°" : "0°",
     position: [0, 0],
     anchor: [0.5, 0.5],
     color: style.labelColor,
@@ -743,10 +728,8 @@ function createAngleDecoration(name: string, style: AngleStyle) {
     const startAngle = Math.atan2(firstDy, firstDx);
     const endAngle = Math.atan2(secondDy, secondDx);
     const counterclockwiseSweep = positiveModulo(endAngle - startAngle, TAU);
-
     const direction =
       counterclockwiseSweep <= Math.PI ? "counterclockwise" : "clockwise";
-
     const interiorAngle =
       direction === "counterclockwise"
         ? counterclockwiseSweep
@@ -766,30 +749,36 @@ function createAngleDecoration(name: string, style: AngleStyle) {
       .setDirection(direction)
       .setAngles(startAngle, endAngle);
 
-    const labelPosition = sector.getLabelPosition(1.55);
+    const labelPosition = sector.getLabelPosition(
+      shape === "right-angle" ? 1.38 : 1.55,
+    );
 
     label
-      .setText(measurementText ?? formatRawAngle(interiorAngle))
+      .setText(
+        measurementText ??
+          (shape === "right-angle" ? "90°" : formatRawAngle(interiorAngle)),
+      )
       .moveTo(labelPosition[0], labelPosition[1]);
   }
 
   return { sector, label, update };
 }
 
-const angleStyles: [AngleStyle, AngleStyle, AngleStyle] = [
+const rightAngleStyle: AngleStyle = {
+  fill: HUES.gold.base,
+  outline: HUES.gold.light,
+  labelColor: "rgba(255, 239, 198, 0.98)",
+  labelBackground: "rgba(45, 34, 14, 0.72)",
+  labelBorder: "1px solid rgba(255, 226, 138, 0.18)",
+};
+
+const acuteAngleStyles: [AngleStyle, AngleStyle] = [
   {
     fill: HUES.purple.base,
     outline: HUES.purple.light,
     labelColor: "rgba(232, 224, 255, 0.98)",
     labelBackground: "rgba(31, 22, 55, 0.72)",
     labelBorder: "1px solid rgba(198, 180, 255, 0.18)",
-  },
-  {
-    fill: HUES.gold.base,
-    outline: HUES.gold.light,
-    labelColor: "rgba(255, 239, 198, 0.98)",
-    labelBackground: "rgba(45, 34, 14, 0.72)",
-    labelBorder: "1px solid rgba(255, 226, 138, 0.18)",
   },
   {
     fill: HUES.magenta.base,
@@ -873,20 +862,21 @@ function createTriangleVisual(
   ];
 
   const markers = initialVertices.map((vertex, index) => {
+    const isRightAngleVertex = index === 0;
     const marker = createParametricShape2D({
       name: `${name}:vertex-${index}`,
       curve: unitCircle,
       domain: [0, TAU],
       segments: 72,
       style: {
-        outline: markerOutline,
+        outline: isRightAngleVertex ? HUES.gold.light : markerOutline,
         outlineWidth: 1.8,
         outlineOpacity: 1,
-        fill: markerFill,
-        fillOpacity: 0.98,
+        fill: isRightAngleVertex ? HUES.gold.base : markerFill,
+        fillOpacity: isRightAngleVertex ? 0.78 : 0.98,
       },
     })
-      .resizeTo(0.115)
+      .resizeTo(isRightAngleVertex ? 0.09 : 0.125)
       .moveTo(vertex[0], vertex[1]);
 
     marker.position.z = 0.08;
@@ -899,9 +889,11 @@ function createTriangleVisual(
     createDimensionBrace(`${name}:brace-ca`, braceStyle),
   ];
 
-  const angles = angleStyles.map((style, index) =>
-    createAngleDecoration(`${name}:angle-${index}`, style),
-  );
+  const angles = [
+    createAngleDecoration(`${name}:angle-a`, rightAngleStyle, "right-angle"),
+    createAngleDecoration(`${name}:angle-b`, acuteAngleStyles[0]),
+    createAngleDecoration(`${name}:angle-c`, acuteAngleStyles[1]),
+  ];
 
   return {
     edges,
@@ -912,10 +904,11 @@ function createTriangleVisual(
   };
 }
 
+reconstructRightAngleVertex();
 synchronizeSmallVertices();
 
 const bigTriangle = createTriangleVisual(
-  "similar-big",
+  "similar-right-big",
   bigVertices,
   HUES.cyan.light,
   HUES.cyan.soft,
@@ -925,7 +918,7 @@ const bigTriangle = createTriangleVisual(
 );
 
 const smallTriangle = createTriangleVisual(
-  "similar-small",
+  "similar-right-small",
   smallVertices,
   HUES.magenta.light,
   HUES.magenta.soft,
@@ -935,7 +928,7 @@ const smallTriangle = createTriangleVisual(
 );
 
 const ratioLabel = createTextLabel2D({
-  name: "similarity-ratio-label",
+  name: "similar-right-triangles-ratio-label",
   text: "",
   position: [6.1, -2.65],
   anchor: [1, 0.5],
@@ -988,6 +981,7 @@ function updateTriangleVisual(
 }
 
 function updateScene(): void {
+  reconstructRightAngleVertex();
   synchronizeSmallVertices();
 
   const measurements = buildMeasurementPresentation();
@@ -1016,45 +1010,42 @@ updateScene();
 
 const dragging = new PointDragController2D(scene);
 
-/* Dragging any large-triangle vertex directly changes the canonical triangle. */
-bigVertices.forEach((_, index) => {
+/*
+  A (index 0) is intentionally not registered. Only the two acute vertices are
+  direct controls; dragging them reconstructs the right-angle vertex.
+*/
+for (const index of [1, 2] as const) {
   dragging.registerPoint({
     getPosition: () => bigVertices[index],
     onDrag: (pointerPosition) => {
-      setCanonicalVertex(index, pointerPosition);
+      setAcuteVertex(index, pointerPosition);
       updateScene();
     },
-    hitRadiusPixels: 26,
+    hitRadiusPixels: 28,
     hoverCursor: "grab",
   });
-});
+}
 
-/*
-  Dragging the smaller triangle applies the inverse similarity transform first,
-  so the larger triangle changes immediately and the smaller one is regenerated
-  from the same canonical geometry.
-*/
-smallVertices.forEach((_, index) => {
+for (const index of [1, 2] as const) {
   dragging.registerPoint({
     getPosition: () => smallVertices[index],
     onDrag: (pointerPosition) => {
-      const mapped = smallToBig(pointerPosition);
-      setCanonicalVertex(index, mapped);
+      setAcuteVertex(index, smallToBig(pointerPosition));
       updateScene();
     },
-    hitRadiusPixels: 26,
+    hitRadiusPixels: 28,
     hoverCursor: "grab",
   });
-});
+}
 
 const resizeObserver = new ResizeObserver(() => {
-  constrainAllCanonicalVerticesToViewport();
+  constrainRightTriangleToViewport();
   updateScene();
 });
 resizeObserver.observe(canvas);
 
 Object.assign(window, {
-  similarTrianglesDemo: {
+  similarRightTrianglesDemo: {
     scene,
     similarityRatio: SIMILARITY_RATIO,
     bigVertices,
