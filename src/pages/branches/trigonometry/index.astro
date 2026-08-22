@@ -1,8 +1,9 @@
 ---
 import BaseLayout from "../../../layouts/BaseLayout.astro";
-import RealAnalysisSidebar from "../../../components/RealAnalysisSidebar.astro";
 import Math from "../../../components/Math.astro";
 import Equation from "../../../components/Equation.astro";
+import HoverNote from "../../../components/HoverNote.astro";
+import MathCanvas2D from "../../../components/math-graphics/MathCanvas2D.astro";
 ---
 
 <BaseLayout
@@ -10,7 +11,6 @@ import Equation from "../../../components/Equation.astro";
   description="A motivated abstract construction of the naturals, integers, rationals and reals."
 >
   <section class="la-page">
-    <RealAnalysisSidebar />
 
     <article class="topic-article">
       <header class="topic-hero">
@@ -24,8 +24,8 @@ import Equation from "../../../components/Equation.astro";
 
       <nav class="topic-toc" aria-label="Page sections">
         <a href="#broad-stroke">Broad Stroke</a>
-        <a href="#quick-examples">Quick Examples</a>
-        <a href="#a-deeper-look">A Deeper Look</a>
+        <a href="#similar-triangles">Similar Triangles</a>
+        <a href="#right-triangles">Right Triangles</a>
       </nav>
 
       <section class="topic-section" id="broad-stroke">
@@ -36,9 +36,235 @@ import Equation from "../../../components/Equation.astro";
 	  
       </section>
 
-      <section class="topic-section" id="a-deeper-look">
-        <h2>A Deeper Look</h2>
+      <section class="topic-section" id="similar-trianlges">
+        <h2>Similar Triangles</h2>
+
+	<p>
+	  The idea of trigonometry in euclidean geometry stems from the concept of <span class = "emph">similar triangles</span>. As a reminder,
+          two triangles sharing two identical angles are said to be similar:
+	</p>
+
+	<MathCanvas2D
+	  id="similar-triangles"
+	  label="An illustration of the relationship between two similar triangles."
+	  aspectRatio="16 / 9"
+	/>
+
+	<p>
+	  Of course, even from the above illustration it is evident that fixing two angles actually fixes all three of them, since we know the angles inside a triangle
+	always sum up to <Math tex="180^{\circ}"/>:
+	</p>
+
+	<MathCanvas2D
+	  id="angle-sum"
+	  label="An illustration of how the sum of angles within a triangle is constant."
+	  aspectRatio="16 / 9"
+	/>
+
+	<p>
+	  So given the three angles of a triangle, <Math tex="\alpha, \beta, \gamma"/>, fixing <Math tex="\alpha"/> and <Math tex="\beta"/> automatically fixes <Math tex="\gamma"/> too:
+	</p>
+
+	<Equation
+	  tex={String.raw`{\red \alpha} + {\red \beta} + \gamma = 180^{\circ} \Rightarrow \gamma = 180^{\circ} - { \red \alpha } - { \red \beta }.`}
+	/>
+
+	<p>
+	  Going back to the similar triangles example, if you look at corresponding pairs of same colored angles
+        from each triangle you'll notice the ratio of sides opposite to those angles
+        is always the same. Say both triangles have the same two angles <Math tex="\alpha"/> and <Math tex="\beta"/>. In the smaller triangle, sides sitting
+	opposite to <Math tex="\alpha"/> and <Math tex="\beta"/> are <Math tex="\text{side}_1"/> and <Math tex="\text{side}_2"/> respectively, and in the bigger one they
+	are <Math tex="\text{Side}_1"/> and <Math tex="\text{Side}_2"/>. Then we can write down the relationship:
+	</p>
+
+	<Equation
+	  tex={String.raw`
+	  \frac{ \text{side}_1 }{ \text{Side}_1 } = \frac{ \text{side}_2 }{ \text{Side}_2 }.
+          `}
+	/>
+
+	<p>
+	  More important here though is not the relationship between the two triangles, but the relationship that the sides of one triangle have between each other. Rearranging:
+	</p>
+
+	<Equation
+	  tex={String.raw`
+	  \frac{ \text{side}_1 }{ \text{Side}_1 } = \frac{ \text{side}_2 }{ \text{Side}_2 } \iff \frac{ \text{side}_1 }{ \text{side}_2 } = \frac{ \text{Side}_1 }{ \text{Side}_2 }.
+          `}
+	/>
+
+	<p>
+	  In a way, fixing the angles of triangles makes them, you could say, ratio invariant. That means if we know what the angles of a triangle are
+        (namely, it is sufficient to only know two of them), while we cannot determine the <i>lengths</i> of its sides based on this information alone, we can always
+	know what the <i>ratios</i> between any two sides will be.
+	</p>
+
+	<p>
+	  Now, we could technically develop some sort of general theory that assigns any two
+          angles <Math tex="\alpha"/> and <Math tex="\beta"/> (or at least supposing they are less than <Math tex="180^{\circ}"/>) to a series of associated ratios
+          (there are <Math tex="A_3^2 = 6"/> different ratios we could compute between sides of a triangle). But trigonometry mainly deals with a particular class of triangles:
+	  <span class="emph"> right triangles</span>. Right triangles are the canonical choice because they make the math easier and, as we'll see later down the line, the
+	  theory we develop around right triangles can be nonetheless applied to any regular ol' triangle as well, albeit in a slightly modified form.
+	</p>
+	
       </section>
+
+      <section class="topic-section" id="right-triangles">
+        <h2>Right Triangles</h2>
+
+	<p>
+	  That brings to our main subject of study (for now): right triangles (and by <i>that</i> I mean the previous section - which you may or may have not bothered to read ig).
+	  That means we'll permanently lock in one of the angles: there will necessarily be a <Math tex="90^{\circ}"/> angle in all triangles we consider, as it can be seen
+	  in the two similar triangles below that totally and positively DO NOT violate <span class="emph">Pythagoras's theorem</span>:
+	</p>
+
+	<MathCanvas2D
+	  id="similar-right-triangles"
+	  label="An illustration of the relationship between two similar right triangles."
+	  aspectRatio="16 / 9"
+	/>
+
+	<p>
+	  Alright, all triangles you could obtain by interacting with the picture do in fact violate <span class="emph">Pythagoras's theorem</span>, but this is just for illustrative
+	purposes and nice whole lengths are more visually appealing. Don't lynch me.
+	</p>
+
+	<p>
+	  Since we already know one of the angle is <Math tex="90^{\circ}"/>, by fixing another angle, say <Math tex="\theta"/>, and by applying the previoulsy discussed reasoning,
+          we can know for sure what the ratio between any two sides is going to be - no matter their lengths - so
+	  we can establish a <span class="emph"> one-to-one </span> correspondence (or at least for the time being one-to-one) between a given angle <Math tex="\theta"/> and a
+          real value representing a certain ratio. A right triangle has three sides (indeed, a truly remarkable property that right triangles possess):
+          two shorter sides - the legs, and the biggest side (opposite to the right angle) - the hypotenuse. So depending on what ratio we're interested in, we could
+          associate <Math tex="\theta"/> with one of the ratios:
+	</p>
+
+	<Equation
+	  tex={String.raw`
+	  \frac{ \text{opposite leg} }{ \text{hypotenuse} },
+	  \frac{ \text{hypotenuse} }{ \text{opposite leg} },
+          \frac{ \text{adjacent leg} }{ \text{hypotenuse} },
+	  \frac{ \text{hypotenuse} }{ \text{adjacent leg} },
+	  \frac{ \text{opposite leg} }{ \text{adjacent leg} },
+	  \frac{ \text{adjacent leg} }{ \text{opposite leg} }.
+          `}
+	/>
+
+	<p> We are going to assign names to each of these: </p>
+
+	<Equation
+	  tex={String.raw`
+	  \sin\theta = \frac{ \text{opposite leg} }{ \text{hypotenuse} } \text{ (sine function)},
+          `}
+	/>
+
+	<Equation
+	  tex={String.raw`
+          \cos\theta = \frac{ \text{adjacent leg} }{ \text{hypotenuse} } \text{ (cosine function)},
+          `}
+	/>
+
+	<Equation
+	  tex={String.raw`
+	  \tan\theta = \frac{ \text{opposite leg} }{ \text{adjacent leg} } \text{ (tangent function)},
+          `}
+	/>
+
+	<Equation
+	  tex={String.raw`
+	  \cot\theta = \frac{ \text{adjacent leg} }{ \text{opposite leg} } \text{ (cotangent function)},
+          `}
+	/>
+
+	<Equation
+	  tex={String.raw`
+	  \sec\theta = \frac{ \text{hypotenuse} }{ \text{adjacent leg} } \text{ (secant function)},
+          `}
+	/>
+
+	<Equation
+	  tex={String.raw`
+	  \csc\theta = \frac{ \text{hypotenuse} }{ \text{opposite leg} } \text{ (cosecant function)}.
+          `}
+	/>
+
+	<p>
+	  These are known as the <span class="emph">trigonometric functions</span><HoverNote>
+	    We haven't exactly defined them as functions yet, but we are going to in the next section, where we'll significantly extend their domain; for now they are restrained
+            to angles under <Math tex="90^{\circ}" />. </HoverNote>. Their names come from Latin, or mistranslated Arabic, or both (we aren't exactly historians around here).
+            Sine refers to a <i>chord</i> or some sort of <i>curvature</i>, tangent means
+	<i> touch</i> and secant has to do with <i>cutting through</i> something - these we'll make a lot more sense when we introduce circles to the study of trigonometry.
+	You'll probably notice the other three functions are basically seen as complementary - whatever that means - to the aforementioned ones.
+	</p>
+
+	<p>
+	  Up until this point, there have been plenty of claims that knowing the angles lets us know the ratios between sides as well. But we haven't clarified how we're supposed
+	  to extract that information exactly. What's sine of <Math tex="11^{\circ}"/>? Or tangent of <Math tex="72^{\circ}"/>? What about secant of <Math tex="36^{\circ}"/>?
+          If you think about how we defined trigonometric
+	  functions, the question of what values do they take turns into infinitely many geometry problems, depending on the angle <Math tex="\theta"/>. And for the vast majority
+	  of angles out there, it is no easy task to determine these numbers. In fact, we aren't even going to attempt to precisely capture, for example, the sine of EVERY angle -
+          that would impractical and, in a sense, impossible<HoverNote>We'll see how to approximate trigonometric functions at least, but that's in a future section.</HoverNote>.
+	  However, we'll discuss the <i>three fundamental angles</i> for which the values of these trigonometric functions are widely known and fairly
+	  easy to obtain: <Math tex="30^{\circ}"/>, <Math tex="45^{\circ}"/> and <Math tex="60^{\circ}"/>.
+	</p>
+
+	<p>
+	  For starters, looking at the <Math tex="6"/> ratios, there seem to be some sort of underlying relationships between them - surely we don't have to compute all of them
+	  separately. What's the minimum then? It shouldn't take too much digging to observe:
+	</p>
+
+	<Equation
+	  tex={String.raw`
+	  \tan\theta = \frac{ \sin\theta }{ \cos\theta },
+          `}
+	/>
+
+	<Equation
+	  tex={String.raw`
+	  \sec\theta = \frac{ 1 }{ \cos\theta },
+          `}
+	/>
+
+	<Equation
+	  tex={String.raw`
+	  \csc\theta = \frac{ 1 }{ \sin\theta }.
+          `}
+	/>
+
+	<p>
+	  So all these values mainly depend on sine and cosine
+	<HoverNote>This might be less obvious, but if you meditate on it for a bit, knowing the sine tells us what the cosine is as well and vice versa - so we only need to find
+	either one of them. More on that later.</HoverNote>. With this knowledge in mind, we set out to compute these two functions in particular, for the values mentioned earlier.
+	</p>
+
+	<MathCanvas2D
+	  id="sine30-proof"
+	  label="An illustration of how the sum of angles within a triangle is constant."
+	  aspectRatio="16 / 9"
+	/>
+
+	<MathCanvas2D
+	  id="sine45-proof"
+	  label="An illustration of how the sum of angles within a triangle is constant."
+	  aspectRatio="16 / 9"
+	/>
+
+	<MathCanvas2D
+	  id="angle-sum-proof"
+	  label="An illustration of how the sum of angles within a triangle is constant."
+	  aspectRatio="16 / 9"
+	/>
+	
+      </section>
+      
     </article>
   </section>
 </BaseLayout>
+
+<script>
+  import "../../../scripts/demos/similarTriangles";
+  import "../../../scripts/demos/similarRightTriangles";
+  import "../../../scripts/demos/angleSum";
+  import "../../../scripts/demos/sine30Proof";
+  import "../../../scripts/demos/sine45Proof";
+  import "../../../scripts/demos/angleSumProof";
+</script>

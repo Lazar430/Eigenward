@@ -3,25 +3,18 @@ import {
   PointDragController2D,
   createAngleSector2D,
   createMathScene2D,
+  createMeasurementDisplayController,
   createParametricShape2D,
   createTextLabel2D,
   createVector2D,
+  formatRoundedNumber,
+  quantizeOrderedPartitionToTotal,
+  type MeasurementDisplayMode,
   type Vec2Tuple,
 } from "../math-graphics";
 
 const TAU = Math.PI * 2;
 const EPSILON = 1e-8;
-
-type MeasurementDisplayMode = "platonic" | "raw";
-
-/*
-  Measurement presentation is intentionally separate from geometry. Dragging is
-  always continuous; only the displayed measurements are idealized.
-
-  Change this one value to "raw" to restore the previous decimal labels.
-*/
-const DEFAULT_MEASUREMENT_DISPLAY_MODE: MeasurementDisplayMode = "platonic";
-let measurementDisplayMode: MeasurementDisplayMode = DEFAULT_MEASUREMENT_DISPLAY_MODE;
 
 /*
   Keep the geometric similarity transform deliberately friendly. In Platonic mode
@@ -82,6 +75,11 @@ const scene = createMathScene2D(canvas, {
   background: null,
 });
 
+const measurementDisplay =
+  createMeasurementDisplayController({
+    initialMode: "platonic",
+  });
+
 type MutablePoint2D = [number, number];
 
 type BraceStyle = {
@@ -126,19 +124,19 @@ function positiveModulo(value: number, modulus: number): number {
 }
 
 function formatRawLength(length: number): string {
-  const factor = 10 ** MEASUREMENT_DISPLAY.raw.lengthDecimals;
-  const rounded = Math.round(length * factor) / factor;
-  return Number.isInteger(rounded)
-    ? rounded.toFixed(0)
-    : rounded.toFixed(MEASUREMENT_DISPLAY.raw.lengthDecimals);
+  return formatRoundedNumber(length, {
+    decimals:
+      MEASUREMENT_DISPLAY.raw.lengthDecimals,
+  });
 }
 
 function formatRawAngleDegrees(degrees: number): string {
-  const factor = 10 ** MEASUREMENT_DISPLAY.raw.angleDecimals;
-  const rounded = Math.round(degrees * factor) / factor;
-  return Number.isInteger(rounded)
-    ? `${rounded.toFixed(0)}°`
-    : `${rounded.toFixed(MEASUREMENT_DISPLAY.raw.angleDecimals)}°`;
+  return (
+    formatRoundedNumber(degrees, {
+      decimals:
+        MEASUREMENT_DISPLAY.raw.angleDecimals,
+    }) + "°"
+  );
 }
 
 function formatRawAngle(angleRadians: number): string {
@@ -146,7 +144,11 @@ function formatRawAngle(angleRadians: number): string {
 }
 
 function formatRawRatio(value: number): string {
-  return value.toFixed(MEASUREMENT_DISPLAY.raw.ratioDecimals);
+  return formatRoundedNumber(value, {
+    decimals:
+      MEASUREMENT_DISPLAY.raw.ratioDecimals,
+    trimTrailingZeros: false,
+  });
 }
 
 type RationalApproximation = {
@@ -304,48 +306,6 @@ function triangleAnglesFromSideLengths(
   ];
 }
 
-function quantizeTriangleAngles(
-  degrees: readonly [number, number, number],
-): [number, number, number] {
-  if (degrees.some((value) => !Number.isFinite(value))) {
-    return [60, 60, 60];
-  }
-
-  const total = degrees[0] + degrees[1] + degrees[2];
-  const normalized = total <= EPSILON
-    ? [60, 60, 60]
-    : degrees.map((value) => value * 180 / total);
-
-  const integers = normalized.map((value) => Math.floor(value));
-  let remainder = 180 - integers.reduce((sum, value) => sum + value, 0);
-
-  const byFraction = [0, 1, 2].sort((left, right) => {
-    const leftFraction = normalized[left] - Math.floor(normalized[left]);
-    const rightFraction = normalized[right] - Math.floor(normalized[right]);
-    return rightFraction - leftFraction;
-  });
-
-  for (let index = 0; remainder > 0; index += 1) {
-    integers[byFraction[index % 3]] += 1;
-    remainder -= 1;
-  }
-
-  const minimum = MEASUREMENT_DISPLAY.platonic.minimumAngleDegrees;
-  for (let index = 0; index < 3; index += 1) {
-    while (integers[index] < minimum) {
-      const donor = [0, 1, 2]
-        .filter((candidate) => candidate !== index)
-        .sort((left, right) => integers[right] - integers[left])[0];
-
-      if (integers[donor] <= minimum) break;
-      integers[index] += 1;
-      integers[donor] -= 1;
-    }
-  }
-
-  return [integers[0], integers[1], integers[2]];
-}
-
 function distance(a: Vec2Tuple, b: Vec2Tuple): number {
   return Math.hypot(b[0] - a[0], b[1] - a[1]);
 }
@@ -384,7 +344,7 @@ function buildMeasurementPresentation(): MeasurementPresentation {
   const bigRawLengths = sideLengths(bigVertices);
   const smallRawLengths = sideLengths(smallVertices);
 
-  if (measurementDisplayMode === "raw") {
+  if (measurementDisplay.getMode() === "raw") {
     const rawAngles = triangleInteriorAnglesDegrees(bigVertices);
     const fractions = smallRawLengths.map((smallLength, index) => {
       const bigLength = bigRawLengths[index];
@@ -422,8 +382,33 @@ function buildMeasurementPresentation(): MeasurementPresentation {
     sum-preserving integer rounding. Thus the displayed lengths and angles form
     one internally coherent ideal triangle rather than unrelated roundings.
   */
-  const idealAngles = triangleAnglesFromSideLengths(bigIntegerLengths);
-  const integerAngles = quantizeTriangleAngles(idealAngles);
+  const idealAngles =
+    triangleAnglesFromSideLengths(
+      bigIntegerLengths,
+    );
+
+  /*
+   * Preserve the full triangle order theorem in the annotation layer:
+   *
+   *   equal displayed sides  <=> equal displayed opposite angles
+   *   longer displayed side  <=> larger displayed opposite angle
+   *
+   * while still keeping A + B + C exactly 180°.
+   */
+  const integerAngles =
+    quantizeOrderedPartitionToTotal(
+      idealAngles,
+      {
+        total: 180,
+        step: 1,
+        minimum:
+          MEASUREMENT_DISPLAY
+            .platonic
+            .minimumAngleDegrees,
+        equalityTolerance: 1e-7,
+        strictOrder: true,
+      },
+    ) as [number, number, number];
   const fractions = smallIntegerLengths.map(
     (smallLength, index) => `${smallLength}/${bigIntegerLengths[index]}`,
   );
@@ -1007,10 +992,12 @@ function updateScene(): void {
   ratioLabel.setText(measurements.ratioText);
 }
 
-function setMeasurementDisplayMode(mode: MeasurementDisplayMode): void {
-  measurementDisplayMode = mode;
-  updateScene();
-}
+const stopMeasurementSubscription =
+  measurementDisplay.subscribe(
+    () => {
+      updateScene();
+    },
+  );
 
 updateScene();
 
@@ -1064,8 +1051,16 @@ Object.assign(window, {
     ratioLabel,
     measurements: {
       config: MEASUREMENT_DISPLAY,
-      getMode: () => measurementDisplayMode,
-      setMode: setMeasurementDisplayMode,
+      controller: measurementDisplay,
+      getMode: () =>
+        measurementDisplay.getMode(),
+      setMode: (
+        mode: MeasurementDisplayMode,
+      ) => {
+        measurementDisplay.setMode(mode);
+      },
+      toggleMode: () =>
+        measurementDisplay.toggleMode(),
     },
     separation: {
       centerX: SEPARATION_X,
@@ -1076,6 +1071,7 @@ Object.assign(window, {
 });
 
 const destroy = (): void => {
+  stopMeasurementSubscription();
   resizeObserver.disconnect();
   dragging.destroy();
   scene.destroy();

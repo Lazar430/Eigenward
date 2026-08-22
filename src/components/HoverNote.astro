@@ -1,0 +1,58 @@
+---
+export interface Props {
+  /**
+   * Optional explicit superscript marker.
+   *
+   * Omit this to use the site's automatic note counter.
+   * Examples: "1", "*", "†".
+   */
+  marker?: string;
+
+  /**
+   * Accessible label for the superscript trigger.
+   */
+  ariaLabel?: string;
+
+  /**
+   * Optional extra class on the outer inline wrapper.
+   */
+  class?: string;
+}
+
+const {
+  marker,
+  ariaLabel = "Explanatory note",
+  class: className,
+} = Astro.props;
+
+const isAutomatic = marker === undefined;
+---
+
+<span
+  class:list={[
+    "hover-note",
+    className,
+  ]}
+>
+  <sup class="hover-note__sup">
+    <button
+      type="button"
+      class:list={[
+        "hover-note__marker",
+        {
+          "hover-note__marker--auto": isAutomatic,
+        },
+      ]}
+      aria-label={ariaLabel}
+    >
+      {marker ?? ""}
+    </button>
+  </sup>
+
+  <span
+    class="hover-note__bubble"
+    role="note"
+  >
+    <slot />
+  </span>
+</span>

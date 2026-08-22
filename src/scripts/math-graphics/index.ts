@@ -452,5 +452,33 @@ export {
   type SphericalWedge3DOptions,
   type SphericalWedgeSweep3D,
 } from "./primitives/SphericalWedge3D";
+export {
+  MeasurementDisplayController,
+  createMeasurementDisplayController,
+  formatAnglePartitionRadians,
+  formatAngleRadians,
+  formatRoundedNumber,
+  quantizeOrderedPartitionToTotal,
+  quantizePartitionToTotal,
+  quantizeToStep,
+  radiansToDegrees,
+  roundToDecimals,
+  type AngleDisplayOptions,
+  type AnglePartitionDisplayOptions,
+  type MeasurementDisplayControllerOptions,
+  type MeasurementDisplayMode,
+  type MeasurementDisplayModeListener,
+  type QuantizeOrderedPartitionToTotalOptions,
+  type QuantizePartitionToTotalOptions,
+  type RoundedNumberFormatOptions,
+} from "./presentation/measurementDisplay";
 
-
+export {
+  DimensionBrace2D,
+  createDimensionBrace2D,
+  type DimensionBrace2DLabel,
+  type DimensionBrace2DLabelStyle,
+  type DimensionBrace2DOptions,
+  type DimensionBrace2DStyle,
+  type DimensionBraceSide2D,
+} from "./primitives/DimensionBrace2D";

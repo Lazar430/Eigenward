@@ -3,25 +3,18 @@ import {
   PointDragController2D,
   createAngleSector2D,
   createMathScene2D,
+  createMeasurementDisplayController,
   createParametricShape2D,
   createTextLabel2D,
   createVector2D,
+  formatRoundedNumber,
+  quantizeOrderedPartitionToTotal,
+  type MeasurementDisplayMode,
   type Vec2Tuple,
 } from "../math-graphics";
 
 const TAU = Math.PI * 2;
 const EPSILON = 1e-8;
-
-type MeasurementDisplayMode = "platonic" | "raw";
-
-/*
-  Measurement presentation is intentionally separate from geometry. Dragging is
-  always continuous; only the displayed measurements are idealized.
-
-  Change this one value to "raw" to restore the previous decimal labels.
-*/
-const DEFAULT_MEASUREMENT_DISPLAY_MODE: MeasurementDisplayMode = "platonic";
-let measurementDisplayMode: MeasurementDisplayMode = DEFAULT_MEASUREMENT_DISPLAY_MODE;
 
 /*
   Keep the geometric similarity transform deliberately friendly. In Platonic mode
@@ -39,6 +32,7 @@ const MEASUREMENT_DISPLAY = {
   platonic: {
     ratioMaxDenominator: 2,
     lengthDensity: 2,
+    minimumAngleDegrees: 1,
   },
 } as const;
 const MIN_LEG_LENGTH = 0.52;
@@ -81,6 +75,11 @@ const scene = createMathScene2D(canvas, {
   center: VIEW_CENTER,
   background: null,
 });
+
+const measurementDisplay =
+  createMeasurementDisplayController({
+    initialMode: "platonic",
+  });
 
 type MutablePoint2D = [number, number];
 
@@ -136,19 +135,19 @@ function positiveModulo(value: number, modulus: number): number {
 }
 
 function formatRawLength(length: number): string {
-  const factor = 10 ** MEASUREMENT_DISPLAY.raw.lengthDecimals;
-  const rounded = Math.round(length * factor) / factor;
-  return Number.isInteger(rounded)
-    ? rounded.toFixed(0)
-    : rounded.toFixed(MEASUREMENT_DISPLAY.raw.lengthDecimals);
+  return formatRoundedNumber(length, {
+    decimals:
+      MEASUREMENT_DISPLAY.raw.lengthDecimals,
+  });
 }
 
 function formatRawAngleDegrees(degrees: number): string {
-  const factor = 10 ** MEASUREMENT_DISPLAY.raw.angleDecimals;
-  const rounded = Math.round(degrees * factor) / factor;
-  return Number.isInteger(rounded)
-    ? `${rounded.toFixed(0)}°`
-    : `${rounded.toFixed(MEASUREMENT_DISPLAY.raw.angleDecimals)}°`;
+  return (
+    formatRoundedNumber(degrees, {
+      decimals:
+        MEASUREMENT_DISPLAY.raw.angleDecimals,
+    }) + "°"
+  );
 }
 
 function formatRawAngle(angleRadians: number): string {
@@ -156,7 +155,11 @@ function formatRawAngle(angleRadians: number): string {
 }
 
 function formatRawRatio(value: number): string {
-  return value.toFixed(MEASUREMENT_DISPLAY.raw.ratioDecimals);
+  return formatRoundedNumber(value, {
+    decimals:
+      MEASUREMENT_DISPLAY.raw.ratioDecimals,
+    trimTrailingZeros: false,
+  });
 }
 
 type RationalApproximation = {
@@ -298,36 +301,69 @@ function sideLengths(vertices: readonly Vec2Tuple[]): [number, number, number] {
   ];
 }
 
-function quantizeTriangleLengthMultipliers(
+function quantizeRightTriangleLengthMultipliers(
   rawLengths: readonly [number, number, number],
 ): [number, number, number] {
-  const density = MEASUREMENT_DISPLAY.platonic.lengthDensity;
-  const multipliers = rawLengths.map((length) =>
-    Math.max(1, Math.round(length * density)),
-  ) as [number, number, number];
-
   /*
-    Keep the three displayed side labels triangle-like, but deliberately do not
-    force them onto a Pythagorean triple. Independent integer approximation is
-    much smoother while dragging and avoids discontinuous jumps between triples.
-  */
-  const longestIndex = multipliers.indexOf(Math.max(...multipliers));
-  const otherIndices = [0, 1, 2].filter((index) => index !== longestIndex);
-  const otherSum =
-    multipliers[otherIndices[0]] + multipliers[otherIndices[1]];
+   * Side order is [AB, BC, CA], with BC the hypotenuse.
+   *
+   * We still do NOT force a Pythagorean triple: that would create the large
+   * discontinuous jumps this scene deliberately avoids. But the displayed
+   * labels must at least describe a triangle whose hypotenuse is strictly
+   * longer than both displayed legs.
+   *
+   * Increase the temporary sampling density only when necessary to leave an
+   * integer strictly between max(leg) and leg1 + leg2.
+   */
+  let density =
+    MEASUREMENT_DISPLAY
+      .platonic
+      .lengthDensity;
 
-  if (multipliers[longestIndex] >= otherSum) {
-    multipliers[longestIndex] = Math.max(1, otherSum - 1);
+  let ab = 1;
+  let ca = 1;
+
+  for (let attempt = 0; attempt < 12; attempt += 1) {
+    ab = Math.max(
+      1,
+      Math.round(rawLengths[0] * density),
+    );
+
+    ca = Math.max(
+      1,
+      Math.round(rawLengths[2] * density),
+    );
+
+    if (Math.min(ab, ca) >= 2) {
+      break;
+    }
+
+    density += 1;
   }
 
-  return multipliers;
+  const minimumHypotenuse =
+    Math.max(ab, ca) + 1;
+
+  const maximumHypotenuse =
+    ab + ca - 1;
+
+  const roundedHypotenuse =
+    Math.round(rawLengths[1] * density);
+
+  const bc = clamp(
+    roundedHypotenuse,
+    minimumHypotenuse,
+    maximumHypotenuse,
+  );
+
+  return [ab, bc, ca];
 }
 
 function buildMeasurementPresentation(): MeasurementPresentation {
   const bigRawLengths = sideLengths(bigVertices);
   const smallRawLengths = sideLengths(smallVertices);
 
-  if (measurementDisplayMode === "raw") {
+  if (measurementDisplay.getMode() === "raw") {
     const rawAngles = triangleInteriorAnglesDegrees(bigVertices);
     const fractions = smallRawLengths.map((smallLength, index) => {
       const bigLength = bigRawLengths[index];
@@ -352,7 +388,7 @@ function buildMeasurementPresentation(): MeasurementPresentation {
     SIMILARITY_RATIO,
     MEASUREMENT_DISPLAY.platonic.ratioMaxDenominator,
   );
-  const multipliers = quantizeTriangleLengthMultipliers(bigRawLengths);
+  const multipliers = quantizeRightTriangleLengthMultipliers(bigRawLengths);
   const bigIntegerLengths = multipliers.map(
     (multiplier) => multiplier * ratio.denominator,
   ) as [number, number, number];
@@ -361,14 +397,56 @@ function buildMeasurementPresentation(): MeasurementPresentation {
   ) as [number, number, number];
 
   /*
-    The geometry itself is exactly right-angled. For display, keep A at 90° and
-    round one acute angle from the live geometry; define the other as its exact
-    complement. This keeps all labels integral and guarantees a 180° total
-    without tying the side labels to discrete Pythagorean triples.
-  */
-  const rawAngles = triangleInteriorAnglesDegrees(bigVertices);
-  const angleB = clamp(Math.round(rawAngles[1]), 1, 89);
-  const integerAngles: [number, number, number] = [90, angleB, 90 - angleB];
+   * Keep A exactly 90°, but derive the two acute displayed angles from the
+   * DISPLAYED leg labels rather than from the unrelated live geometry.
+   *
+   * With side order [AB, BC, CA]:
+   *   angle B is opposite CA;
+   *   angle C is opposite AB.
+   *
+   * Therefore:
+   *   AB = CA  ->  B = C = 45°;
+   *   CA > AB  ->  B > C;
+   *   AB > CA  ->  C > B.
+   *
+   * The hypotenuse labels are still allowed to violate Pythagoras; the point
+   * here is to remove the more visually destructive contradictions involving
+   * side/angle order and isosceles symmetry.
+   */
+  const ab =
+    bigIntegerLengths[0];
+
+  const ca =
+    bigIntegerLengths[2];
+
+  const idealAcuteAngles = [
+    Math.atan2(ca, ab) *
+      180 / Math.PI,
+    Math.atan2(ab, ca) *
+      180 / Math.PI,
+  ] as const;
+
+  const [angleB, angleC] =
+    quantizeOrderedPartitionToTotal(
+      idealAcuteAngles,
+      {
+        total: 90,
+        step: 1,
+        minimum:
+          MEASUREMENT_DISPLAY
+            .platonic
+            .minimumAngleDegrees,
+        equalityTolerance: 1e-7,
+        strictOrder: true,
+      },
+    );
+
+  const integerAngles:
+    [number, number, number] = [
+      90,
+      angleB,
+      angleC,
+    ];
   const fractions = smallIntegerLengths.map(
     (smallLength, index) => `${smallLength}/${bigIntegerLengths[index]}`,
   );
@@ -1001,10 +1079,12 @@ function updateScene(): void {
   ratioLabel.setText(measurements.ratioText);
 }
 
-function setMeasurementDisplayMode(mode: MeasurementDisplayMode): void {
-  measurementDisplayMode = mode;
-  updateScene();
-}
+const stopMeasurementSubscription =
+  measurementDisplay.subscribe(
+    () => {
+      updateScene();
+    },
+  );
 
 updateScene();
 
@@ -1055,8 +1135,16 @@ Object.assign(window, {
     ratioLabel,
     measurements: {
       config: MEASUREMENT_DISPLAY,
-      getMode: () => measurementDisplayMode,
-      setMode: setMeasurementDisplayMode,
+      controller: measurementDisplay,
+      getMode: () =>
+        measurementDisplay.getMode(),
+      setMode: (
+        mode: MeasurementDisplayMode,
+      ) => {
+        measurementDisplay.setMode(mode);
+      },
+      toggleMode: () =>
+        measurementDisplay.toggleMode(),
     },
     separation: {
       centerX: SEPARATION_X,
@@ -1067,6 +1155,7 @@ Object.assign(window, {
 });
 
 const destroy = (): void => {
+  stopMeasurementSubscription();
   resizeObserver.disconnect();
   dragging.destroy();
   scene.destroy();
