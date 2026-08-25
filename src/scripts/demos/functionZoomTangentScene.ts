@@ -30,14 +30,14 @@ const functionDefinition = (
   x: number,
 ): number =>
   0.12 * x * x * x -
-  0.8 * x +
-  0.35;
+    0.8 * x +
+    0.35;
 
 const derivativeDefinition = (
   x: number,
 ): number =>
   0.36 * x * x -
-  0.8;
+    0.8;
 
 /* -------------------------------------------------------------------------- */
 /* Visual / interaction constants                                             */
@@ -109,7 +109,7 @@ function formatNumber(
 ): string {
   const rounded =
     Math.abs(value) <
-    1e-10
+      1e-10
       ? 0
       : value;
 
@@ -138,10 +138,10 @@ function effectiveBackgroundColor(
 
     if (
       color &&
-      color !==
-        "transparent" &&
-      color !==
-        "rgba(0, 0, 0, 0)"
+	color !==
+          "transparent" &&
+	color !==
+          "rgba(0, 0, 0, 0)"
     ) {
       return color.replace(
         /^rgba\(([^,]+),([^,]+),([^,]+),[^)]+\)$/,
@@ -617,25 +617,25 @@ const gridLeft =
   Math.floor(
     baseBounds.left,
   ) -
-  2;
+    2;
 
 const gridRight =
   Math.ceil(
     baseBounds.right,
   ) +
-  2;
+    2;
 
 const gridBottom =
   Math.floor(
     baseBounds.bottom,
   ) -
-  2;
+    2;
 
 const gridTop =
   Math.ceil(
     baseBounds.top,
   ) +
-  2;
+    2;
 
 for (
   let x =
@@ -648,7 +648,7 @@ for (
 ) {
   if (
     Math.abs(x) <
-    1e-10
+      1e-10
   ) {
     continue;
   }
@@ -691,7 +691,7 @@ for (
 ) {
   if (
     Math.abs(y) <
-    1e-10
+      1e-10
   ) {
     continue;
   }
@@ -839,8 +839,8 @@ const magnifierGeometryObserver =
 
       if (
         pointerInside &&
-        interactionMode ===
-          "magnifier"
+          interactionMode ===
+            "magnifier"
       ) {
         updatePointer(
           pointerClientX,
@@ -862,8 +862,8 @@ const syncGeometryFromViewport =
 
     if (
       pointerInside &&
-      interactionMode ===
-        "magnifier"
+	interactionMode ===
+          "magnifier"
     ) {
       updatePointer(
         pointerClientX,
@@ -1082,11 +1082,11 @@ function updatePointer(
 
   pointerLocalX =
     clientX -
-    rectangle.left;
+      rectangle.left;
 
   pointerLocalY =
     clientY -
-    rectangle.top;
+      rectangle.top;
 
   pointerWorldPoint =
     scene.clientToWorld(
@@ -1102,10 +1102,10 @@ function updatePointer(
   lensCursor.style.transform =
     `translate3d(${
       clientX -
-      MAGNIFIER_RADIUS_PIXELS
+	MAGNIFIER_RADIUS_PIXELS
     }px, ${
       clientY -
-      MAGNIFIER_RADIUS_PIXELS
+	MAGNIFIER_RADIUS_PIXELS
     }px, 0)`;
 
   lensCenterMarker.style.transform =
@@ -1123,7 +1123,7 @@ function showMagnifierCursor(): void {
   if (
     interactionMode !==
       "magnifier" ||
-    !pointerInside
+      !pointerInside
   ) {
     return;
   }
@@ -1162,30 +1162,30 @@ function updateMagnifierCamera(): void {
 
   if (
     rectangle.width <= 0 ||
-    rectangle.height <= 0
+      rectangle.height <= 0
   ) {
     return;
   }
 
   const scale =
     BASE_UNIT_SIZE_PIXELS *
-    currentMagnification;
+      currentMagnification;
 
   const centerX =
     pointerWorldPoint[0] -
-    (
-      pointerLocalX -
-      rectangle.width / 2
-    ) /
-    scale;
+      (
+	pointerLocalX -
+	  rectangle.width / 2
+      ) /
+	scale;
 
   const centerY =
     pointerWorldPoint[1] +
-    (
-      pointerLocalY -
-      rectangle.height / 2
-    ) /
-    scale;
+      (
+	pointerLocalY -
+	  rectangle.height / 2
+      ) /
+	scale;
 
   magnifierScene.setView({
     unitSizePixels:
@@ -1208,9 +1208,9 @@ function updateMagnifierCamera(): void {
       clamp01(
         (
           currentMagnification -
-          1
+            1
         ) /
-        0.12,
+          0.12,
       ),
     );
 
@@ -1223,31 +1223,31 @@ function advanceMagnification(
   if (
     interactionMode !==
       "magnifier" ||
-    !pointerInside
+      !pointerInside
   ) {
     return;
   }
 
   const response =
     1 -
-    Math.exp(
-      -ZOOM_RESPONSE *
-      deltaTime,
-    );
+      Math.exp(
+	-ZOOM_RESPONSE *
+	  deltaTime,
+      );
 
   currentMagnification +=
     (
       targetMagnification -
-      currentMagnification
+	currentMagnification
     ) *
-    response;
+      response;
 
   if (
     Math.abs(
       targetMagnification -
-      currentMagnification,
+	currentMagnification,
     ) <
-    1e-4
+      1e-4
   ) {
     currentMagnification =
       targetMagnification;
@@ -1317,34 +1317,34 @@ function tangentEndpointsForScene(
       x +
         (
           startX -
-          x
+            x
         ) *
-        scale,
+          scale,
 
       y +
         slope *
-        (
-          startX -
-          x
-        ) *
-        scale,
+          (
+            startX -
+              x
+          ) *
+          scale,
     ],
 
     [
       x +
         (
           endX -
-          x
+            x
         ) *
-        scale,
+          scale,
 
       y +
         slope *
-        (
-          endX -
-          x
-        ) *
-        scale,
+          (
+            endX -
+              x
+          ) *
+          scale,
     ],
   ];
 }
@@ -1353,8 +1353,8 @@ function syncMainTangent(): void {
   if (
     displayedTangentX ===
       null ||
-    tangentScale <=
-      1e-4
+      tangentScale <=
+	1e-4
   ) {
     tangentLine.hide();
     tangentPoint.hide();
@@ -1396,8 +1396,8 @@ function syncMagnifiedTangent(): void {
   if (
     displayedTangentX ===
       null ||
-    tangentScale <=
-      1e-4
+      tangentScale <=
+	1e-4
   ) {
     magnifierTangentLine.hide();
     return;
@@ -1465,8 +1465,8 @@ function requestTangent(
   if (
     requestedTangentX ===
       displayedTangentX &&
-    tangentPhase ===
-      "idle"
+      tangentPhase ===
+	"idle"
   ) {
     return;
   }
@@ -1480,26 +1480,26 @@ function advanceTangent(
 ): void {
   if (
     tangentPhase ===
-    "idle"
+      "idle"
   ) {
     return;
   }
 
   if (
     tangentPhase ===
-    "shrinking"
+      "shrinking"
   ) {
     tangentScale =
       Math.max(
         0,
         tangentScale -
           deltaTime /
-          TANGENT_SHRINK_SECONDS,
+            TANGENT_SHRINK_SECONDS,
       );
 
     if (
       tangentScale <=
-      1e-4
+	1e-4
     ) {
       tangentScale =
         0;
@@ -1523,13 +1523,13 @@ function advanceTangent(
       1,
       tangentScale +
         deltaTime /
-        TANGENT_GROW_SECONDS,
+          TANGENT_GROW_SECONDS,
     );
 
   if (
     tangentScale >=
-    1 -
-    1e-4
+      1 -
+	1e-4
   ) {
     tangentScale =
       1;
@@ -1582,9 +1582,9 @@ function pickFunctionX(
   if (
     Math.abs(
       curveClientY -
-      clientY,
+	clientY,
     ) >
-    GRAPH_HIT_RADIUS_PIXELS
+      GRAPH_HIT_RADIUS_PIXELS
   ) {
     return null;
   }
@@ -1599,7 +1599,7 @@ function pickFunctionX(
 function refreshUI(): void {
   const magnifierActive =
     interactionMode ===
-    "magnifier";
+      "magnifier";
 
   magnifierButton.style.background =
     magnifierActive
@@ -1664,7 +1664,7 @@ function setMode(
   if (
     mode ===
       "magnifier" &&
-    pointerInside
+      pointerInside
   ) {
     updateMagnifierCamera();
   }
@@ -1709,7 +1709,7 @@ canvas.addEventListener(
 
     if (
       interactionMode ===
-      "magnifier"
+	"magnifier"
     ) {
       updateMagnifierCamera();
       showMagnifierCursor();
@@ -1731,7 +1731,7 @@ canvas.addEventListener(
 
     if (
       interactionMode ===
-      "magnifier"
+	"magnifier"
     ) {
       updateMagnifierCamera();
     }
@@ -1751,7 +1751,7 @@ canvas.addEventListener(
 
     if (
       interactionMode ===
-      "magnifier"
+	"magnifier"
     ) {
       canvas.style.cursor =
         "default";
@@ -1766,7 +1766,7 @@ canvas.addEventListener(
   ) => {
     if (
       interactionMode !==
-      "magnifier"
+	"magnifier"
     ) {
       return;
     }
@@ -1781,7 +1781,7 @@ canvas.addEventListener(
     const multiplier =
       Math.exp(
         -event.deltaY *
-        WHEEL_ZOOM_SENSITIVITY,
+          WHEEL_ZOOM_SENSITIVITY,
       );
 
     targetMagnification =
@@ -1808,7 +1808,7 @@ canvas.addEventListener(
   ) => {
     if (
       interactionMode !==
-      "tangent"
+	"tangent"
     ) {
       return;
     }
@@ -1853,7 +1853,7 @@ const stopFrame =
       if (
         interactionMode ===
           "magnifier" &&
-        pointerInside
+          pointerInside
       ) {
         syncMagnifiedTangent();
       }
