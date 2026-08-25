@@ -18,3 +18,7 @@ pnpm-debug.log*
 .DS_Store
 .idea/
 .vscode/
+
+# Emacs BS
+#*#
+.#*
