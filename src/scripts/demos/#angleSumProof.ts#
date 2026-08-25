@@ -1,0 +1,772 @@
+import {
+  HUES,
+  ProofStageController2D,
+  createDimensionBrace2D,
+  createMathScene2D,
+  createTextLabel2D,
+  currentSceneView2D,
+  type ProofStage2D,
+  type Vec2Tuple,
+} from "../math-graphics";
+import {
+  createProofSectorHighlight2D,
+  createProofSegment2D,
+  revealProofSector2D,
+} from "../math-graphics/animation/proofHelpers2D";
+
+const DEG = Math.PI / 180;
+
+const ALPHA = 40 * DEG;
+const BETA = 30 * DEG;
+const THETA = ALPHA + BETA;
+const SCALE = 6.0;
+`
+const canvas = document.querySelector<HTMLCanvasElement>("#angle-sum-proof");
+
+if (!canvas) {
+  throw new Error("The angle-sum proof canvas could not be found.");
+}
+
+const scene = createMathScene2D(canvas, {
+  viewHeight: 8.8,
+  center: [3, 1.78],
+  background: null,
+});
+
+const initialView = currentSceneView2D(scene);
+
+/* -------------------------------------------------------------------------- */
+/* Geometry                                                                   */
+/* -------------------------------------------------------------------------- */
+
+const sinTheta = Math.sin(THETA);
+const cosTheta = Math.cos(THETA);
+const sinAlpha = Math.sin(ALPHA);
+const cosAlpha = Math.cos(ALPHA);
+const sinBeta = Math.sin(BETA);
+const cosBeta = Math.cos(BETA);
+
+const A: Vec2Tuple = [0, 0];
+const B: Vec2Tuple = [SCALE * sinTheta, 0];
+const C: Vec2Tuple = [0, SCALE * cosTheta];
+const D: Vec2Tuple = [B[0], C[1] + 0.42];
+
+const rayBE: Vec2Tuple = [-sinBeta, cosBeta];
+
+const E: Vec2Tuple = [
+  B[0] + SCALE * cosAlpha * rayBE[0],
+  B[1] + SCALE * cosAlpha * rayBE[1],
+];
+
+const F: Vec2Tuple = [B[0], E[1]];
+const G: Vec2Tuple = [0, E[1]];
+
+/* -------------------------------------------------------------------------- */
+/* Generic helpers                                                            */
+/* -------------------------------------------------------------------------- */
+
+function createAngleLabel(
+  name: string,
+  text: string,
+  color: string,
+  background: string,
+  border: string,
+) {
+  return createTextLabel2D({
+    name,
+    text,
+    position: [0, 0],
+    anchor: [0.5, 0.5],
+    color,
+    fontSizePx: 14,
+    fontWeight: 760,
+    background,
+    border,
+    borderRadiusPx: 7,
+    padding: "0.10rem 0.32rem",
+  });
+}
+
+function placeAngleLabel(
+  label: ReturnType<typeof createTextLabel2D>,
+  sector: ReturnType<typeof createProofSectorHighlight2D>,
+  radiusFactor = 1.42,
+): void {
+  const [x, y] = sector.getLabelPosition(radiusFactor);
+  label.moveTo(x, y);
+}
+
+async function revealDimensionBrace(
+  proof: ProofStageController2D,
+  brace: ReturnType<typeof createDimensionBrace2D>,
+  durationSeconds = 0.72,
+): Promise<void> {
+  brace.show().setRevealProgress(0).setLabelOpacity(0);
+
+  await proof.animate(durationSeconds, (progress) => {
+    brace.setRevealProgress(progress);
+
+    const labelProgress = Math.min(
+      1,
+      Math.max(0, (progress - 0.68) / 0.32),
+    );
+
+    brace.setLabelOpacity(labelProgress);
+  });
+
+  brace.showCompleteBrace().setLabelOpacity(1);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Edge segments                                                              */
+/* -------------------------------------------------------------------------- */
+
+const edges = {
+  AB: createProofSegment2D({
+    name: "angle-sum-proof-edge-ab",
+    color: HUES.cyan.light,
+    width: 2.85,
+    opacity: 0.97,
+  }),
+
+  AC: createProofSegment2D({
+    name: "angle-sum-proof-edge-ac",
+    color: HUES.cyan.light,
+    width: 2.85,
+    opacity: 0.97,
+  }),
+
+  BC: createProofSegment2D({
+    name: "angle-sum-proof-edge-bc",
+    color: HUES.cyan.light,
+    width: 2.85,
+    opacity: 0.97,
+  }),
+
+  BD: createProofSegment2D({
+    name: "angle-sum-proof-edge-bd",
+    color: HUES.gold.light,
+    width: 2.55,
+    opacity: 0.95,
+  }),
+
+  DF: createProofSegment2D({
+    name: "angle-sum-proof-edge-df",
+    color: HUES.gold.light,
+    width: 2.55,
+    opacity: 0.95,
+  }),
+
+  BE: createProofSegment2D({
+    name: "angle-sum-proof-edge-be",
+    color: HUES.purple.light,
+    width: 2.55,
+    opacity: 0.95,
+  }),
+
+  CE: createProofSegment2D({
+    name: "angle-sum-proof-edge-ce",
+    color: HUES.purple.light,
+    width: 2.55,
+    opacity: 0.95,
+  }),
+
+  EF: createProofSegment2D({
+    name: "angle-sum-proof-edge-ef",
+    color: HUES.magenta.light,
+    width: 2.55,
+    opacity: 0.95,
+  }),
+
+  GE: createProofSegment2D({
+    name: "angle-sum-proof-edge-ge",
+    color: HUES.magenta.light,
+    width: 2.55,
+    opacity: 0.95,
+  }),
+
+  CG: createProofSegment2D({
+    name: "angle-sum-proof-edge-cg",
+    color: HUES.magenta.light,
+    width: 2.55,
+    opacity: 0.95,
+  }),
+};
+
+/* -------------------------------------------------------------------------- */
+/* Angle highlights                                                           */
+/* -------------------------------------------------------------------------- */
+
+const angleARight = createProofSectorHighlight2D({
+  name: "angle-sum-proof-angle-a-right",
+  vertex: A,
+  firstArmPoint: B,
+  secondArmPoint: C,
+  shape: "right-angle",
+  fill: HUES.cyan.base,
+  fillOpacity: 0.16,
+  outline: HUES.cyan.light,
+  outlineOpacity: 0.96,
+});
+
+const angleCTotal = createProofSectorHighlight2D({
+  name: "angle-sum-proof-angle-c-total",
+  vertex: C,
+  firstArmPoint: A,
+  secondArmPoint: B,
+  fill: HUES.magenta.base,
+  fillOpacity: 0.24,
+  outline: HUES.magenta.light,
+  outlineOpacity: 0.94,
+});
+
+const angleBTotal = createProofSectorHighlight2D({
+  name: "angle-sum-proof-angle-b-total",
+  vertex: B,
+  firstArmPoint: C,
+  secondArmPoint: D,
+  fill: HUES.gold.base,
+  fillOpacity: 0.24,
+  outline: HUES.gold.light,
+  outlineOpacity: 0.94,
+});
+
+const angleBAlpha = createProofSectorHighlight2D({
+  name: "angle-sum-proof-angle-b-alpha",
+  vertex: B,
+  firstArmPoint: C,
+  secondArmPoint: E,
+  fill: HUES.purple.base,
+  fillOpacity: 0.22,
+  outline: HUES.purple.light,
+  outlineOpacity: 0.94,
+});
+
+const angleBBeta = createProofSectorHighlight2D({
+  name: "angle-sum-proof-angle-b-beta",
+  vertex: B,
+  firstArmPoint: E,
+  secondArmPoint: D,
+  fill: HUES.gold.base,
+  fillOpacity: 0.22,
+  outline: HUES.gold.light,
+  outlineOpacity: 0.94,
+});
+
+const angleERight = createProofSectorHighlight2D({
+  name: "angle-sum-proof-angle-e-right",
+  vertex: E,
+  firstArmPoint: B,
+  secondArmPoint: C,
+  shape: "right-angle",
+  fill: HUES.cyan.base,
+  fillOpacity: 0.16,
+  outline: HUES.cyan.light,
+  outlineOpacity: 0.96,
+});
+
+const angleFRight = createProofSectorHighlight2D({
+  name: "angle-sum-proof-angle-f-right",
+  vertex: F,
+  firstArmPoint: B,
+  secondArmPoint: E,
+  shape: "right-angle",
+  fill: HUES.cyan.base,
+  fillOpacity: 0.16,
+  outline: HUES.cyan.light,
+  outlineOpacity: 0.96,
+});
+
+const angleGRight = createProofSectorHighlight2D({
+  name: "angle-sum-proof-angle-g-right",
+  vertex: G,
+  firstArmPoint: C,
+  secondArmPoint: E,
+  shape: "right-angle",
+  fill: HUES.cyan.base,
+  fillOpacity: 0.16,
+  outline: HUES.cyan.light,
+  outlineOpacity: 0.96,
+});
+
+const angleEBeta = createProofSectorHighlight2D({
+  name: "angle-sum-proof-angle-e-beta",
+  vertex: E,
+  firstArmPoint: C,
+  secondArmPoint: G,
+  fill: HUES.gold.base,
+  fillOpacity: 0.22,
+  outline: HUES.gold.light,
+  outlineOpacity: 0.94,
+});
+
+/* -------------------------------------------------------------------------- */
+/* Angle labels                                                               */
+/* -------------------------------------------------------------------------- */
+
+const angleLabels = {
+  cTotal: createAngleLabel(
+    "angle-sum-proof-label-c-total",
+    "α + β",
+    "rgba(255, 222, 237, 0.98)",
+    "rgba(54, 19, 41, 0.78)",
+    "1px solid rgba(255, 152, 187, 0.18)",
+  ),
+
+  bTotal: createAngleLabel(
+    "angle-sum-proof-label-b-total",
+    "α + β",
+    "rgba(255, 240, 203, 0.98)",
+    "rgba(54, 42, 18, 0.78)",
+    "1px solid rgba(255, 226, 138, 0.18)",
+  ),
+
+  bAlpha: createAngleLabel(
+    "angle-sum-proof-label-b-alpha",
+    "α",
+    "rgba(231, 222, 255, 0.98)",
+    "rgba(31, 22, 55, 0.78)",
+    "1px solid rgba(198, 180, 255, 0.18)",
+  ),
+
+  bBeta: createAngleLabel(
+    "angle-sum-proof-label-b-beta",
+    "β",
+    "rgba(255, 240, 203, 0.98)",
+    "rgba(54, 42, 18, 0.78)",
+    "1px solid rgba(255, 226, 138, 0.18)",
+  ),
+
+  eBeta: createAngleLabel(
+    "angle-sum-proof-label-e-beta",
+    "β",
+    "rgba(255, 240, 203, 0.98)",
+    "rgba(54, 42, 18, 0.78)",
+    "1px solid rgba(255, 226, 138, 0.18)",
+  ),
+};
+
+/* -------------------------------------------------------------------------- */
+/* Measurement braces                                                         */
+/* -------------------------------------------------------------------------- */
+
+const INWARD_BRACE_STYLE = {
+  color: HUES.gold.light,
+  width: 3.7,
+  opacity: 0.94,
+
+  /*
+   * hookDepth matches offset so the two terminal tips land exactly on the
+   * measured side instead of passing through it.
+   */
+  offset: 0.18,
+  hookDepth: 0.18,
+  cuspDepth: 0.19,
+  samples: 96,
+} as const;
+
+const OUTWARD_BRACE_STYLE = {
+  color: HUES.mint.light,
+  width: 3.7,
+  opacity: 0.94,
+  offset: 0.28,
+  hookDepth: 0.28,
+  cuspDepth: 0.22,
+  samples: 96,
+} as const;
+
+const INWARD_LABEL_STYLE = {
+  color: "rgba(255, 242, 214, 0.98)",
+  fontSizePx: 20,
+  fontWeight: 760,
+  background: "rgba(56, 40, 14, 0.82)",
+  border: "1px solid rgba(255, 219, 132, 0.20)",
+  borderRadiusPx: 7,
+  padding: "0.10rem 0.32rem",
+  offset: 0.18,
+} as const;
+
+const OUTWARD_LABEL_STYLE = {
+  color: "rgba(221, 255, 242, 0.98)",
+  fontSizePx: 20,
+  fontWeight: 760,
+  background: "rgba(17, 46, 38, 0.80)",
+  border: "1px solid rgba(136, 242, 206, 0.20)",
+  borderRadiusPx: 7,
+  padding: "0.10rem 0.32rem",
+  offset: 0.20,
+} as const;
+
+const braces = {
+  BC: createDimensionBrace2D({
+    name: "angle-sum-proof-brace-bc",
+    start: B,
+    end: C,
+    referencePoint: A,
+    side: "toward-reference",
+    style: INWARD_BRACE_STYLE,
+    label: {
+      latex: "1",
+      style: { ...INWARD_LABEL_STYLE, offset: 0.3 }
+    },
+  }),
+
+  AB: createDimensionBrace2D({
+    name: "angle-sum-proof-brace-ab",
+    start: A,
+    end: B,
+    referencePoint: C,
+    side: "away-from-reference",
+    style: OUTWARD_BRACE_STYLE,
+    label: {
+      latex: String.raw`\sin(\alpha+\beta)`,
+      style: { ...OUTWARD_LABEL_STYLE, offset: 0.3 }
+    },
+  }),
+
+  AC: createDimensionBrace2D({
+    name: "angle-sum-proof-brace-ac",
+    start: A,
+    end: C,
+    referencePoint: B,
+    side: "away-from-reference",
+    style: OUTWARD_BRACE_STYLE,
+    label: {
+      latex: String.raw`\cos(\alpha+\beta)`,
+      style: { ...OUTWARD_LABEL_STYLE, offset: 0.8 }
+    },
+  }),
+
+  BE: createDimensionBrace2D({
+    name: "angle-sum-proof-brace-be",
+    start: B,
+    end: E,
+    referencePoint: C,
+    side: "toward-reference",
+    style: INWARD_BRACE_STYLE,
+    label: {
+      latex: String.raw`\cos\alpha`,
+      style: { ...INWARD_LABEL_STYLE, offset: 0.5 }
+    },
+  }),
+
+  CE: createDimensionBrace2D({
+    name: "angle-sum-proof-brace-ce",
+    start: C,
+    end: E,
+    referencePoint: B,
+    side: "toward-reference",
+    style: INWARD_BRACE_STYLE,
+    label: {
+      latex: String.raw`\sin\alpha`,
+      style: { ...INWARD_LABEL_STYLE, offset: 0.3 }
+    },
+  }),
+
+  BF: createDimensionBrace2D({
+    name: "angle-sum-proof-brace-bf",
+    start: B,
+    end: F,
+    referencePoint: E,
+    side: "away-from-reference",
+    style: OUTWARD_BRACE_STYLE,
+    label: {
+      latex: String.raw`\cos\beta\cos\alpha`,
+      style: { ...OUTWARD_LABEL_STYLE, offset: 0.8 }
+    },
+  }),
+
+  EF: createDimensionBrace2D({
+    name: "angle-sum-proof-brace-ef",
+    start: E,
+    end: F,
+    referencePoint: B,
+    side: "away-from-reference",
+    style: OUTWARD_BRACE_STYLE,
+    label: {
+      latex: String.raw`\sin\beta\cos\alpha`,
+      style: { ...OUTWARD_LABEL_STYLE, offset: 0.3 }
+    },
+  }),
+
+  CG: createDimensionBrace2D({
+    name: "angle-sum-proof-brace-cg",
+    start: C,
+    end: G,
+    referencePoint: E,
+    side: "away-from-reference",
+    style: OUTWARD_BRACE_STYLE,
+    label: {
+      latex: String.raw`\sin\beta\sin\alpha`,
+      style: { ...OUTWARD_LABEL_STYLE, offset: 0.8 }
+    },
+  }),
+
+  GE: createDimensionBrace2D({
+    name: "angle-sum-proof-brace-ge",
+    start: G,
+    end: E,
+    referencePoint: C,
+    side: "away-from-reference",
+    style: OUTWARD_BRACE_STYLE,
+    label: {
+      latex: String.raw`\cos\beta\sin\alpha`,
+      style: { ...OUTWARD_LABEL_STYLE, offset: 0.3 }
+    },
+  }),
+};
+
+scene.add(
+  ...Object.values(edges),
+  angleARight,
+  angleCTotal,
+  angleBTotal,
+  angleBAlpha,
+  angleBBeta,
+  angleERight,
+  angleFRight,
+  angleGRight,
+  angleEBeta,
+  ...Object.values(angleLabels),
+  ...Object.values(braces),
+);
+
+/* -------------------------------------------------------------------------- */
+/* Reset                                                                      */
+/* -------------------------------------------------------------------------- */
+
+const allSegments = Object.values(edges);
+
+const allAngles = [
+  angleARight,
+  angleCTotal,
+  angleBTotal,
+  angleBAlpha,
+  angleBBeta,
+  angleERight,
+  angleFRight,
+  angleGRight,
+  angleEBeta,
+];
+
+const allLabels = Object.values(angleLabels);
+const allBraces = Object.values(braces);
+
+function resetScene(): void {
+  scene.setView({
+    viewHeight: initialView.viewHeight,
+    center: initialView.center,
+    unitSizePixels: null,
+  });
+
+  for (const segment of allSegments) {
+    segment.hide();
+  }
+
+  for (const angle of allAngles) {
+    angle.hide().setRadius(0);
+  }
+
+  for (const label of allLabels) {
+    label.hide().setOpacity(0);
+  }
+
+  for (const brace of allBraces) {
+    brace.hide().setRevealProgress(0).setLabelOpacity(0);
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Stages                                                                     */
+/* -------------------------------------------------------------------------- */
+
+const stages: ProofStage2D[] = [
+  {
+    title: "Stage 1 — the main right triangle",
+    description:
+      "Start with a right triangle whose hypotenuse has length 1. Its legs are sin(α+β) and cos(α+β).",
+    async run(proof) {
+      await proof.drawSegment(edges.AB, A, B, {
+        durationSeconds: 0.42,
+      });
+
+      await Promise.all([
+        proof.drawSegment(edges.AC, A, C, {
+          durationSeconds: 0.42,
+        }),
+        proof.drawSegment(edges.BC, B, C, {
+          durationSeconds: 0.52,
+        }),
+      ]);
+
+      await Promise.all([
+        revealProofSector2D(proof, angleARight, 0.28, {
+          durationSeconds: 0.28,
+        }),
+        revealProofSector2D(proof, angleCTotal, 0.56, {
+          durationSeconds: 0.34,
+        }),
+      ]);
+
+      placeAngleLabel(angleLabels.cTotal, angleCTotal, 1.42);
+      angleLabels.cTotal.show().setOpacity(1);
+
+      await Promise.all([
+        revealDimensionBrace(proof, braces.BC, 0.62),
+        revealDimensionBrace(proof, braces.AB, 0.62),
+        revealDimensionBrace(proof, braces.AC, 0.62),
+      ]);
+    },
+  },
+
+  {
+    title: "Stage 2 — draw the short parallel",
+    description:
+      "From the lower endpoint of the hypotenuse, draw a short line parallel to the adjacent leg. The angle it makes with the hypotenuse is again α+β.",
+    async run(proof) {
+      await proof.drawSegment(edges.BD, B, D, {
+        durationSeconds: 0.42,
+      });
+
+      await revealProofSector2D(proof, angleBTotal, 0.56, {
+        durationSeconds: 0.34,
+      });
+
+      placeAngleLabel(angleLabels.bTotal, angleBTotal, 1.42);
+      angleLabels.bTotal.show().setOpacity(1);
+    },
+  },
+
+  {
+    title: "Stage 3 — split the angle into α and β",
+    description:
+      "Split the stage-2 angle into α and β, then extend the splitter and the perpendicular from the top vertex until they meet. This creates a right triangle with hypotenuse 1 and legs cos α and sin α.",
+    async run(proof) {
+      angleBTotal.hide().setRadius(0);
+      angleLabels.bTotal.hide().setOpacity(0);
+
+      await proof.drawSegment(edges.BE, B, E, {
+        durationSeconds: 0.44,
+      });
+
+      await proof.drawSegment(edges.CE, C, E, {
+        durationSeconds: 0.44,
+      });
+
+      await Promise.all([
+        revealProofSector2D(proof, angleBAlpha, 0.50, {
+          durationSeconds: 0.30,
+        }),
+        revealProofSector2D(proof, angleBBeta, 0.42, {
+          durationSeconds: 0.30,
+        }),
+        revealProofSector2D(proof, angleERight, 0.26, {
+          durationSeconds: 0.28,
+        }),
+      ]);
+
+      placeAngleLabel(angleLabels.bAlpha, angleBAlpha, 1.48);
+      placeAngleLabel(angleLabels.bBeta, angleBBeta, 1.58);
+
+      angleLabels.bAlpha.show().setOpacity(1);
+      angleLabels.bBeta.show().setOpacity(1);
+
+      await Promise.all([
+        revealDimensionBrace(proof, braces.BE, 0.64),
+        revealDimensionBrace(proof, braces.CE, 0.64),
+      ]);
+    },
+  },
+
+  {
+    title: "Stage 4 — the second right triangle",
+    description:
+      "Extend the parallel line upward until it meets the perpendicular from the stage-3 right angle. This produces another right triangle with legs cosβ cosα and sinβ cosα.",
+    async run(proof) {
+      await proof.drawSegment(edges.DF, D, F, {
+        durationSeconds: 0.36,
+      });
+
+      await proof.drawSegment(edges.EF, E, F, {
+        durationSeconds: 0.42,
+      });
+
+      await revealProofSector2D(proof, angleFRight, 0.26, {
+        durationSeconds: 0.28,
+      });
+
+      await Promise.all([
+        revealDimensionBrace(proof, braces.BF, 0.66),
+        revealDimensionBrace(proof, braces.EF, 0.66),
+      ]);
+    },
+  },
+
+  {
+    title: "Stage 5 — the final right triangle",
+    description:
+      "Extend the original cos(α+β) leg upward and the stage-4 segment leftward until they meet. The final right triangle contributes the terms sinβ sinα and cosβ sinα.",
+    async run(proof) {
+      await proof.drawSegment(edges.CG, C, G, {
+        durationSeconds: 0.42,
+      });
+
+      await proof.drawSegment(edges.GE, G, E, {
+        durationSeconds: 0.42,
+      });
+
+      await Promise.all([
+        revealProofSector2D(proof, angleGRight, 0.26, {
+          durationSeconds: 0.28,
+        }),
+        revealProofSector2D(proof, angleEBeta, 0.42, {
+          durationSeconds: 0.30,
+        }),
+      ]);
+
+      placeAngleLabel(angleLabels.eBeta, angleEBeta, 1.48);
+      angleLabels.eBeta.show().setOpacity(1);
+
+      await Promise.all([
+        revealDimensionBrace(proof, braces.CG, 0.66),
+        revealDimensionBrace(proof, braces.GE, 0.66),
+      ]);
+    },
+  },
+];
+
+const proof = new ProofStageController2D(scene, {
+  stages,
+  reset: resetScene,
+  startVisibilityRatio: 0.15,
+  nextButtonPosition: "bottom-right",
+});
+
+Object.assign(window, {
+  angleSumProofScene: {
+    scene,
+    proof,
+    points: { A, B, C, D, E, F, G },
+    edges,
+    angles: {
+      angleARight,
+      angleCTotal,
+      angleBTotal,
+      angleBAlpha,
+      angleBBeta,
+      angleERight,
+      angleFRight,
+      angleGRight,
+      angleEBeta,
+    },
+    braces,
+  },
+});
+
+const destroy = (): void => {
+  proof.destroy();
+  scene.destroy();
+};
+
+window.addEventListener("pagehide", destroy, { once: true });
+document.addEventListener("astro:before-swap", destroy, { once: true });

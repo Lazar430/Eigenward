@@ -482,3 +482,30 @@ export {
   type DimensionBrace2DStyle,
   type DimensionBraceSide2D,
 } from "./primitives/DimensionBrace2D";
+
+export {
+  SequencePointsPlayer2D,
+  createSequencePointsPlayer2D,
+  type SequenceLimit2D,
+  type SequencePointsPlayer2DOptions,
+  type SequencePointsPlayer2DStyle,
+  type SequenceTerm2D,
+  type SequenceViewport2D,
+} from "./animation/SequencePointsPlayer2D";
+
+export {
+  NumberLine2D,
+  NumberLineFiniteSet2D,
+  NumberLineInterval2D,
+  createNumberLine2D,
+  createNumberLinePoint2D,
+  formatNumberLineTick2D,
+  niceNumberLineTickStep2D,
+  type NumberLine2DOptions,
+  type NumberLine2DStyle,
+  type NumberLineFiniteSet2DOptions,
+  type NumberLineInterval2DOptions,
+  type NumberLinePoint2DOptions,
+  type ResolvedNumberLine2DStyle,
+} from "./presentation/NumberLine2D";
+

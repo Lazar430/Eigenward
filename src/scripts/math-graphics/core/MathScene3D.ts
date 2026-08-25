@@ -358,10 +358,30 @@ export class MathScene3D {
     const { width, height } = this.canvas.getBoundingClientRect();
     if (width <= 0 || height <= 0) return;
 
-    this.renderer.setPixelRatio(
-      Math.min(window.devicePixelRatio || 1, this.maxPixelRatio),
+    const pixelRatio = Math.min(
+      window.devicePixelRatio || 1,
+      this.maxPixelRatio,
     );
-    this.renderer.setSize(width, height, false);
+
+    /*
+     * Keep the WebGL drawing buffer and viewport on exactly the same
+     * device-pixel boundary. Fractional CSS sizes can otherwise make Three.js
+     * floor the drawing-buffer size but round the viewport one pixel upward,
+     * which Firefox reports as:
+     *
+     *   Drawing to a destination rect smaller than the viewport rect.
+     */
+    const renderWidth =
+      Math.max(1, Math.floor(width * pixelRatio)) /
+      pixelRatio;
+
+    const renderHeight =
+      Math.max(1, Math.floor(height * pixelRatio)) /
+      pixelRatio;
+
+    this.renderer.setPixelRatio(pixelRatio);
+    this.renderer.setSize(renderWidth, renderHeight, false);
+
     this.labelRenderer.setSize(width, height);
 
     this.camera.aspect = width / height;
@@ -372,9 +392,9 @@ export class MathScene3D {
   private requestFrame(): void {
     if (
       this.disposed ||
-	this.animationFrame !== 0 ||
-	!this.canvasVisible ||
-	document.hidden
+      this.animationFrame !== 0 ||
+      !this.canvasVisible ||
+      document.hidden
     ) {
       return;
     }

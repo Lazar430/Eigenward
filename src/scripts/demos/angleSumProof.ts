@@ -16,10 +16,10 @@ import {
 
 const DEG = Math.PI / 180;
 
-const ALPHA = 34 * DEG;
-const BETA = 21 * DEG;
+const ALPHA = 40 * DEG;
+const BETA = 30 * DEG;
 const THETA = ALPHA + BETA;
-const SCALE = 4.0;
+const SCALE = 6.0;
 
 const canvas = document.querySelector<HTMLCanvasElement>("#angle-sum-proof");
 
@@ -29,7 +29,7 @@ if (!canvas) {
 
 const scene = createMathScene2D(canvas, {
   viewHeight: 8.8,
-  center: [1.58, 1.78],
+  center: [3, 1.78],
   background: null,
 });
 

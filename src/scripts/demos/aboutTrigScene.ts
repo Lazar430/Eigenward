@@ -3,25 +3,32 @@ import {
   PointDragController2D,
   createAngleSector2D,
   createCoordinatePlane2D,
+  createDimensionBrace2D,
   createMathScene2D,
   createParametricShape2D,
   createTextLabel2D,
   createVector2D,
   type Vec2Tuple,
 } from "../math-graphics";
+import {
+  createProofSegment2D,
+} from "../math-graphics/animation/proofHelpers2D";
 
 const TAU = Math.PI * 2;
 const UNIT_RADIUS = 1;
-const UNIT_SIZE_PIXELS = 120;
+const UNIT_SIZE_PIXELS = 200;
+const EPSILON = 1e-8;
 const ORIGIN: Vec2Tuple = [0, 0];
 
-/* -------------------------------------------------------------------------- */
-/* Measurement display                                                        */
-/* -------------------------------------------------------------------------- */
-
 type MeasurementDisplayMode = "raw" | "platonic";
+type TrigViewMode =
+  | "coordinates"
+  | "lower-triangle"
+  | "upper-triangle"
+  | "all-triangles";
 
 const DEFAULT_MEASUREMENT_DISPLAY_MODE: MeasurementDisplayMode = "platonic";
+const DEFAULT_VIEW_MODE: TrigViewMode = "coordinates";
 
 const MEASUREMENT_DISPLAY = {
   raw: {
@@ -29,23 +36,28 @@ const MEASUREMENT_DISPLAY = {
   },
 
   platonic: {
-    /**
-     * Display angles as multiples of this many degrees.
-     *
-     * 1 -> whole degrees
-     * 5 -> multiples of 5°
-     * 10 -> multiples of 10°
-     */
     angleStepDegrees: 1,
   },
 } as const;
 
+const VIEW_MODE_ORDER: readonly TrigViewMode[] = [
+  "coordinates",
+  "lower-triangle",
+  "upper-triangle",
+  "all-triangles",
+] as const;
+
+const VIEW_MODE_LABEL: Record<TrigViewMode, string> = {
+  coordinates: "Coordinates",
+  "lower-triangle": "Lower triangle",
+  "upper-triangle": "Upper triangle",
+  "all-triangles": "All braces",
+};
+
 let measurementDisplayMode: MeasurementDisplayMode =
   DEFAULT_MEASUREMENT_DISPLAY_MODE;
 
-/* -------------------------------------------------------------------------- */
-/* Scene                                                                      */
-/* -------------------------------------------------------------------------- */
+let currentViewMode: TrigViewMode = DEFAULT_VIEW_MODE;
 
 const canvas = document.querySelector<HTMLCanvasElement>(
   "#about-trig-scene",
@@ -57,13 +69,6 @@ if (!canvas) {
   );
 }
 
-/*
- * Keep the trigonometric circle mathematically unit-sized (radius = 1), but
- * make one mathematical unit occupy more screen space.
- *
- * Increase/decrease UNIT_SIZE_PIXELS to zoom the mathematical scale without
- * changing any coordinates or the meaning of the unit circle.
- */
 const scene = createMathScene2D(canvas, {
   unitSizePixels: UNIT_SIZE_PIXELS,
   center: [0, 0],
@@ -72,11 +77,6 @@ const scene = createMathScene2D(canvas, {
 
 const coordinatePlane = createCoordinatePlane2D({
   name: "trigonometric-coordinate-plane",
-  /*
-   * Responsive mode: derive the visible grid/axes from the scene camera.
-   * This is important when unitSizePixels is used; fixed xRange/yRange would
-   * leave axis arrowheads outside a zoomed-in viewport.
-   */
   scene,
   edgePaddingPixels: 20,
   gridStep: 1,
@@ -113,16 +113,6 @@ const unitCircle = createParametricShape2D({
   },
 });
 
-/* -------------------------------------------------------------------------- */
-/* Angle state                                                                */
-/* -------------------------------------------------------------------------- */
-
-/**
- * This always stores the real geometric angle.
- *
- * Platonic mode affects only what the user sees in labels;
- * the vector itself remains perfectly smooth while dragging.
- */
 let currentAngle = Math.PI / 6;
 
 const angleSector = createAngleSector2D({
@@ -183,18 +173,144 @@ const coordinateLabel = createTextLabel2D({
   padding: "0.25rem 0.45rem",
 });
 
+const lowerHorizontal = createProofSegment2D({
+  name: "trig-lower-horizontal",
+  color: HUES.mint.light,
+  width: 2.2,
+  opacity: 0.9,
+});
+
+const lowerVertical = createProofSegment2D({
+  name: "trig-lower-vertical",
+  color: HUES.mint.light,
+  width: 2.2,
+  opacity: 0.9,
+});
+
+const upperVertical = createProofSegment2D({
+  name: "trig-upper-vertical",
+  color: HUES.blue.light,
+  width: 2.2,
+  opacity: 0.9,
+});
+
+const upperHorizontal = createProofSegment2D({
+  name: "trig-upper-horizontal",
+  color: HUES.blue.light,
+  width: 2.2,
+  opacity: 0.9,
+});
+
+const braceStyleLower = {
+  color: HUES.mint.light,
+  width: 3.3,
+  opacity: 0.95,
+  offset: 0.16,
+  hookDepth: 0.16,
+  cuspDepth: 0.13,
+  samples: 96,
+} as const;
+
+const braceStyleUpper = {
+  color: HUES.blue.light,
+  width: 3.3,
+  opacity: 0.95,
+  offset: 0.16,
+  hookDepth: 0.16,
+  cuspDepth: 0.13,
+  samples: 96,
+} as const;
+
+const braceLabelStyleLower = {
+  color: "rgba(221, 255, 242, 0.98)",
+  fontSizePx: 17,
+  fontWeight: 760,
+  background: "rgba(17, 46, 38, 0.82)",
+  border: "1px solid rgba(136, 242, 206, 0.20)",
+  borderRadiusPx: 7,
+  padding: "0.08rem 0.28rem",
+  offset: 0.12,
+} as const;
+
+const braceLabelStyleUpper = {
+  color: "rgba(225, 236, 255, 0.98)",
+  fontSizePx: 17,
+  fontWeight: 760,
+  background: "rgba(17, 29, 52, 0.82)",
+  border: "1px solid rgba(144, 178, 255, 0.20)",
+  borderRadiusPx: 7,
+  padding: "0.08rem 0.28rem",
+  offset: 0.12,
+} as const;
+
+const lowerCosBrace = createDimensionBrace2D({
+  name: "trig-lower-cos-brace",
+  start: [0, 0],
+  end: [1, 0],
+  referencePoint: [0, 1],
+  side: "away-from-reference",
+  style: braceStyleLower,
+  label: {
+    latex: String.raw`\cos 30^{\circ}`,
+    style: braceLabelStyleLower,
+  },
+});
+
+const lowerSinBrace = createDimensionBrace2D({
+  name: "trig-lower-sin-brace",
+  start: [1, 0],
+  end: [1, 1],
+  referencePoint: [0, 0],
+  side: "away-from-reference",
+  style: braceStyleLower,
+  label: {
+    latex: String.raw`\sin 30^{\circ}`,
+    style: braceLabelStyleLower,
+  },
+});
+
+const upperSinBrace = createDimensionBrace2D({
+  name: "trig-upper-sin-brace",
+  start: [0, 0],
+  end: [0, 1],
+  referencePoint: [1, 0],
+  side: "away-from-reference",
+  style: braceStyleUpper,
+  label: {
+    latex: String.raw`\sin 30^{\circ}`,
+    style: braceLabelStyleUpper,
+  },
+});
+
+const upperCosBrace = createDimensionBrace2D({
+  name: "trig-upper-cos-brace",
+  start: [0, 1],
+  end: [1, 1],
+  referencePoint: [0, 0],
+  side: "away-from-reference",
+  style: braceStyleUpper,
+  label: {
+    latex: String.raw`\cos 30^{\circ}`,
+    style: braceLabelStyleUpper,
+  },
+});
+
 scene.add(
   coordinatePlane,
   unitCircle,
   angleSector,
+  lowerHorizontal,
+  lowerVertical,
+  upperVertical,
+  upperHorizontal,
+  lowerCosBrace,
+  lowerSinBrace,
+  upperSinBrace,
+  upperCosBrace,
   unitVector,
   angleLabel,
   coordinateLabel,
 );
-
-/* -------------------------------------------------------------------------- */
-/* Angle formatting                                                           */
-/* -------------------------------------------------------------------------- */
 
 function normalizeAngle(angle: number): number {
   const normalized = ((angle % TAU) + TAU) % TAU;
@@ -219,12 +335,6 @@ function quantizeDegrees(
   const quantized =
     Math.round(degrees / stepDegrees) * stepDegrees;
 
-  /**
-   * 359.8° should reasonably become 360° in Platonic mode.
-   *
-   * Unlike the geometric angle, this is only display text, so showing
-   * 360° here is preferable to wrapping it immediately to 0°.
-   */
   return Math.max(0, Math.min(360, quantized));
 }
 
@@ -261,10 +371,6 @@ function formatDisplayedDegrees(
     : rounded.toFixed(decimals);
 }
 
-/* -------------------------------------------------------------------------- */
-/* Labels                                                                     */
-/* -------------------------------------------------------------------------- */
-
 function updateCoordinateLabelPosition(
   tip: Vec2Tuple,
 ): void {
@@ -283,26 +389,138 @@ function updateCoordinateLabelPosition(
     ]);
 }
 
-/* -------------------------------------------------------------------------- */
-/* Scene update                                                               */
-/* -------------------------------------------------------------------------- */
+function setSegmentVisible(
+  segment: ReturnType<typeof createProofSegment2D>,
+  start: Vec2Tuple,
+  end: Vec2Tuple,
+): void {
+  if (Math.hypot(end[0] - start[0], end[1] - start[1]) <= EPSILON) {
+    segment.hide();
+    return;
+  }
+
+  segment
+    .setEndpoints(start, end)
+    .show();
+}
+
+function setBraceVisible(
+  brace: ReturnType<typeof createDimensionBrace2D>,
+  start: Vec2Tuple,
+  end: Vec2Tuple,
+  referencePoint: Vec2Tuple,
+): void {
+  if (Math.hypot(end[0] - start[0], end[1] - start[1]) <= EPSILON) {
+    brace.hide();
+    return;
+  }
+
+  brace
+    .setEndpoints(start, end)
+    .setReferencePoint(referencePoint)
+    .show()
+    .showCompleteBrace()
+    .setLabelOpacity(1);
+}
+
+function hideLowerTriangleObjects(): void {
+  lowerHorizontal.hide();
+  lowerVertical.hide();
+  lowerCosBrace.hide();
+  lowerSinBrace.hide();
+}
+
+function hideUpperTriangleObjects(): void {
+  upperVertical.hide();
+  upperHorizontal.hide();
+  upperSinBrace.hide();
+  upperCosBrace.hide();
+}
+
+function applyViewMode(
+  tip: Vec2Tuple,
+): void {
+  const lowerFoot: Vec2Tuple = [tip[0], 0];
+  const upperFoot: Vec2Tuple = [0, tip[1]];
+
+  coordinateLabel.hide();
+  hideLowerTriangleObjects();
+  hideUpperTriangleObjects();
+
+  switch (currentViewMode) {
+    case "coordinates": {
+      coordinateLabel.show();
+      break;
+    }
+
+    case "lower-triangle": {
+      setSegmentVisible(lowerHorizontal, ORIGIN, lowerFoot);
+      setSegmentVisible(lowerVertical, lowerFoot, tip);
+      setBraceVisible(lowerCosBrace, ORIGIN, lowerFoot, tip);
+      setBraceVisible(lowerSinBrace, lowerFoot, tip, ORIGIN);
+      break;
+    }
+
+    case "upper-triangle": {
+      setSegmentVisible(upperVertical, ORIGIN, upperFoot);
+      setSegmentVisible(upperHorizontal, upperFoot, tip);
+      setBraceVisible(upperSinBrace, ORIGIN, upperFoot, tip);
+      setBraceVisible(upperCosBrace, upperFoot, tip, ORIGIN);
+      break;
+    }
+
+    case "all-triangles": {
+      setSegmentVisible(lowerHorizontal, ORIGIN, lowerFoot);
+      setSegmentVisible(lowerVertical, lowerFoot, tip);
+      setSegmentVisible(upperVertical, ORIGIN, upperFoot);
+      setSegmentVisible(upperHorizontal, upperFoot, tip);
+
+      setBraceVisible(lowerCosBrace, ORIGIN, lowerFoot, tip);
+      setBraceVisible(lowerSinBrace, lowerFoot, tip, ORIGIN);
+      setBraceVisible(upperSinBrace, ORIGIN, upperFoot, tip);
+      setBraceVisible(upperCosBrace, upperFoot, tip, ORIGIN);
+      break;
+    }
+  }
+}
+
+function updateBraceLabels(
+  degreesText: string,
+): void {
+  const angleLatex =
+    `${degreesText}^{\\circ}`;
+
+  lowerCosBrace.setLabelLatex(
+    `\\cos ${angleLatex}`,
+  );
+
+  lowerSinBrace.setLabelLatex(
+    `\\sin ${angleLatex}`,
+  );
+
+  upperSinBrace.setLabelLatex(
+    `\\sin ${angleLatex}`,
+  );
+
+  upperCosBrace.setLabelLatex(
+    `\\cos ${angleLatex}`,
+  );
+}
 
 function displayAngle(angleRadians: number): void {
   currentAngle = normalizeAngle(angleRadians);
 
-  /*
-   * Geometry always follows the real angle.
-   */
   const tip: Vec2Tuple = [
     Math.cos(currentAngle),
     Math.sin(currentAngle),
   ];
 
-  /*
-   * Labels may instead show the idealized Platonic angle.
-   */
   const degreesText =
     formatDisplayedDegrees(currentAngle);
+
+  updateBraceLabels(
+    degreesText,
+  );
 
   unitVector.setEnd(tip);
   angleSector.setAngles(0, currentAngle);
@@ -322,13 +540,58 @@ function displayAngle(angleRadians: number): void {
   );
 
   updateCoordinateLabelPosition(tip);
+  applyViewMode(tip);
 }
 
-displayAngle(currentAngle);
+function setViewMode(
+  mode: TrigViewMode,
+): void {
+  currentViewMode = mode;
+  updateModeButtonText();
+  displayAngle(currentAngle);
+}
 
-/* -------------------------------------------------------------------------- */
-/* Dragging                                                                   */
-/* -------------------------------------------------------------------------- */
+function cycleViewMode(): void {
+  const currentIndex = VIEW_MODE_ORDER.indexOf(currentViewMode);
+  const nextIndex =
+    (currentIndex + 1) % VIEW_MODE_ORDER.length;
+
+  setViewMode(VIEW_MODE_ORDER[nextIndex]);
+}
+
+const controlsHost = canvas.parentElement ?? canvas;
+const previousHostPosition = controlsHost.style.position;
+
+if (getComputedStyle(controlsHost).position === "static") {
+  controlsHost.style.position = "relative";
+}
+
+const modeButton = document.createElement("button");
+modeButton.type = "button";
+modeButton.setAttribute("aria-label", "Switch trigonometric view mode");
+modeButton.style.position = "absolute";
+modeButton.style.top = "0.65rem";
+modeButton.style.right = "0.65rem";
+modeButton.style.zIndex = "20";
+modeButton.style.padding = "0.45rem 0.7rem";
+modeButton.style.borderRadius = "10px";
+modeButton.style.border = "1px solid rgba(166, 221, 255, 0.28)";
+modeButton.style.background = "rgba(11, 20, 35, 0.84)";
+modeButton.style.color = "rgba(232, 246, 255, 0.98)";
+modeButton.style.font = "600 0.9rem system-ui, sans-serif";
+modeButton.style.cursor = "pointer";
+modeButton.style.backdropFilter = "blur(8px)";
+modeButton.style.boxShadow = "0 8px 22px rgba(0, 0, 0, 0.2)";
+
+function updateModeButtonText(): void {
+  modeButton.textContent = `Mode: ${VIEW_MODE_LABEL[currentViewMode]}`;
+}
+
+modeButton.addEventListener("click", cycleViewMode);
+controlsHost.appendChild(modeButton);
+updateModeButtonText();
+
+displayAngle(currentAngle);
 
 const dragging = new PointDragController2D(scene);
 
@@ -353,10 +616,6 @@ dragging.registerPoint({
   hoverCursor: "grab",
 });
 
-/* -------------------------------------------------------------------------- */
-/* Intro animation                                                            */
-/* -------------------------------------------------------------------------- */
-
 function clamp01(value: number): number {
   return Math.min(1, Math.max(0, value));
 }
@@ -366,38 +625,82 @@ function easeOutCubic(value: number): number {
   return 1 - Math.pow(1 - t, 3);
 }
 
+const INTRO_START_VISIBILITY_RATIO = 0.15;
+
+let introStarted = false;
 let introStartTime: number | null = null;
 let stopIntro = (): void => {};
+let introObserver: IntersectionObserver | null = null;
 
-stopIntro = scene.onFrame(({ time }) => {
-  introStartTime ??= time;
-
-  const elapsed =
-    (time - introStartTime) / 1000;
-
-  const axisProgress =
-    easeOutCubic(elapsed / 1.15);
-
-  const integerProgress =
-    easeOutCubic((elapsed - 0.95) / 0.9);
-
-  coordinatePlane.setAxisReveal(axisProgress);
-  coordinatePlane.setIntegerReveal(integerProgress);
-
-  if (
-    axisProgress >= 1 &&
-    integerProgress >= 1
-  ) {
-    stopIntro();
+function startIntro(): void {
+  if (introStarted) {
+    return;
   }
-});
 
-/* -------------------------------------------------------------------------- */
-/* Public API                                                                 */
-/* -------------------------------------------------------------------------- */
+  introStarted = true;
+  introStartTime = null;
+
+  stopIntro = scene.onFrame(({ time }) => {
+    introStartTime ??= time;
+
+    const elapsed =
+      (time - introStartTime) / 1000;
+
+    const axisProgress =
+      easeOutCubic(elapsed / 1.15);
+
+    const integerProgress =
+      easeOutCubic((elapsed - 0.95) / 0.9);
+
+    coordinatePlane.setAxisReveal(axisProgress);
+    coordinatePlane.setIntegerReveal(integerProgress);
+
+    if (
+      axisProgress >= 1 &&
+      integerProgress >= 1
+    ) {
+      stopIntro();
+    }
+  });
+}
+
+if (
+  typeof IntersectionObserver === "function"
+) {
+  introObserver =
+    new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (
+            entry.target === canvas &&
+            entry.isIntersecting &&
+            entry.intersectionRatio >=
+              INTRO_START_VISIBILITY_RATIO
+          ) {
+            startIntro();
+            introObserver?.disconnect();
+            introObserver = null;
+            break;
+          }
+        }
+      },
+      {
+        threshold: [
+          0,
+          INTRO_START_VISIBILITY_RATIO,
+          0.5,
+          1,
+        ],
+      },
+    );
+
+  introObserver.observe(canvas);
+} else {
+  startIntro();
+}
 
 Object.assign(window, {
-  mathTrigDemo: {
+  mathTrigViewModesDemo: {
     scene,
     coordinatePlane,
     unitCircle,
@@ -405,9 +708,34 @@ Object.assign(window, {
     angleSector,
     angleLabel,
     coordinateLabel,
+    lowerHorizontal,
+    lowerVertical,
+    upperVertical,
+    upperHorizontal,
+    braces: {
+      lowerCosBrace,
+      lowerSinBrace,
+      upperSinBrace,
+      upperCosBrace,
+    },
+    button: modeButton,
 
     setAngleDegrees(degrees: number) {
       displayAngle(degrees * Math.PI / 180);
+    },
+
+    viewModes: {
+      getMode(): TrigViewMode {
+        return currentViewMode;
+      },
+
+      setMode(mode: TrigViewMode) {
+        setViewMode(mode);
+      },
+
+      cycle() {
+        cycleViewMode();
+      },
     },
 
     measurements: {
@@ -417,23 +745,24 @@ Object.assign(window, {
 
       setMode(mode: MeasurementDisplayMode) {
         measurementDisplayMode = mode;
-
-        /*
-         * Geometry does not change. Only regenerate the annotations.
-         */
         displayAngle(currentAngle);
       },
     },
   },
 });
 
-/* -------------------------------------------------------------------------- */
-/* Cleanup                                                                    */
-/* -------------------------------------------------------------------------- */
-
 const destroy = (): void => {
+  introObserver?.disconnect();
+  introObserver = null;
   stopIntro();
   dragging.destroy();
+  modeButton.removeEventListener("click", cycleViewMode);
+  modeButton.remove();
+
+  if (getComputedStyle(controlsHost).position === "relative") {
+    controlsHost.style.position = previousHostPosition;
+  }
+
   scene.destroy();
 };
 

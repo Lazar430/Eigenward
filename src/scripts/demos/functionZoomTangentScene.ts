@@ -49,7 +49,7 @@ const GRAPH_WIDTH_PIXELS = 3.2;
 const TANGENT_WIDTH_PIXELS =
   GRAPH_WIDTH_PIXELS;
 
-const MAGNIFIER_RADIUS_PIXELS = 200;
+const MAGNIFIER_RADIUS_PIXELS = 138;
 const MAGNIFIER_BORDER_PIXELS = 3;
 
 const MIN_MAGNIFICATION = 1;
@@ -58,7 +58,7 @@ const MIN_MAGNIFICATION = 1;
  * pronounced while still leaving enough numerical headroom for stable
  * interaction.
  */
-const MAX_MAGNIFICATION = 60;
+const MAX_MAGNIFICATION = 40;
 
 /*
  * Wheel changes a target zoom exponentially. The actual zoom approaches that

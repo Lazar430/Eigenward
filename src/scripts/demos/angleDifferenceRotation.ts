@@ -18,7 +18,7 @@ const ORIGIN: Vec2Tuple = [0, 0];
 const UNIT_CIRCLE_RADIUS = 1;
 
 const ALPHA = 150 * Math.PI / 180;
-const BETA = 80 * Math.PI / 180;
+const BETA = 100 * Math.PI / 180;
 const DIFFERENCE = ALPHA - BETA;
 
 const ALPHA_SECTOR_RADIUS = 0.74;

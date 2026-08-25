@@ -86,7 +86,7 @@ export class MathScene2D {
 
     if (
       this.unitSizePixels !== null &&
-	!(this.unitSizePixels > 0)
+      !(this.unitSizePixels > 0)
     ) {
       throw new RangeError("unitSizePixels must be greater than zero.");
     }
@@ -207,7 +207,7 @@ export class MathScene2D {
     if (options.unitSizePixels !== undefined) {
       if (
         options.unitSizePixels !== null &&
-          !(options.unitSizePixels > 0)
+        !(options.unitSizePixels > 0)
       ) {
         throw new RangeError("unitSizePixels must be greater than zero.");
       }
@@ -377,10 +377,35 @@ export class MathScene2D {
     const { width, height } = this.canvas.getBoundingClientRect();
     if (width <= 0 || height <= 0) return;
 
-    this.renderer.setPixelRatio(
-      Math.min(window.devicePixelRatio || 1, this.maxPixelRatio),
+    const pixelRatio = Math.min(
+      window.devicePixelRatio || 1,
+      this.maxPixelRatio,
     );
-    this.renderer.setSize(width, height, false);
+
+    /*
+     * Firefox warns when Three.js rounds the WebGL viewport up while the
+     * drawing buffer itself was floored to a slightly smaller integer size.
+     * This can happen whenever getBoundingClientRect() returns fractional CSS
+     * dimensions on a high-DPI display.
+     *
+     * Quantize the renderer's logical size to exact device-pixel boundaries:
+     *
+     *   safeCssSize * pixelRatio = integer drawing-buffer size.
+     *
+     * The CSS layout and camera still use the real DOM dimensions; only the
+     * WebGL backing store is quantized.
+     */
+    const renderWidth =
+      Math.max(1, Math.floor(width * pixelRatio)) /
+      pixelRatio;
+
+    const renderHeight =
+      Math.max(1, Math.floor(height * pixelRatio)) /
+      pixelRatio;
+
+    this.renderer.setPixelRatio(pixelRatio);
+    this.renderer.setSize(renderWidth, renderHeight, false);
+
     this.labelRenderer.setSize(width, height);
     this.resizeCamera();
     this.invalidate();
@@ -419,9 +444,9 @@ export class MathScene2D {
   private requestFrame(): void {
     if (
       this.disposed ||
-	this.animationFrame !== 0 ||
-	!this.canvasVisible ||
-	document.hidden
+      this.animationFrame !== 0 ||
+      !this.canvasVisible ||
+      document.hidden
     ) {
       return;
     }
