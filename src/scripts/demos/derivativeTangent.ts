@@ -67,7 +67,7 @@ function unitCircle(parameter: number): Vec2Tuple {
 
 const canvas = document.querySelector<HTMLCanvasElement>(
   "#derivative-tangent-scene",
-) ?? document.querySelector<HTMLCanvasElement>("#tangent-derivative-scene");
+) ?? document.querySelector<HTMLCanvasElement>("#tangent-derivative");
 
 if (!canvas) {
   throw new Error(

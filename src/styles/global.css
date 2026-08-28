@@ -589,114 +589,616 @@ p {
     border-left-color: var(--accent-strong);
 }
 
-.carousel-header {
-    display: flex;
-    justify-content: space-between;
-    gap: 24px;
-    align-items: flex-end;
+.featured-articles-section {
+    padding-top: 30px;
+    padding-bottom: 58px;
 }
 
-.carousel-controls {
-    display: flex;
-    gap: 10px;
-    padding-bottom: 4px;
+/*
+ * Six equal outer hexagons around one equal center hexagon. Percentage
+ * translations are relative to each hexagon's own dimensions, so the standard
+ * flat-top honeycomb offsets make adjacent sides touch exactly.
+ */
+.featured-hex-orbit {
+    /*
+     * MAXIMUM PRACTICAL HONEYCOMB SIZE
+     * --------------------------------
+     *
+     * The site shell is capped at --max-width: 1160px. A seven-cell flat-top
+     * honeycomb is 2.5 hexagon-widths across, so 40% would touch the exact
+     * left/right bounds before hover enlargement.
+     *
+     * 39% makes the desktop hexagons about 452px wide at the site's maximum
+     * content width while retaining a small safety margin for the 1.028 hover
+     * scale and shadows.
+     *
+     * This is now fluid rather than capped at a small fixed pixel width.
+     */
+    --featured-hex-width: 39%;
+
+    position: relative;
+    width: min(100%, var(--max-width));
+
+    /*
+     * Reserve the full vertical footprint of the touching honeycomb, including
+     * the slight hover enlargement of the top/bottom cells, so the following
+     * homepage section cannot overlap it.
+     */
+    aspect-ratio: 0.975;
+
+    margin: 0 auto;
+    isolation: isolate;
 }
 
-.carousel-controls button {
-    width: 46px;
-    height: 46px;
-    border: 1px solid var(--border);
-    border-radius: 50%;
-    background: var(--surface);
+.featured-hex-card,
+.featured-hex-center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: var(--featured-hex-width);
+    aspect-ratio: 1.154700538;
+    clip-path: polygon(
+        25% 0%,
+        75% 0%,
+        100% 50%,
+        75% 100%,
+        25% 100%,
+        0% 50%
+    );
+}
+
+.featured-hex-card {
+    --hex-translate-x: 0%;
+    --hex-translate-y: 0%;
+
+    display: grid;
+    place-items: center;
+    padding: clamp(22px, 2.7vw, 32px);
     color: var(--ink);
+    text-align: center;
+    background: rgba(119, 112, 153, 0.52);
+    transform:
+        translate(-50%, -50%)
+        translate(var(--hex-translate-x), var(--hex-translate-y));
+    overflow: hidden;
+    filter: drop-shadow(0 16px 28px rgba(0, 0, 0, 0.22));
+    transition:
+        transform 180ms ease,
+        filter 180ms ease;
+}
+
+.featured-hex-card[data-hex-position="0"] {
+    --hex-translate-x: 0%;
+    --hex-translate-y: -100%;
+}
+
+.featured-hex-card[data-hex-position="1"] {
+    --hex-translate-x: 75%;
+    --hex-translate-y: -50%;
+}
+
+.featured-hex-card[data-hex-position="2"] {
+    --hex-translate-x: 75%;
+    --hex-translate-y: 50%;
+}
+
+.featured-hex-card[data-hex-position="3"] {
+    --hex-translate-x: 0%;
+    --hex-translate-y: 100%;
+}
+
+.featured-hex-card[data-hex-position="4"] {
+    --hex-translate-x: -75%;
+    --hex-translate-y: 50%;
+}
+
+.featured-hex-card[data-hex-position="5"] {
+    --hex-translate-x: -75%;
+    --hex-translate-y: -50%;
+}
+
+.featured-hex-card::before,
+.featured-hex-center::before {
+    content: "";
+    position: absolute;
+    inset: 2px;
+    z-index: 0;
+    clip-path: inherit;
+    pointer-events: none;
+    background:
+        radial-gradient(
+            circle at 78% 18%,
+            rgba(100, 216, 203, 0.12),
+            transparent 42%
+        ),
+        linear-gradient(
+            145deg,
+            rgba(63, 63, 90, 0.58),
+            rgba(30, 27, 48, 0.46)
+        );
+}
+
+.featured-hex-card:hover,
+.featured-hex-card:focus-visible {
+    transform:
+        translate(-50%, -50%)
+        translate(var(--hex-translate-x), var(--hex-translate-y))
+        scale(1.028);
+    filter:
+        drop-shadow(0 20px 32px rgba(0, 0, 0, 0.28))
+        drop-shadow(0 0 14px rgba(100, 216, 203, 0.09));
+    outline: none;
+    z-index: 4;
+}
+
+.featured-hex-card h3 {
+    position: relative;
+    z-index: 2;
+    max-width: 78%;
+    margin: 0;
+    font-size: clamp(1.04rem, 1.9vw, 1.42rem);
+    line-height: 1.04;
+    letter-spacing: -0.05em;
+    text-wrap: balance;
+    transition:
+        opacity 150ms ease,
+        transform 150ms ease;
+}
+
+.featured-hex-hover {
+    position: absolute;
+    inset: 2px;
+    z-index: 3;
+    display: grid;
+    place-content: center;
+    gap: 0.5rem;
+    padding: 17% 16%;
+    clip-path: inherit;
+    color: rgba(245, 243, 255, 0.96);
+    background:
+        radial-gradient(
+            circle at 50% 25%,
+            rgba(100, 216, 203, 0.14),
+            transparent 48%
+        ),
+        rgba(18, 16, 31, 0.82);
+    opacity: 0;
+    transform: scale(0.96);
+    pointer-events: none;
+    transition:
+        opacity 150ms ease,
+        transform 150ms ease;
+}
+
+.featured-hex-card:hover h3,
+.featured-hex-card:focus-visible h3 {
+    opacity: 0;
+    transform: scale(0.95);
+}
+
+.featured-hex-card:hover .featured-hex-hover,
+.featured-hex-card:focus-visible .featured-hex-hover {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.featured-hex-eyebrow {
+    color: var(--accent);
+    font-size: 0.65rem;
+    font-weight: 820;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.featured-hex-hover p {
+    margin: 0;
+    color: rgba(239, 234, 255, 0.82);
+    font-size: clamp(0.73rem, 1.1vw, 0.88rem);
+    line-height: 1.42;
+}
+
+.featured-hex-center {
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    padding: 28px;
+    color: inherit;
+    text-decoration: none;
+    background: rgba(119, 112, 153, 0.58);
+    transform: translate(-50%, -50%);
+    filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.24));
+    overflow: hidden;
     cursor: pointer;
-    font-size: 1.25rem;
-    font-weight: 800;
-    transition: background-color 160ms ease, color 160ms ease, transform 160ms ease;
+    transition:
+        filter 170ms ease;
 }
 
-.carousel-controls button:hover {
-    background: var(--accent);
-    color: #171728;
-    transform: translateY(-2px);
+.featured-hex-center:hover,
+.featured-hex-center:focus-visible {
+    filter:
+        brightness(1.06)
+        drop-shadow(0 20px 34px rgba(0, 0, 0, 0.27));
+    outline: none;
 }
 
-.featured-carousel {
-    display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: minmax(310px, 390px);
-    gap: 16px;
-    margin-top: 22px;
-    padding-bottom: 16px;
-    overflow-x: auto;
-    overscroll-behavior-inline: contain;
-    scroll-snap-type: inline mandatory;
-    scrollbar-width: thin;
-    scrollbar-color: var(--border) transparent;
+.featured-hex-center::before {
+    background:
+        radial-gradient(
+            circle at 50% 28%,
+            rgba(255, 184, 108, 0.12),
+            transparent 48%
+        ),
+        linear-gradient(
+            145deg,
+            rgba(58, 49, 88, 0.62),
+            rgba(28, 23, 46, 0.50)
+        );
 }
 
-.featured-card {
-    min-height: 250px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 24px;
-    scroll-snap-align: start;
-    background: linear-gradient(180deg, rgba(63, 63, 90, 0.78), rgba(44, 44, 62, 0.78)), radial-gradient(circle at 90% 10%, rgba(100, 216, 203, 0.12), transparent 14rem);
-    transition: transform 160ms ease, border-color 160ms ease, background-color 160ms ease;
-}
-
-.featured-card:hover,
-.spotlight-card:hover,
-.hub-overview-card:hover,
-.hub-problem-card:hover,
-.hub-index-card:hover {
-    transform: translateY(-4px);
-    border-color: var(--accent);
-}
-
-.featured-card h3 {
-    margin: 0 0 10px;
-    font-size: 1.55rem;
-    line-height: 1.05;
-    letter-spacing: -0.055em;
-}
-
-.weekly-grid {
-    display: grid;
-    grid-template-columns: 1.2fr 1.2fr 0.95fr;
-    gap: 16px;
-}
-
-.spotlight-card {
-    min-height: 330px;
-    padding: clamp(22px, 4vw, 32px);
-    background: linear-gradient(180deg, rgba(44, 44, 62, 0.78), rgba(32, 32, 51, 0.72)), radial-gradient(circle at 95% 8%, rgba(255, 184, 108, 0.12), transparent 16rem);
-    transition: transform 160ms ease, border-color 160ms ease;
-}
-
-.spotlight-card h2 {
-    margin: 0 0 16px;
-    font-size: clamp(1.8rem, 3vw, 2.65rem);
-    line-height: 0.98;
-    letter-spacing: -0.07em;
-}
-
-.spotlight-card p {
-    margin: 18px 0 0;
-    color: var(--muted);
-}
-
-.spotlight-math {
-    overflow-x: auto;
-    margin: 18px 0;
-    padding: 16px 0;
+.featured-hex-center h2 {
+    position: relative;
+    z-index: 2;
+    margin: 0;
     color: var(--ink);
-    font-size: 1.08rem;
+    font-size: clamp(1.35rem, 2.6vw, 2rem);
+    line-height: 0.96;
+    letter-spacing: -0.06em;
+    text-align: center;
+    transition:
+        opacity 150ms ease,
+        transform 150ms ease;
 }
 
-.mathematician-card {
-    background: linear-gradient(180deg, rgba(63, 63, 90, 0.80), rgba(44, 44, 62, 0.70)), radial-gradient(circle at 90% 10%, rgba(100, 216, 203, 0.14), transparent 15rem);
+.featured-hex-center span {
+    display: block;
+    color: var(--accent);
+}
+
+.featured-hex-animation-stage {
+    position: absolute;
+    inset: 2px;
+    z-index: 3;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 150ms ease;
+}
+
+/*
+ * One isolated scene host per article.
+ *
+ * Do NOT replace this with canvas[hidden] or display:none:
+ * keeping every slot laid out gives a newly imported math scene a non-zero
+ * viewport immediately, while visibility:hidden suppresses the entire scene
+ * subtree (canvas + CSS2D labels + any other DOM overlays).
+ */
+.featured-hex-animation-slot {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/*
+ * A preview is visible only after its native-size scene has finished
+ * initializing. During the two-frame initialization window the center remains
+ * blank instead of flashing a full-size scene.
+ */
+.featured-hex-animation-slot[
+    data-preview-active="true"
+][data-preview-ready="true"] {
+    visibility: visible;
+    opacity: 1;
+}
+
+/*
+ * Empty/future preview slots have no module to initialize, so they can become
+ * visible as soon as the controller marks them ready.
+ */
+.featured-hex-animation-slot[
+    data-preview-active="true"
+][data-preview-initializing="false"] {
+    visibility: visible;
+    opacity: 1;
+}
+
+/*
+ * IMPORTANT:
+ *
+ * This mount is a NORMAL 960x540 scene internally. The math engine and the
+ * CSS2D label renderer both lay themselves out at those unscaled dimensions.
+ *
+ * JavaScript applies --featured-preview-scale only AFTER initialization.
+ * Because a CSS transform does not change layout dimensions / ResizeObserver
+ * content size, the scene keeps believing it is the original 960x540 canvas.
+ * The canvas, labels and every other DOM layer are then reduced together as
+ * one miniature.
+ */
+.featured-hex-animation-mount {
+    --featured-preview-scale: 1;
+
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 960px;
+    height: 540px;
+
+    transform:
+        translate(-50%, -50%)
+        scale(var(--featured-preview-scale));
+
+    transform-origin: center center;
+}
+
+/*
+ * MathScene2D/3D append CSS label/render layers to this exact parent. Since
+ * the transform lives on the parent, those layers are scaled by precisely the
+ * same amount as the WebGL canvas.
+ */
+.featured-hex-animation-mount > canvas,
+.featured-hex-animation-canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+}
+
+.featured-hex-center[data-preview-active="true"] h2 {
+    opacity: 0;
+    transform: scale(0.94);
+}
+
+.featured-hex-center[data-preview-active="true"]
+.featured-hex-animation-stage {
+    opacity: 1;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Oddity Exhibition                                                          */
+/* -------------------------------------------------------------------------- */
+
+.oddity-exhibition-section {
+    display: grid;
+    gap: clamp(1rem, 2vw, 1.4rem);
+    padding-top: clamp(30px, 4vw, 52px);
+    padding-bottom: clamp(44px, 6vw, 72px);
+}
+
+.oddity-exhibition-title {
+    margin: 0;
+    color: var(--ink);
+    font-size: clamp(2rem, 5vw, 4.4rem);
+    line-height: 0.96;
+    letter-spacing: -0.06em;
+}
+
+.oddity-exhibition-card {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    min-height: 0;
+    overflow: hidden;
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: clamp(1rem, 2.2vw, 1.6rem);
+
+    background:
+        radial-gradient(
+            circle at 22% 16%,
+            rgba(100, 216, 203, 0.08),
+            transparent 32%
+        ),
+        radial-gradient(
+            circle at 82% 80%,
+            rgba(214, 140, 255, 0.07),
+            transparent 34%
+        ),
+        rgba(19, 15, 34, 0.48);
+
+    box-shadow:
+        0 28px 76px rgba(0, 0, 0, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.045);
+
+    cursor: pointer;
+    transition:
+        transform 180ms ease,
+        border-color 180ms ease,
+        box-shadow 180ms ease;
+}
+
+.oddity-exhibition-card:hover,
+.oddity-exhibition-card:focus-visible {
+    transform: translateY(-3px);
+    border-color: rgba(145, 239, 255, 0.34);
+    box-shadow:
+        0 32px 86px rgba(0, 0, 0, 0.34),
+        0 0 28px rgba(100, 216, 203, 0.055);
+    outline: none;
+}
+
+.oddity-exhibition-canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+
+    /* The whole card is the link; preserve click behavior over the canvas. */
+    pointer-events: none;
+    user-select: none;
+}
+
+/*
+ * Homepage weekly/monthly cards intentionally reuse the same semantic class
+ * names as the Articles and Problems hubs. They are scoped under the homepage
+ * stack here so the hub pages can keep their own local sizing rules.
+ */
+.home-weekly-stack {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.home-weekly-stack .problem-card,
+.home-weekly-stack .article-card {
+    display: grid;
+    gap: 1.2rem;
+    width: 100%;
+    min-width: 0;
+    padding: clamp(1.2rem, 3vw, 2rem);
+    border: 1px solid rgba(255, 255, 255, 0.11);
+    border-radius: 1.4rem;
+    color: inherit;
+    background:
+        radial-gradient(
+            circle at 85% 0%,
+            rgba(113, 230, 255, 0.08),
+            transparent 30%
+        ),
+        linear-gradient(
+            145deg,
+            rgba(44, 44, 62, 0.62),
+            rgba(24, 20, 42, 0.50)
+        );
+    box-shadow:
+        0 24px 70px rgba(0, 0, 0, 0.27),
+        inset 0 1px 0 rgba(255, 255, 255, 0.045);
+    text-decoration: none;
+    overflow: hidden;
+    transition:
+        transform 180ms ease,
+        border-color 180ms ease,
+        box-shadow 180ms ease;
+}
+
+.home-weekly-stack .problem-card:hover,
+.home-weekly-stack .problem-card:focus-visible,
+.home-weekly-stack .article-card:hover,
+.home-weekly-stack .article-card:focus-visible {
+    transform: translateY(-4px);
+    border-color: rgba(113, 230, 255, 0.44);
+    box-shadow:
+        0 30px 85px rgba(0, 0, 0, 0.34),
+        0 0 28px rgba(113, 230, 255, 0.08);
+    outline: none;
+}
+
+.home-weekly-stack .problem-card-header,
+.home-weekly-stack .article-card-header {
+    display: grid;
+    gap: 0.65rem;
+}
+
+.home-weekly-stack .problem-branch,
+.home-weekly-stack .article-branch {
+    color: var(--accent, #71e6ff);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+}
+
+.home-weekly-stack .home-weekly-card h2 {
+    max-width: 900px;
+    margin: 0;
+    font-size: clamp(1.9rem, 4.8vw, 4rem);
+    line-height: 1;
+    letter-spacing: -0.05em;
+}
+
+.home-weekly-stack .problem-formula {
+    display: grid;
+    place-items: center;
+    min-width: 0;
+    padding: clamp(1rem, 3vw, 2rem) 0;
+    color: rgba(247, 244, 255, 0.94);
+    overflow: auto hidden;
+}
+
+.home-weekly-stack .problem-formula .katex-display {
+    max-width: 100%;
+    margin: 0;
+}
+
+.home-weekly-stack .problem-formula .katex {
+    font-size: clamp(1rem, 1.55vw, 1.32rem);
+}
+
+.home-weekly-stack .problem-description,
+.home-weekly-stack .article-description {
+    max-width: 880px;
+    margin: 0;
+    color: rgba(239, 234, 255, 0.72);
+    font-size: clamp(0.96rem, 1.3vw, 1.08rem);
+    line-height: 1.72;
+}
+
+.home-weekly-stack .read-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    width: fit-content;
+    color: rgba(239, 248, 255, 0.9);
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+}
+
+.home-weekly-stack .read-label span {
+    color: var(--accent, #71e6ff);
+    font-size: 1.15rem;
+    transition: transform 180ms ease;
+}
+
+.home-weekly-stack .problem-card:hover .read-label span,
+.home-weekly-stack .problem-card:focus-visible .read-label span,
+.home-weekly-stack .article-card:hover .read-label span,
+.home-weekly-stack .article-card:focus-visible .read-label span {
+    transform: translateX(4px);
+}
+
+.home-weekly-stack .theorem-card {
+    background:
+        radial-gradient(
+            circle at 86% 0%,
+            rgba(255, 184, 108, 0.09),
+            transparent 32%
+        ),
+        linear-gradient(
+            145deg,
+            rgba(52, 43, 66, 0.60),
+            rgba(26, 21, 42, 0.48)
+        );
+}
+
+.home-weekly-stack .mathematician-card {
+    background:
+        radial-gradient(
+            circle at 88% 4%,
+            rgba(100, 216, 203, 0.10),
+            transparent 34%
+        ),
+        linear-gradient(
+            145deg,
+            rgba(43, 49, 64, 0.60),
+            rgba(23, 23, 39, 0.48)
+        );
+}
+
+.home-weekly-stack .article-canvas {
+    min-height: clamp(250px, 32vw, 390px);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 1rem;
+    background: rgba(4, 4, 13, 0.30);
+    overflow: hidden;
+}
+
+.home-weekly-stack .article-canvas canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: inherit;
 }
 
 .background-explainer {
@@ -1412,22 +1914,87 @@ body {
         transform: translateY(-2px);
     }
 
-    .carousel-header {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    .featured-carousel {
-        grid-auto-columns: minmax(280px, 84vw);
-    }
-
-    .weekly-grid {
-        grid-template-columns: 1fr;
-    }
-
     .background-explainer {
         align-items: flex-start;
         flex-direction: column;
+    }
+}
+
+@media (max-width: 620px) {
+    .featured-articles-section {
+        padding-bottom: 42px;
+    }
+
+    .featured-hex-orbit {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.6rem;
+        width: 100%;
+        aspect-ratio: auto;
+    }
+
+    .featured-hex-center,
+    .featured-hex-card {
+        position: relative;
+        left: auto;
+        top: auto;
+        width: min(100%, 280px);
+        margin: 0 auto;
+        transform: none;
+    }
+
+    .featured-hex-center {
+        grid-column: 1 / -1;
+        width: min(72vw, 280px);
+    }
+
+    .featured-hex-card:hover,
+    .featured-hex-card:focus-visible {
+        transform: scale(1.022);
+    }
+
+    .featured-hex-hover {
+        padding: 17% 15%;
+    }
+
+    .home-weekly-stack .problem-card,
+    .home-weekly-stack .article-card {
+        border-radius: 1rem;
+    }
+
+    .home-weekly-stack .article-canvas {
+        min-height: 235px;
+    }
+}
+
+@media (max-width: 520px) {
+    .featured-hex-orbit {
+        grid-template-columns: 1fr;
+    }
+
+    .featured-hex-center {
+        grid-column: auto;
+    }
+
+    .featured-hex-center,
+    .featured-hex-card {
+        width: min(88vw, 320px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .oddity-exhibition-card,
+    .featured-hex-card,
+    .featured-hex-card h3,
+    .featured-hex-hover,
+    .featured-hex-center,
+    .featured-hex-center h2,
+    .featured-hex-animation-stage,
+    .featured-hex-animation-slot,
+    .home-weekly-stack .problem-card,
+    .home-weekly-stack .article-card,
+    .home-weekly-stack .read-label span {
+        transition: none;
     }
 }
 

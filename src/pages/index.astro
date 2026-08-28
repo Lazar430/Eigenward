@@ -4,7 +4,7 @@ import { withBase } from "@/utils/paths";
 import katex from "katex";
 
 const theoremFormula = katex.renderToString(
-  String.raw`e^{i\pi} + 1 = 0`,
+  String.raw`e^{i\pi} = -1`,
   {
     displayMode: true,
     throwOnError: false
@@ -19,31 +19,54 @@ const problemFormula = katex.renderToString(
   }
 );
 
-const featuredPosts = [
+const featuredArticles = [
   {
     eyebrow: "Linear Algebra",
-    title: "Why vector spaces exist",
-    text: "A motivated path from arrows and equations to abstraction, bases, and dimension."
+    title: "Why do we exist?",
+    text: "Fuck knows.",
+    href: withBase("articles/"),
+    previewKey: "about-primitives-scene",
+    canvasId: "about-primitives-scene"
   },
   {
     eyebrow: "Geometry",
-    title: "What a conic really is",
-    text: "From school curves to quadratic forms, affine changes of coordinates, and classification."
+    title: "What pigeons REALLY are",
+    text: "Government drones.",
+    href: withBase("articles/"),
+    previewKey: "about-curve-scene",
+    canvasId: "about-curve-scene"
   },
   {
     eyebrow: "Proofs",
-    title: "How to read a proof",
-    text: "A practical guide to understanding proofs as mechanisms rather than text to memorize."
+    title: "How to read the bible",
+    text: "The way the Lord intended it.",
+    href: withBase("articles/"),
+    previewKey: "about-lissajous-scene",
+    canvasId: "about-lissajous-scene"
   },
   {
     eyebrow: "Analysis",
-    title: "The meaning of a limit",
-    text: "Why epsilon arguments are not arbitrary formalism, but a language for controlled approximation."
+    title: "Pushing Frank's limits.",
+    text: "Poor Frank...",
+    href: withBase("articles/"),
+    previewKey: "factorial-shuffling",
+    canvasId: "factorial-shuffling"
   },
   {
     eyebrow: "Computation",
-    title: "Turing machines as mathematics",
-    text: "A first look at computation as a rigorous mathematical object."
+    title: "Amazon Stocks",
+    text: "Hot DILFS make smart investments.",
+    href: withBase("articles/"),
+    previewKey: "about-determinant-transformation-scene",
+    canvasId: "about-determinant-transformation-scene"
+  },
+  {
+    eyebrow: "Probability",
+    title: "Raabe-Duhamel",
+    text: "IYKYK.",
+    href: withBase("articles/coupon-collector/"),
+    previewKey: "about-function-graph-scene",
+    canvasId: "about-function-graph-scene"
   }
 ];
 
@@ -147,6 +170,13 @@ function polar(radius: number, angle: number): [number, number] {
   ];
 }
 
+/*
+ * Use an explicitly sampled polygon instead of SVG A/arcs for the annular
+ * sectors. The visual result is indistinguishable at this resolution, but it
+ * avoids Firefox/WebRender's cached arc-tessellation path, which can leave a
+ * triangular "chip" missing from a sector after the SVG leaves and re-enters
+ * the viewport.
+ */
 function annularSectorPath(
   innerRadius: number,
   outerRadius: number,
@@ -155,19 +185,26 @@ function annularSectorPath(
 ): string {
   const start = startAngle + OVERVIEW_GAP;
   const end = endAngle - OVERVIEW_GAP;
+  const samples = 28;
 
-  const [outerStartX, outerStartY] = polar(outerRadius, start);
-  const [outerEndX, outerEndY] = polar(outerRadius, end);
-  const [innerEndX, innerEndY] = polar(innerRadius, end);
-  const [innerStartX, innerStartY] = polar(innerRadius, start);
+  const outerPoints = Array.from({ length: samples + 1 }, (_, index) => {
+    const t = index / samples;
+    const angle = start + (end - start) * t;
+    return polar(outerRadius, angle);
+  });
 
-  const largeArc = end - start > Math.PI ? 1 : 0;
+  const innerPoints = Array.from({ length: samples + 1 }, (_, index) => {
+    const t = index / samples;
+    const angle = end - (end - start) * t;
+    return polar(innerRadius, angle);
+  });
+
+  const [firstX, firstY] = outerPoints[0];
 
   return [
-    `M ${outerStartX} ${outerStartY}`,
-    `A ${outerRadius} ${outerRadius} 0 ${largeArc} 1 ${outerEndX} ${outerEndY}`,
-    `L ${innerEndX} ${innerEndY}`,
-    `A ${innerRadius} ${innerRadius} 0 ${largeArc} 0 ${innerStartX} ${innerStartY}`,
+    `M ${firstX} ${firstY}`,
+    ...outerPoints.slice(1).map(([x, y]) => `L ${x} ${y}`),
+    ...innerPoints.map(([x, y]) => `L ${x} ${y}`),
     "Z"
   ].join(" ");
 }
@@ -272,192 +309,255 @@ const overviewSectors = overviewBranches.map((branch, index) => {
 
     <div
       class="home-sunburst-viewport"
+      data-home-sunburst-viewport
       aria-label="Overview of the main branches of mathematics"
     >
+      <canvas
+        class="home-sunburst-canvas"
+        data-home-sunburst-canvas
+        aria-hidden="true"
+      ></canvas>
+
+      <!--
+        The SVG is now ONLY an invisible interaction map. Nothing visible is
+        painted with SVG paths anymore, so the old triangular sector chip
+        cannot be a visible SVG/WebRender artifact.
+      -->
       <svg
-        class="home-sunburst-map"
+        class="home-sunburst-hit-map"
         viewBox={`0 0 ${OVERVIEW_SIZE} ${OVERVIEW_SIZE}`}
-        role="img"
-        aria-label="Sunburst overview of the main mathematical subjects"
+        aria-hidden="true"
       >
-        {overviewSectors.map((sector) => (
+        {overviewSectors.map((sector, index) => (
           <a
-            class="home-sunburst-sector"
+            class="home-sunburst-hit-sector"
             href={sector.href}
             aria-label={sector.label}
+            data-sunburst-sector
+            data-index={index}
+            data-path={sector.path}
+            data-fill={sector.fill}
+            data-stroke={sector.stroke}
+            data-text-x={sector.textX}
+            data-text-y={sector.textY}
+            data-rotation={sector.rotation}
+            data-font-size={sector.fontSize}
+            data-lines={sector.lines.map((line) => line.text).join("|")}
           >
             <path
-              class="home-sunburst-segment"
               d={sector.path}
-              fill={sector.fill}
-              fill-opacity={sector.fillOpacity}
-              stroke={sector.stroke}
-              stroke-width="2.4"
+              fill="rgba(255, 255, 255, 0.001)"
+              stroke="none"
             ></path>
-
-            <text
-              class="home-sunburst-label"
-              x={sector.textX}
-              y={sector.textY}
-              fill="#ffffff"
-              stroke="rgba(8, 5, 20, 0.46)"
-              stroke-width="1.5"
-              paint-order="stroke"
-              text-anchor="middle"
-              dominant-baseline="middle"
-              font-size={sector.fontSize}
-              font-weight="760"
-              transform={`rotate(${sector.rotation} ${sector.textX} ${sector.textY})`}
-            >
-              {sector.lines.map((line) => (
-                <tspan
-                  x={sector.textX}
-                  dy={line.dy}
-                >
-                  {line.text}
-                </tspan>
-              ))}
-            </text>
           </a>
         ))}
 
         <a
-          class="home-sunburst-center-link"
+          class="home-sunburst-hit-center"
           href={withBase("branches/")}
           aria-label="Open the full Branches page"
+          data-sunburst-center
         >
           <circle
-            class="home-sunburst-center-disc"
             cx={OVERVIEW_CENTER}
             cy={OVERVIEW_CENTER}
             r={OVERVIEW_INNER_RADIUS - 5}
-            fill={mixHex("#8e7dff", "#0d081d", 0.72)}
-            stroke={mixHex("#8e7dff", "#ffffff", 0.24)}
-            stroke-width="4"
+            fill="rgba(255, 255, 255, 0.001)"
           ></circle>
-
-          <text
-            class="home-sunburst-center-label"
-            x={OVERVIEW_CENTER}
-            y={OVERVIEW_CENTER}
-            fill="#ffffff"
-            text-anchor="middle"
-            dominant-baseline="middle"
-            font-size="29"
-            font-weight="820"
-          >
-            Branches
-          </text>
         </a>
       </svg>
     </div>
   </section>
 
-  <section class="front-section">
-    <div class="carousel-header">
-      <div class="section-header">
-        <h2>Featured posts</h2>
-
-        <p>
-          Current rotation of things I deem to be interesting.
-        </p>
-      </div>
-
-      <div
-        class="carousel-controls"
-        aria-label="Featured posts controls"
-      >
-        <button
-          type="button"
-          data-carousel-prev
-          aria-label="Previous featured posts"
-        >
-          ←
-        </button>
-
-        <button
-          type="button"
-          data-carousel-next
-          aria-label="Next featured posts"
-        >
-          →
-        </button>
-      </div>
-    </div>
-
+  <section
+    class="front-section featured-articles-section"
+    aria-labelledby="featured-articles-heading"
+  >
     <div
-      class="featured-carousel"
-      data-featured-track
+      class="featured-hex-orbit"
+      aria-label="Featured articles"
     >
+      <a
+        class="featured-hex-center"
+        href={withBase("articles/")}
+        aria-label="Browse all articles"
+        data-featured-hex-center
+        data-preview-active="false"
+      >
+        <h2 id="featured-articles-heading">
+          Featured
+          <span>Articles</span>
+        </h2>
+
+        <div
+          class="featured-hex-animation-stage"
+          aria-hidden="true"
+        >
+          {
+            featuredArticles.map((article) => (
+              <div
+                class="featured-hex-animation-slot"
+                data-featured-preview-slot
+                data-preview-key={article.previewKey}
+                data-preview-active="false"
+                aria-hidden="true"
+              >
+                <!--
+                  Every animation gets its OWN parent element.
+
+                  This is important for MathScene2D/MathScene3D because the
+                  engines may append DOM/CSS label layers to the canvas parent.
+                  Hiding only the canvas allowed those extra layers from
+                  different scenes to remain visible together.
+                -->
+                <div class="featured-hex-animation-mount">
+                  <canvas
+                    id={article.canvasId}
+                    class="featured-hex-animation-canvas"
+                    data-featured-preview-canvas
+                    data-preview-key={article.previewKey}
+                    aria-hidden="true"
+                  ></canvas>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </a>
+
       {
-        featuredPosts.map((post) => (
+        featuredArticles.map((article, index) => (
           <a
-            class="featured-card"
-            href={withBase("articles/")}
+            class="featured-hex-card"
+            href={article.href}
+            aria-label={`Read ${article.title}`}
+            data-hex-position={index}
+            data-featured-preview-trigger
+            data-preview-key={article.previewKey}
           >
-            <span class="eyebrow">{post.eyebrow}</span>
+            <h3>{article.title}</h3>
 
-            <h3>{post.title}</h3>
+            <div class="featured-hex-hover">
+              <span class="featured-hex-eyebrow">{article.eyebrow}</span>
 
-            <p>{post.text}</p>
+              <p>{article.text}</p>
+            </div>
           </a>
         ))
       }
     </div>
   </section>
 
-  <section class="front-section">
-    <div class="weekly-grid">
-      <a
-        class="spotlight-card problem-card"
-        href={withBase("problems/")}
-      >
-        <span class="eyebrow">Problem of the week</span>
+  <section
+    class="front-section oddity-exhibition-section"
+    aria-labelledby="oddity-exhibition-heading"
+  >
+    <h2
+      id="oddity-exhibition-heading"
+      class="oddity-exhibition-title"
+    >
+      Oddity Exhibition
+    </h2>
 
-        <h2>A sum of cubes</h2>
+    <a
+      class="oddity-exhibition-card"
+      data-oddity-exhibition-link
+      href={withBase("")}
+      aria-label="Open the Oddity Exhibition"
+    >
+      <canvas
+        class="oddity-exhibition-canvas"
+        data-oddity-exhibition-canvas
+        aria-hidden="true"
+      ></canvas>
+    </a>
+  </section>
+
+  <section class="front-section">
+    <div class="home-weekly-stack">
+      <a
+        class="problem-card home-weekly-card"
+        href={withBase("problems/")}
+        aria-label="Open the problem of the week"
+      >
+        <header class="problem-card-header">
+          <span class="problem-branch">Problem of the week</span>
+
+          <h2>A sum of cubes</h2>
+        </header>
 
         <div
-          class="spotlight-math"
+          class="problem-formula"
+          role="img"
+          aria-label="Sum of cubes identity"
           set:html={problemFormula}
         />
 
-        <p>
-          Prove the identity without induction by giving both sides a geometric
-          or combinatorial interpretation.
+        <p class="problem-description">
+          🤤🍆
         </p>
+
+        <span class="read-label" aria-hidden="true">
+          View problem <span>→</span>
+        </span>
       </a>
 
       <a
-        class="spotlight-card theorem-card"
+        class="article-card home-weekly-card theorem-card"
         href={withBase("articles/")}
+        aria-label="Read the theorem of the week"
       >
-        <span class="eyebrow">Theorem of the week</span>
+        <header class="article-card-header">
+          <span class="article-branch">Theorem of the week</span>
 
-        <h2>Euler's identity</h2>
+          <h2>Euler's identity</h2>
+        </header>
 
         <div
-          class="spotlight-math"
+          class="problem-formula"
+          role="img"
+          aria-label="Euler's identity"
           set:html={theoremFormula}
         />
 
-        <p>
-          A compact meeting point of analysis, geometry, trigonometry, and
-          complex numbers.
+        <p class="article-description">
+          Now WHO was this Leonard Euler REALLY?
         </p>
+
+        <span class="read-label" aria-hidden="true">
+          Read theorem <span>→</span>
+        </span>
       </a>
 
       <a
-        class="spotlight-card mathematician-card"
+        class="article-card home-weekly-card mathematician-card"
         href={withBase("articles/")}
+        aria-label="Read about the mathematician of the month, Emmy Noether"
       >
-        <span class="eyebrow">Mathematician of the month</span>
+        <header class="article-card-header">
+          <span class="article-branch">Mathematician of the month</span>
 
-        <h2>Emmy Noether</h2>
+          <h2>Emmy Noether</h2>
+        </header>
 
-        <p>
-          A central figure in modern algebra, symmetry, invariant theory, and
-          the structural way mathematics is now written.
+        <div
+          class="article-canvas home-mathematician-canvas"
+          role="img"
+          aria-label="Reserved animation canvas for Emmy Noether"
+        >
+          <canvas
+            id="fourier-epicycles"
+            aria-hidden="true"
+          ></canvas>
+        </div>
+
+        <p class="article-description">
+         Her iconic 1910 digital portrait that looks conspicuously similar to the figure of Joseph Fourier.
         </p>
+
+        <span class="read-label" aria-hidden="true">
+          Read profile <span>→</span>
+        </span>
       </a>
     </div>
   </section>
@@ -484,96 +584,1127 @@ const overviewSectors = overviewBranches.map((branch, index) => {
   </section>
 
   <script>
-    const track = document.querySelector("[data-featured-track]");
-    const previous = document.querySelector("[data-carousel-prev]");
-    const next = document.querySelector("[data-carousel-next]");
+    const oddityCanvas = document.querySelector(
+      "[data-oddity-exhibition-canvas]"
+    );
 
-    previous?.addEventListener("click", () => {
-      track?.scrollBy({
-        left: -420,
-        behavior: "smooth"
-      });
-    });
+    const oddityCard = document.querySelector(
+      "[data-oddity-exhibition-link]"
+    );
 
-    next?.addEventListener("click", () => {
-      track?.scrollBy({
-        left: 420,
-        behavior: "smooth"
-      });
-    });
+    /*
+     * ODDITY EXHIBITION SELECTION
+     * ---------------------------
+     * Add future choices here. Each entry owns the canvas id expected by its
+     * existing animation module, the lazy module loader, and its click target.
+     */
+    const oddityChoices = [
+      {
+        key: "cow-to-sphere",
+        canvasId: "cow-to-sphere-scene",
+        href: oddityCard?.getAttribute("href") ?? "/",
+        load: () =>
+          import(
+            "../scripts/animations/lessons/topology/cowToSphere"
+          )
+      },
+      {
+        key: "mug-to-donut",
+        canvasId: "mug-to-donut-scene",
+        href: oddityCard?.getAttribute("href") ?? "/",
+        load: () =>
+          import(
+            "../scripts/animations/lessons/topology/mugToDonut"
+          )
+      }
+    ];
+
+    const oddityChoice =
+      oddityChoices[
+        Math.floor(
+          Math.random() * oddityChoices.length
+        )
+      ];
+
+    let oddityLoaded = false;
+
+    if (
+      oddityCanvas instanceof HTMLCanvasElement &&
+      oddityCard instanceof HTMLAnchorElement &&
+      oddityChoice
+    ) {
+      /*
+       * Both topology modules query their expected canvas id as soon as the
+       * module evaluates, so assign the chosen id BEFORE importing it.
+       */
+      oddityCanvas.id = oddityChoice.canvasId;
+      oddityCanvas.dataset.oddityKey = oddityChoice.key;
+      oddityCard.dataset.oddityKey = oddityChoice.key;
+      oddityCard.href = oddityChoice.href;
+    }
+
+    async function loadOddityExhibition() {
+      if (
+        oddityLoaded ||
+        !oddityChoice ||
+        !(oddityCanvas instanceof HTMLCanvasElement)
+      ) {
+        return;
+      }
+
+      oddityLoaded = true;
+
+      try {
+        await oddityChoice.load();
+      } catch (error) {
+        oddityLoaded = false;
+        console.error(
+          `Failed to load Oddity Exhibition animation "${oddityChoice.key}".`,
+          error
+        );
+      }
+    }
+
+    /*
+     * Initialize the selected automatic animation only once the card is at
+     * least 15% in view, matching the rest of the site's animation convention.
+     */
+    const oddityObserver =
+      oddityCard && "IntersectionObserver" in window
+        ? new IntersectionObserver(
+            ([entry]) => {
+              if (
+                entry?.isIntersecting &&
+                entry.intersectionRatio >= 0.15
+              ) {
+                oddityObserver?.disconnect();
+                loadOddityExhibition();
+              }
+            },
+            { threshold: 0.15 }
+          )
+        : null;
+
+    if (oddityCard) {
+      if (oddityObserver) {
+        oddityObserver.observe(oddityCard);
+      } else {
+        loadOddityExhibition();
+      }
+    }
+
+    document.addEventListener(
+      "astro:before-swap",
+      () => oddityObserver?.disconnect(),
+      { once: true }
+    );
   </script>
+
+  <script>
+    /*
+     * This one still belongs to the Mathematician-of-the-month card below.
+     * Featured-article preview modules are loaded lazily in the preview
+     * controller so two preview scenes are never initialized into one shared
+     * host at page load.
+     */
+    import "../scripts/demos/fourierEpicycles";
+  </script>
+
+  <script>
+    const SUNBURST_SIZE = 900;
+    const SUNBURST_CENTER = SUNBURST_SIZE / 2;
+    const SUNBURST_INNER_RADIUS = 145;
+
+    const sunburstViewport = document.querySelector(
+      "[data-home-sunburst-viewport]"
+    );
+
+    const sunburstCanvas = sunburstViewport?.querySelector(
+      "[data-home-sunburst-canvas]"
+    );
+
+    const sunburstSectorLinks = Array.from(
+      sunburstViewport?.querySelectorAll(
+        "[data-sunburst-sector]"
+      ) ?? []
+    );
+
+    const sunburstCenterLink = sunburstViewport?.querySelector(
+      "[data-sunburst-center]"
+    );
+
+    const parsedSectors = sunburstSectorLinks.map((link) => ({
+      link,
+      index: Number(link.dataset.index ?? 0),
+      path: new Path2D(link.dataset.path ?? ""),
+      fill: link.dataset.fill ?? "rgb(80, 72, 112)",
+      stroke: link.dataset.stroke ?? "rgb(30, 24, 50)",
+      textX: Number(link.dataset.textX ?? 0),
+      textY: Number(link.dataset.textY ?? 0),
+      rotation: Number(link.dataset.rotation ?? 0),
+      fontSize: Number(link.dataset.fontSize ?? 17),
+      lines: (link.dataset.lines ?? "").split("|").filter(Boolean)
+    }));
+
+    let activeSector = null;
+    let centerActive = false;
+
+    function drawSunburst() {
+      if (!(sunburstCanvas instanceof HTMLCanvasElement)) return;
+
+      const rectangle = sunburstCanvas.getBoundingClientRect();
+      if (rectangle.width <= 0 || rectangle.height <= 0) return;
+
+      const pixelRatio = Math.min(
+        window.devicePixelRatio || 1,
+        2
+      );
+
+      const backingWidth = Math.max(
+        1,
+        Math.round(rectangle.width * pixelRatio)
+      );
+
+      const backingHeight = Math.max(
+        1,
+        Math.round(rectangle.height * pixelRatio)
+      );
+
+      if (
+        sunburstCanvas.width !== backingWidth ||
+        sunburstCanvas.height !== backingHeight
+      ) {
+        sunburstCanvas.width = backingWidth;
+        sunburstCanvas.height = backingHeight;
+      }
+
+      const context = sunburstCanvas.getContext("2d");
+      if (!context) return;
+
+      context.setTransform(1, 0, 0, 1, 0, 0);
+      context.clearRect(
+        0,
+        0,
+        backingWidth,
+        backingHeight
+      );
+
+      const scale =
+        Math.min(
+          rectangle.width,
+          rectangle.height
+        ) / SUNBURST_SIZE;
+
+      const offsetX =
+        (rectangle.width - SUNBURST_SIZE * scale) / 2;
+
+      const offsetY =
+        (rectangle.height - SUNBURST_SIZE * scale) / 2;
+
+      context.setTransform(
+        pixelRatio * scale,
+        0,
+        0,
+        pixelRatio * scale,
+        pixelRatio * offsetX,
+        pixelRatio * offsetY
+      );
+
+      context.lineJoin = "round";
+      context.lineCap = "round";
+
+      for (const sector of parsedSectors) {
+        context.save();
+
+        /*
+         * Match the original SVG appearance: colored sectors are translucent,
+         * so the Julia background remains visible through the sunburst.
+         */
+        context.globalAlpha = 0.86;
+        context.fillStyle = sector.fill;
+        context.fill(sector.path);
+
+        /*
+         * Keep the boundary a little more solid than the fill, as in the
+         * original SVG where stroke-opacity was not reduced with fill-opacity.
+         */
+        context.globalAlpha = 0.96;
+        context.strokeStyle = sector.stroke;
+        context.lineWidth = 2.4;
+        context.stroke(sector.path);
+
+        if (activeSector === sector.index) {
+          /*
+           * Very restrained hover brightening. Because this is canvas-rendered
+           * there is no per-SVG-path compositing layer involved anymore.
+           */
+          context.globalAlpha = 0.075;
+          context.fillStyle = "#ffffff";
+          context.fill(sector.path);
+        }
+
+        context.restore();
+      }
+
+      /*
+       * Center disc.
+       */
+      context.save();
+
+      context.beginPath();
+      context.arc(
+        SUNBURST_CENTER,
+        SUNBURST_CENTER,
+        SUNBURST_INNER_RADIUS - 5,
+        0,
+        Math.PI * 2
+      );
+
+      /*
+       * These are the original center-disc colors:
+       *
+       *   mixHex("#8e7dff", "#0d081d", 0.72)  -> rgb(49, 41, 92)
+       *   mixHex("#8e7dff", "#ffffff", 0.24)  -> rgb(169, 156, 255)
+       *
+       * On hover/focus the ENTIRE disc receives the same subtle brightness /
+       * saturation lift the SVG version used to have, rather than changing
+       * only the border.
+       */
+      context.filter = centerActive
+        ? "brightness(1.12) saturate(1.03)"
+        : "none";
+
+      context.fillStyle = "rgb(49, 41, 92)";
+      context.fill();
+
+      context.strokeStyle = "rgb(169, 156, 255)";
+      context.lineWidth = 4;
+      context.stroke();
+
+      context.filter = "none";
+      context.restore();
+
+      /*
+       * Sector labels are also canvas-rendered. This keeps the visible
+       * sunburst in one raster surface, with no independently composited SVG
+       * paths or SVG text nodes.
+       */
+      context.textAlign = "center";
+      context.textBaseline = "middle";
+      context.fillStyle = "#ffffff";
+      context.strokeStyle = "rgba(8, 5, 20, 0.48)";
+      context.lineJoin = "round";
+
+      for (const sector of parsedSectors) {
+        context.save();
+
+        context.translate(
+          sector.textX,
+          sector.textY
+        );
+
+        context.rotate(
+          sector.rotation *
+          Math.PI /
+          180
+        );
+
+        context.font =
+          `760 ${sector.fontSize}px Inter, ui-sans-serif, system-ui, sans-serif`;
+
+        context.lineWidth = 3;
+
+        const lineHeight =
+          sector.fontSize *
+          1.08;
+
+        const totalHeight =
+          (sector.lines.length - 1) *
+          lineHeight;
+
+        sector.lines.forEach((line, index) => {
+          const y =
+            index *
+            lineHeight -
+            totalHeight / 2;
+
+          context.strokeText(
+            line,
+            0,
+            y
+          );
+
+          context.fillText(
+            line,
+            0,
+            y
+          );
+        });
+
+        context.restore();
+      }
+
+      context.save();
+
+      context.fillStyle =
+        "#ffffff";
+
+      context.strokeStyle =
+        "rgba(8, 5, 20, 0.48)";
+
+      context.lineWidth =
+        3;
+
+      context.font =
+        "820 29px Inter, ui-sans-serif, system-ui, sans-serif";
+
+      context.textAlign =
+        "center";
+
+      context.textBaseline =
+        "middle";
+
+      context.strokeText(
+        "Branches",
+        SUNBURST_CENTER,
+        SUNBURST_CENTER
+      );
+
+      context.fillText(
+        "Branches",
+        SUNBURST_CENTER,
+        SUNBURST_CENTER
+      );
+
+      context.restore();
+    }
+
+    for (const sector of parsedSectors) {
+      sector.link.addEventListener(
+        "pointerenter",
+        () => {
+          activeSector = sector.index;
+          drawSunburst();
+        }
+      );
+
+      sector.link.addEventListener(
+        "pointerleave",
+        () => {
+          activeSector = null;
+          drawSunburst();
+        }
+      );
+
+      sector.link.addEventListener(
+        "focus",
+        () => {
+          activeSector = sector.index;
+          drawSunburst();
+        }
+      );
+
+      sector.link.addEventListener(
+        "blur",
+        () => {
+          activeSector = null;
+          drawSunburst();
+        }
+      );
+    }
+
+    sunburstCenterLink?.addEventListener(
+      "pointerenter",
+      () => {
+        centerActive = true;
+        drawSunburst();
+      }
+    );
+
+    sunburstCenterLink?.addEventListener(
+      "pointerleave",
+      () => {
+        centerActive = false;
+        drawSunburst();
+      }
+    );
+
+    sunburstCenterLink?.addEventListener(
+      "focus",
+      () => {
+        centerActive = true;
+        drawSunburst();
+      }
+    );
+
+    sunburstCenterLink?.addEventListener(
+      "blur",
+      () => {
+        centerActive = false;
+        drawSunburst();
+      }
+    );
+
+    const sunburstResizeObserver =
+      sunburstCanvas &&
+      "ResizeObserver" in window
+        ? new ResizeObserver(drawSunburst)
+        : null;
+
+    if (sunburstCanvas) {
+      sunburstResizeObserver?.observe(
+        sunburstCanvas
+      );
+    }
+
+    /*
+     * Redraw on viewport entry too, but DO NOT replace DOM nodes anymore.
+     * The canvas is the sole visible rendering surface; a normal redraw is
+     * enough and cannot preserve a stale SVG sector tile.
+     */
+    const sunburstVisibilityObserver =
+      sunburstViewport &&
+      "IntersectionObserver" in window
+        ? new IntersectionObserver(
+            ([entry]) => {
+              if (entry?.isIntersecting) {
+                requestAnimationFrame(
+                  drawSunburst
+                );
+              }
+            },
+            {
+              threshold: 0.01
+            }
+          )
+        : null;
+
+    sunburstVisibilityObserver?.observe(
+      sunburstViewport
+    );
+
+    requestAnimationFrame(
+      drawSunburst
+    );
+
+    document.addEventListener(
+      "astro:before-swap",
+      () => {
+        sunburstResizeObserver?.disconnect();
+        sunburstVisibilityObserver?.disconnect();
+      },
+      { once: true }
+    );
+  </script>
+
+  <script>
+    const featuredOrbit = document.querySelector(
+      ".featured-hex-orbit"
+    );
+
+    const featuredCenter = featuredOrbit?.querySelector(
+      "[data-featured-hex-center]"
+    );
+
+    const featuredTriggers = Array.from(
+      featuredOrbit?.querySelectorAll(
+        "[data-featured-preview-trigger]"
+      ) ?? []
+    );
+
+    const featuredPreviewSlots = Array.from(
+      featuredOrbit?.querySelectorAll(
+        "[data-featured-preview-slot]"
+      ) ?? []
+    );
+
+    /*
+     * FEATURED PREVIEW NATIVE VIEWPORT
+     * --------------------------------
+     *
+     * Every preview scene is created at this SAME ordinary 16:9 canvas size.
+     * The math engine therefore lays out geometry, camera bounds and CSS2D
+     * labels exactly as it would in a normal MathCanvas2D.
+     *
+     * Only AFTER the scene has initialized do we scale the complete DOM subtree
+     * down as one visual object to fit inside the center hexagon.
+     *
+     * Do not use these values as "make preview smaller" controls. They define
+     * the scene's native logical viewport. The miniature display size is
+     * determined automatically from the hexagon.
+     */
+    /*
+     * CONSTANT NATIVE PREVIEW DIMENSIONS
+     * ----------------------------------
+     *
+     * Every featured animation is always initialized as the same ordinary
+     * 16:9 scene. These dimensions are intentionally not article-specific and
+     * are not used as visual-size controls.
+     */
+    const FEATURED_PREVIEW_NATIVE_WIDTH = 960;
+    const FEATURED_PREVIEW_NATIVE_HEIGHT = 540;
+
+    let activePreviewKey = null;
+
+    /*
+     * Preview scenes are imported only when their corresponding article is
+     * first activated.
+     */
+    const featuredPreviewLoaders = new Map([
+      [
+        "about-primitives-scene",
+        () => import("../scripts/demos/aboutPrimitivesScene")
+      ],
+      [
+        "about-curve-scene",
+        () =>
+          import(
+            "../scripts/demos/aboutCurveScene"
+          )
+      ],
+      [
+        "about-lissajous-scene",
+        () =>
+          import(
+            "../scripts/demos/aboutLissajousScene"
+          )
+      ],
+      [
+        "about-determinant-transformation-scene",
+        () =>
+          import(
+            "../scripts/demos/aboutDeterminantTransformationScene"
+          )
+      ],
+      [
+        "factorial-shuffling",
+        () =>
+          import(
+            "../scripts/demos/factorialShuffling"
+          )
+      ],
+      [
+        "about-function-graph-scene",
+        () =>
+          import(
+            "../scripts/demos/aboutFunctionGraphScene"
+          )
+      ]
+    ]);
+
+    const featuredPreviewLoadPromises =
+      new Map();
+
+    const featuredPreviewReadyKeys =
+      new Set();
+
+    function getPreviewMount(slot) {
+      return slot.querySelector(
+        ".featured-hex-animation-mount"
+      );
+    }
+
+    function preparePreviewAtNativeSize(slot) {
+      if (!(slot instanceof HTMLElement)) {
+        return;
+      }
+
+      const mount =
+        getPreviewMount(slot);
+
+      if (!(mount instanceof HTMLElement)) {
+        return;
+      }
+
+      /*
+       * Crucial: scale MUST be 1 while the scene constructor runs.
+       *
+       * MathScene2D/3D measure canvas.getBoundingClientRect(). If an ancestor
+       * is already transformed, the engine sees the visually shrunken size and
+       * recomputes the camera/labels for that small box. That is not a miniature
+       * of the normal scene; it is a different viewport.
+       */
+      mount.style.width =
+        `${FEATURED_PREVIEW_NATIVE_WIDTH}px`;
+
+      mount.style.height =
+        `${FEATURED_PREVIEW_NATIVE_HEIGHT}px`;
+
+      mount.style.setProperty(
+        "--featured-preview-scale",
+        "1"
+      );
+    }
+
+    /*
+     * Largest centered rectangle of a given aspect ratio that is fully inside
+     * the exact CSS hexagon:
+     *
+     *   polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%)
+     *
+     * This is better than multiplying width/height by arbitrary percentages:
+     * the corners of a 16:9 rectangle otherwise hit the sloping sides first.
+     */
+    function fittedPreviewScale() {
+      if (!(featuredCenter instanceof HTMLElement)) {
+        return 1;
+      }
+
+      const rectangle =
+        featuredCenter.getBoundingClientRect();
+
+      const hexWidth =
+        rectangle.width;
+
+      const hexHeight =
+        rectangle.height;
+
+      if (
+        hexWidth <= 0 ||
+        hexHeight <= 0
+      ) {
+        return 1;
+      }
+
+      const nativeWidth =
+        FEATURED_PREVIEW_NATIVE_WIDTH;
+
+      const nativeHeight =
+        FEATURED_PREVIEW_NATIVE_HEIGHT;
+
+      /*
+       * At vertical distance y from the hex center, a flat-top hexagon's
+       * horizontal half-width is:
+       *
+       *   W/2 - (W/(2H)) y
+       *
+       * Solving that boundary simultaneously for a centered rectangle gives
+       * the scale below. The vertical constraint is included separately.
+       */
+      const sideConstraint =
+        hexWidth /
+        (
+          nativeWidth +
+          hexWidth *
+            nativeHeight /
+            (2 * hexHeight)
+        );
+
+      const verticalConstraint =
+        hexHeight /
+        nativeHeight;
+
+      return Math.min(
+        sideConstraint,
+        verticalConstraint
+      );
+    }
+
+    function applyMiniatureScale() {
+      const scale =
+        fittedPreviewScale();
+
+      for (const slot of featuredPreviewSlots) {
+        if (!(slot instanceof HTMLElement)) {
+          continue;
+        }
+
+        const previewKey =
+          slot.dataset.previewKey ?? null;
+
+        if (
+          previewKey === null ||
+          !featuredPreviewReadyKeys.has(
+            previewKey
+          )
+        ) {
+          /*
+           * Uninitialized scenes remain at native scale so their future
+           * constructor will measure the real 960x540 viewport.
+           */
+          preparePreviewAtNativeSize(
+            slot
+          );
+
+          continue;
+        }
+
+        const mount =
+          getPreviewMount(slot);
+
+        if (!(mount instanceof HTMLElement)) {
+          continue;
+        }
+
+        mount.style.width =
+          `${FEATURED_PREVIEW_NATIVE_WIDTH}px`;
+
+        mount.style.height =
+          `${FEATURED_PREVIEW_NATIVE_HEIGHT}px`;
+
+        mount.style.setProperty(
+          "--featured-preview-scale",
+          String(scale)
+        );
+      }
+    }
+
+    async function ensureFeaturedPreviewLoaded(
+      previewKey
+    ) {
+      if (
+        previewKey === null ||
+        featuredPreviewReadyKeys.has(
+          previewKey
+        )
+      ) {
+        return;
+      }
+
+      const slot =
+        featuredPreviewSlots.find(
+          (candidate) =>
+            candidate instanceof HTMLElement &&
+            candidate.dataset.previewKey ===
+              previewKey
+        );
+
+      if (!(slot instanceof HTMLElement)) {
+        return;
+      }
+
+      /*
+       * Establish the NORMAL scene dimensions before module evaluation.
+       */
+      preparePreviewAtNativeSize(
+        slot
+      );
+
+      const loader =
+        featuredPreviewLoaders.get(
+          previewKey
+        );
+
+      if (!loader) {
+        /*
+         * Empty future-preview canvas: still mark it ready so the empty canvas
+         * follows the same miniature sizing behavior.
+         */
+        featuredPreviewReadyKeys.add(
+          previewKey
+        );
+
+        applyMiniatureScale();
+        return;
+      }
+
+      const existing =
+        featuredPreviewLoadPromises.get(
+          previewKey
+        );
+
+      if (existing) {
+        await existing;
+        return;
+      }
+
+      /*
+       * Keep the active slot invisible during native-size initialization. This
+       * prevents one frame of the 960x540 scene from flashing through the
+       * hexagon before it is reduced.
+       */
+      slot.dataset.previewInitializing =
+        "true";
+
+      const promise =
+        loader()
+          .then(
+            () =>
+              new Promise((resolve) => {
+                /*
+                 * MathScene constructors resize synchronously, but waiting two
+                 * browser frames also allows their CSS2D renderer/label layer
+                 * and ResizeObserver bookkeeping to settle at native size.
+                 */
+                requestAnimationFrame(() => {
+                  requestAnimationFrame(
+                    resolve
+                  );
+                });
+              })
+          )
+          .then(() => {
+            featuredPreviewReadyKeys.add(
+              previewKey
+            );
+
+            slot.dataset.previewInitializing =
+              "false";
+
+            slot.dataset.previewReady =
+              "true";
+
+            applyMiniatureScale();
+          })
+          .catch((error) => {
+            featuredPreviewLoadPromises.delete(
+              previewKey
+            );
+
+            slot.dataset.previewInitializing =
+              "false";
+
+            console.error(
+              `Failed to load featured preview "${previewKey}".`,
+              error
+            );
+          });
+
+      featuredPreviewLoadPromises.set(
+        previewKey,
+        promise
+      );
+
+      await promise;
+    }
+
+    const featuredPreviewResizeObserver =
+      featuredCenter &&
+      "ResizeObserver" in window
+        ? new ResizeObserver(
+            applyMiniatureScale
+          )
+        : null;
+
+    if (featuredCenter) {
+      featuredPreviewResizeObserver?.observe(
+        featuredCenter
+      );
+    }
+
+    async function setFeaturedPreview(
+      previewKey
+    ) {
+      activePreviewKey =
+        previewKey;
+
+      if (featuredCenter) {
+        featuredCenter.dataset.previewActive =
+          previewKey === null
+            ? "false"
+            : "true";
+      }
+
+      let activeCanvas = null;
+      let activeSlot = null;
+
+      /*
+       * Exactly one COMPLETE scene subtree can be active. This includes the
+       * WebGL canvas and every CSS2D/DOM layer the scene appended to its mount.
+       */
+      for (const slot of featuredPreviewSlots) {
+        if (!(slot instanceof HTMLElement)) {
+          continue;
+        }
+
+        const active =
+          previewKey !== null &&
+          slot.dataset.previewKey ===
+            previewKey;
+
+        slot.dataset.previewActive =
+          active
+            ? "true"
+            : "false";
+
+        slot.setAttribute(
+          "aria-hidden",
+          active
+            ? "false"
+            : "true"
+        );
+
+        if (active) {
+          activeSlot =
+            slot;
+
+          activeCanvas =
+            slot.querySelector(
+              "[data-featured-preview-canvas]"
+            );
+        }
+      }
+
+      if (
+        previewKey !== null
+      ) {
+        await ensureFeaturedPreviewLoaded(
+          previewKey
+        );
+
+        /*
+         * The pointer may have moved to another article while the dynamic
+         * import was resolving. Do not reveal a stale preview.
+         */
+        if (
+          activePreviewKey !==
+          previewKey
+        ) {
+          return;
+        }
+
+        applyMiniatureScale();
+      }
+
+      featuredOrbit?.dispatchEvent(
+        new CustomEvent(
+          "featured-article-preview-change",
+          {
+            detail: {
+              previewKey,
+              canvas: activeCanvas,
+              slot: activeSlot
+            }
+          }
+        )
+      );
+    }
+
+    function clearFeaturedPreviewIfInactive(
+      trigger
+    ) {
+      requestAnimationFrame(() => {
+        const stillHovered =
+          trigger.matches(":hover");
+
+        const stillFocused =
+          document.activeElement ===
+          trigger;
+
+        if (
+          !stillHovered &&
+          !stillFocused &&
+          activePreviewKey ===
+            trigger.dataset.previewKey
+        ) {
+          setFeaturedPreview(
+            null
+          );
+        }
+      });
+    }
+
+    /*
+     * Start every potential scene host at true native dimensions. No CSS
+     * presentation scaling is applied until that scene has initialized.
+     */
+    for (
+      const slot of
+      featuredPreviewSlots
+    ) {
+      preparePreviewAtNativeSize(
+        slot
+      );
+    }
+
+    for (const trigger of featuredTriggers) {
+      trigger.addEventListener(
+        "pointerenter",
+        () => {
+          setFeaturedPreview(
+            trigger.dataset.previewKey ??
+              null
+          );
+        }
+      );
+
+      trigger.addEventListener(
+        "pointerleave",
+        () => {
+          clearFeaturedPreviewIfInactive(
+            trigger
+          );
+        }
+      );
+
+      trigger.addEventListener(
+        "focus",
+        () => {
+          setFeaturedPreview(
+            trigger.dataset.previewKey ??
+              null
+          );
+        }
+      );
+
+      trigger.addEventListener(
+        "blur",
+        () => {
+          clearFeaturedPreviewIfInactive(
+            trigger
+          );
+        }
+      );
+    }
+
+    document.addEventListener(
+      "astro:before-swap",
+      () => {
+        featuredPreviewResizeObserver?.disconnect();
+      },
+      { once: true }
+    );
+  </script>
+
 </BaseLayout>
 
 <style>
-  /*
-   * These rules intentionally mirror the Branches-page sunburst styling:
-  * transparent solid sectors, dark group-tinted boundaries, white labels,
-   * rounded joins, and the same restrained hover brightening.
-   */
   .home-sunburst-viewport {
+    position: relative;
     width: min(100%, 900px);
+    aspect-ratio: 1;
     margin: 0.35rem auto 0;
-    overflow: hidden;
-    contain: layout paint;
   }
 
-  .home-sunburst-map {
+  .home-sunburst-canvas,
+  .home-sunburst-hit-map {
+    position: absolute;
+    inset: 0;
     display: block;
     width: 100%;
-    height: auto;
-    aspect-ratio: 1;
+    height: 100%;
   }
 
-  .home-sunburst-sector {
+  .home-sunburst-canvas {
+    z-index: 0;
+    pointer-events: none;
+    background: transparent;
+  }
+
+  /*
+   * The SVG contains only transparent hit areas / links. It contributes zero
+   * visible pixels, so SVG path rasterization cannot produce the visible
+   * triangular chip anymore.
+   */
+  .home-sunburst-hit-map {
+    z-index: 1;
+    overflow: visible;
+  }
+
+  .home-sunburst-hit-sector,
+  .home-sunburst-hit-center {
     cursor: pointer;
     text-decoration: none;
-    transition: opacity 140ms ease;
   }
 
-  .home-sunburst-sector:hover .home-sunburst-segment,
-  .home-sunburst-sector:focus-visible .home-sunburst-segment,
-  .home-sunburst-center-link:hover .home-sunburst-center-disc,
-  .home-sunburst-center-link:focus-visible .home-sunburst-center-disc {
-    filter: brightness(1.12) saturate(1.03);
-  }
-
-  .home-sunburst-sector:focus-visible,
-  .home-sunburst-center-link:focus-visible {
+  .home-sunburst-hit-sector:focus-visible,
+  .home-sunburst-hit-center:focus-visible {
     outline: none;
-  }
-
-  .home-sunburst-segment {
-    stroke-linejoin: round;
-    stroke-linecap: round;
-    transition: filter 140ms ease, opacity 140ms ease;
-  }
-
-  .home-sunburst-label,
-  .home-sunburst-center-label {
-    font-family: inherit;
-    pointer-events: none;
-  }
-
-  .home-sunburst-label {
-    letter-spacing: -0.015em;
-    stroke-linejoin: round;
-  }
-
-  .home-sunburst-center-disc {
-    transition: filter 140ms ease;
   }
 
   @media (max-width: 700px) {
     .home-sunburst-viewport {
       width: min(100%, 760px);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .home-sunburst-sector,
-    .home-sunburst-segment,
-    .home-sunburst-center-disc {
-      transition: none;
     }
   }
 </style>

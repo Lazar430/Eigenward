@@ -7,7 +7,7 @@ import {
 
 const trigCanvas =
   document.querySelector<HTMLCanvasElement>(
-    "#about-curve-scene",
+    "#about-lissajous-scene",
   );
 
 if (!trigCanvas) {

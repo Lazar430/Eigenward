@@ -2226,6 +2226,43 @@ const bridgeEdges: GraphEdge[] = [
   }
 ];
 
+
+/*
+ * ============================================================================
+ * BRANCH AVAILABILITY
+ * ============================================================================
+ *
+ * This is the single place to control whether a subject sector is live.
+ *
+ * - true  -> normal color, hover/focus behavior, clickable link
+ * - false -> faded, non-focusable, non-clickable, no hover interaction
+ * - omitted -> unavailable by default
+ *
+ * A few display names differ slightly from their internal topic ids:
+ *   Logic          -> "logic" (displayed as Mathematical Logic)
+ *   Number Theory  -> "elementary-number-theory"
+ *   Probability    -> "probability-theory"
+ */
+const TOPIC_AVAILABILITY: Record<string, boolean> = {
+  "linear-algebra": true,
+  "real-analysis": true,
+  "complex-analysis": true,
+  "topology": true,
+  "logic": true,
+  "set-theory": true,
+  "combinatorics": true,
+  "geometry": true,
+  "trigonometry": true,
+  "elementary-number-theory": true,
+  "abstract-algebra": true,
+  "probability-theory": true,
+  "mathematical-physics": true,
+};
+
+function isTopicAvailable(topicId: string): boolean {
+  return TOPIC_AVAILABILITY[topicId] ?? false;
+}
+
 const GROUP_COLORS: Record<GroupId, string> = {
   "foundations": "#8e7dff",
   "algebra": "#ff7597",
@@ -2248,6 +2285,7 @@ type SunburstNode = {
   group: GroupId;
   prerequisites: string[];
   href: string;
+  available: boolean;
   parent: SunburstNode | null;
   children: SunburstNode[];
   depth: number;
@@ -2264,6 +2302,7 @@ type SunburstSector = {
   label: string;
   labelLower: string;
   href: string;
+  available: boolean;
   prerequisites: string[];
   depth: number;
   path: string;
@@ -2521,6 +2560,7 @@ function buildTree(groupId: GroupId): SunburstNode[] {
         group: topic.group,
         prerequisites: [...topic.prerequisites],
         href: withBase(`branches/${topic.id}/`),
+        available: isTopicAvailable(topic.id),
         parent: null,
         children: [],
         depth: 1,
@@ -2819,6 +2859,7 @@ function makeSector(
     label: node.label,
     labelLower: node.label.toLowerCase(),
     href: node.href,
+    available: node.available,
     prerequisites: node.prerequisites,
     depth: node.depth,
     path: annularSectorPath(
@@ -2916,16 +2957,11 @@ const sunbursts = groups.map(buildSunburst);
       <h1>Branches of Mathematics</h1>
 
       <p class="branches-intro">
-        Mathematics is not a collection of sealed compartments. It is a network
-        of ideas: subjects grow from earlier subjects, split into specialized
-        theories, and reconnect through unexpected bridges.
+	YES!YESYES!YESYES!YESYES!YESYES!YESYES!YESYES!YESYES!YESYES!YESYES!YESYES!YESYES!YESYES!YESYES!YESYES!YES
       </p>
 
       <p class="branches-note">
-        Solid arrows show major prerequisite or developmental paths. Dashed
-        arrows show especially important cross-disciplinary connections. No
-        such map can be perfectly canonical, since many subjects naturally
-        belong to several areas at once.
+	NO!NONO!NONO!NONO!NONO!NONO!NONO!NONO!NONO!NONO!NONO!NONO!NONO!NONO!NONO!NONO!NONO!NONO!NONO!NONO!NONO!NO
       </p>
     </header>
 
@@ -2997,12 +3033,24 @@ const sunbursts = groups.map(buildSunburst);
           >
             {chart.sectors.map((sector) => (
               <a
-                class="sunburst-sector"
-                href={sector.href}
+                class:list={[
+                  "sunburst-sector",
+                  sector.available
+                    ? "is-available"
+                    : "is-unavailable",
+                ]}
+                href={sector.available ? sector.href : undefined}
                 data-node-label={sector.labelLower}
                 data-node-id={sector.id}
                 data-text-orientation={sector.orientation}
-                aria-label={sector.label}
+                data-available={sector.available ? "true" : "false"}
+                aria-label={
+                  sector.available
+                    ? sector.label
+                    : `${sector.label} — unavailable`
+                }
+                aria-disabled={sector.available ? undefined : "true"}
+                tabindex={sector.available ? undefined : "-1"}
               >
                 <path
                   class="sunburst-segment"
@@ -3405,17 +3453,30 @@ const sunbursts = groups.map(buildSunburst);
     }
 
   .sunburst-sector {
-    cursor: pointer;
     text-decoration: none;
     transition: opacity 140ms ease;
     }
 
-  .sunburst-sector:hover .sunburst-segment,
-  .sunburst-sector:focus-visible .sunburst-segment {
+  /*
+   * Only available sectors are interactive. Unavailable sectors deliberately
+   * have no pointer target at all, so they cannot hover, focus, click, or
+   * accidentally activate an unfinished branch.
+   */
+  .sunburst-sector.is-available {
+    cursor: pointer;
+    }
+
+  .sunburst-sector.is-unavailable {
+    cursor: default;
+    pointer-events: none;
+    }
+
+  .sunburst-sector.is-available:hover .sunburst-segment,
+  .sunburst-sector.is-available:focus-visible .sunburst-segment {
     filter: brightness(1.12) saturate(1.03);
     }
 
-  .sunburst-sector:focus-visible {
+  .sunburst-sector.is-available:focus-visible {
     outline: none;
     }
 
@@ -3423,6 +3484,19 @@ const sunbursts = groups.map(buildSunburst);
     stroke-linejoin: round;
     stroke-linecap: round;
     transition: filter 140ms ease, opacity 140ms ease;
+    }
+
+  /*
+   * Unavailable subjects retain their group's palette and remain legible as
+   * part of the mathematical map, but are visibly secondary.
+   */
+  .sunburst-sector.is-unavailable .sunburst-segment {
+    opacity: 0.60;
+    filter: saturate(0.58) brightness(0.86);
+    }
+
+  .sunburst-sector.is-unavailable .sunburst-label {
+    opacity: 0.56;
     }
 
   .sunburst-label,
