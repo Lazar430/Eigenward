@@ -1,0 +1,239 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import CombinatoricsSidebar from "../../../components/CombinatoricsSidebar.astro";
+import { withBase } from "@/utils/paths";
+import katex from "katex";
+
+const formulaOne = katex.renderToString(
+  String.raw`\binom{n}{k}=\frac{n!}{k!(n-k)!}`,
+  {
+    displayMode: true,
+    throwOnError: false
+  }
+);
+
+const formulaTwo = katex.renderToString(
+  String.raw`|A\cup B|=|A|+|B|-|A\cap B|`,
+  {
+    displayMode: true,
+    throwOnError: false
+  }
+);
+
+const branchHref = withBase("branches/combinatorics/");
+const lessonsHref = withBase("branches/combinatorics/lessons/");
+const theoremsHref = withBase("branches/combinatorics/theorems/");
+const definitionsHref = withBase("branches/combinatorics/definitions/");
+
+const lessons = [
+  {
+    number: "01",
+    title: "Counting Principles",
+    href: lessonsHref,
+    text: "Sum and product rules, bijective counting, complementary counting, double counting, and the role of combinatorial models."
+  },
+  {
+    number: "02",
+    title: "Permutations and Combinations",
+    href: lessonsHref,
+    text: "Permutations, combinations, binomial coefficients, multinomial coefficients, selections with repetition, and basic counting identities."
+  },
+  {
+    number: "03",
+    title: "The Pigeonhole Principle",
+    href: lessonsHref,
+    text: "Ordinary and generalized pigeonhole arguments, extremal applications, divisibility applications, and how local crowding forces global structure."
+  },
+  {
+    number: "04",
+    title: "Binomial Identities and Bijective Proofs",
+    href: lessonsHref,
+    text: "Pascal's identity, Vandermonde convolution, hockey-stick identities, combinatorial interpretations, and proving algebraic identities by counting the same set twice."
+  },
+  {
+    number: "05",
+    title: "Inclusion–Exclusion",
+    href: lessonsHref,
+    text: "Counting unions, derangements, surjections, restricted arrangements, Möbius-style inversion on subsets, and systematic overcount correction."
+  },
+  {
+    number: "06",
+    title: "Recurrences",
+    href: lessonsHref,
+    text: "Recursive structures, linear recurrences, characteristic equations, divide-and-conquer recurrences, Catalan-type recurrences, and combinatorial decomposition."
+  },
+  {
+    number: "07",
+    title: "Generating Functions",
+    href: lessonsHref,
+    text: "Ordinary and exponential generating functions, coefficient extraction, products as combinatorial composition, recurrence solving, and enumerative encoding."
+  },
+  {
+    number: "08",
+    title: "Partitions and Integer Compositions",
+    href: lessonsHref,
+    text: "Integer partitions, compositions, Ferrers diagrams, conjugation, partition identities, restricted partitions, and generating functions."
+  }
+];
+
+const problems = [
+  {
+    title: "Count the same family two ways",
+    text: "Find a natural combinatorial class whose two different descriptions produce a nontrivial binomial identity."
+  },
+  {
+    title: "A Hall condition hidden in a puzzle",
+    text: "Translate a selection problem into a bipartite graph and prove that a perfect matching exists by verifying Hall's condition."
+  },
+  {
+    title: "Force a monochromatic pattern",
+    text: "Use a small Ramsey argument to show that every sufficiently large coloring contains a prescribed uniform subconfiguration."
+  }
+];
+
+const theorems = [
+  "Hall's Marriage Theorem",
+  "Ramsey's Theorem",
+  "Sperner's Theorem",
+  "Turán's Theorem",
+  "Cayley's Formula",
+  "Burnside's Lemma"
+];
+
+const definitions = [
+  "Permutation",
+  "Combination",
+  "Generating function",
+  "Graph",
+  "Matching",
+  "Tree",
+  "Partially ordered set",
+  "Ramsey number"
+];
+---
+
+<BaseLayout
+  title="Combinatorics"
+  description="A structured path through enumeration, bijections, inclusion-exclusion, generating functions, graph theory, extremal combinatorics, Ramsey theory, posets, designs, and the probabilistic method."
+>
+  <section class="hub-page">
+    <CombinatoricsSidebar />
+
+    <div class="hub-main">
+      <section class="hub-hero">
+        <span class="eyebrow">Branch prototype</span>
+
+        <h1>Combinatorics</h1>
+
+        <p>
+          This page is the main entrance to the combinatorics section. The subject studies discrete structures by counting, constructing, decomposing, and comparing them, with methods ranging from bijections and generating functions to graph theory, extremal arguments, algebraic techniques, and probability.
+        </p>
+      </section>
+
+      <section class="hub-overview-grid">
+        <a class="hub-overview-card" href={branchHref}>
+          <span class="eyebrow">Core idea</span>
+
+          <h2>Finite structure and counting</h2>
+
+          <p>
+            Combinatorics asks how many configurations exist, when a configuration must exist, how discrete objects can be organized, and which structural principles turn complicated counting problems into manageable ones.
+          </p>
+        </a>
+
+        <a class="hub-overview-card formuhub-card" href={branchHref}>
+          <span class="eyebrow">Enumerative language</span>
+
+          <div class="hub-formula" set:html={formulaOne} />
+
+          <p>
+            Binomial coefficients encode one of the basic acts of combinatorics: selecting a k-element subset from an n-element set. Their identities admit both algebraic and bijective proofs.
+          </p>
+        </a>
+
+        <a class="hub-overview-card formuhub-card" href={branchHref}>
+          <span class="eyebrow">Correcting overcount</span>
+
+          <div class="hub-formula" set:html={formulaTwo} />
+
+          <p>
+            Inclusion–exclusion begins with a simple two-set identity and develops into a systematic method for handling overlapping restrictions.
+          </p>
+        </a>
+      </section>
+
+      <section class="hub-section" id="lessons">
+        <div class="section-header">
+          <h2>Lessons</h2>
+
+          <p>
+            A sequential path through the branch's central concepts. These are
+            the opening stages of the complete lesson sequence.
+          </p>
+        </div>
+
+        <div class="lesson-timeline">
+          {
+            lessons.map((lesson) => (
+              <a class="lesson-card" href={lesson.href}>
+                <span class="lesson-number">{lesson.number}</span>
+
+                <div>
+                  <h3>{lesson.title}</h3>
+                  <p>{lesson.text}</p>
+                </div>
+              </a>
+            ))
+          }
+        </div>
+      </section>
+
+      <section class="hub-section" id="problems">
+        <div class="section-header">
+          <h2>Highlighted problems</h2>
+
+          <p>
+            A small rotating shelf of representative problems, with the complete
+            archive living in the shared Problems section.
+          </p>
+        </div>
+
+        <div class="hub-problem-grid">
+          {
+            problems.map((problem) => (
+              <a class="hub-problem-card" href={withBase("problems/combinatorics/")}>
+                <span class="eyebrow">Problem</span>
+
+                <h3>{problem.title}</h3>
+
+                <p>{problem.text}</p>
+              </a>
+            ))
+          }
+        </div>
+      </section>
+
+      <section class="hub-index-grid">
+        <a class="hub-index-card" id="theorems" href={theoremsHref}>
+          <span class="eyebrow">Theorem index</span>
+
+          <h2>Theorems</h2>
+
+          <ul>
+            {theorems.map((theorem) => <li>{theorem}</li>)}
+          </ul>
+        </a>
+
+        <a class="hub-index-card" id="definitions" href={definitionsHref}>
+          <span class="eyebrow">Definition index</span>
+
+          <h2>Definitions</h2>
+
+          <ul>
+            {definitions.map((definition) => <li>{definition}</li>)}
+          </ul>
+        </a>
+      </section>
+    </div>
+  </section>
+</BaseLayout>

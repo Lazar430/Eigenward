@@ -1,0 +1,216 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import NumberTheorySidebar from "../../../../components/NumberTheorySidebar.astro";
+import { withBase } from "@/utils/paths";
+
+const lessons = [
+  {
+    number: "01",
+    title: "Divisibility and the Euclidean Algorithm",
+    href: withBase("branches/number-theory/lessons/"),
+    text: "Divisibility, gcds, the Euclidean algorithm, Bézout identities, prime factorization, valuations, and the arithmetic structure of the integers."
+  },
+  {
+    number: "02",
+    title: "Prime Numbers and Unique Factorization",
+    href: withBase("branches/number-theory/lessons/"),
+    text: "Prime and composite numbers, the fundamental theorem of arithmetic, Euclid's proof of infinitely many primes, prime-counting questions, and elementary consequences of unique factorization."
+  },
+  {
+    number: "03",
+    title: "Congruences and Residue Classes",
+    href: withBase("branches/number-theory/lessons/"),
+    text: "Congruence modulo n, arithmetic of residue classes, complete and reduced residue systems, linear congruences, inverses modulo n, and systems of congruences."
+  },
+  {
+    number: "04",
+    title: "The Chinese Remainder Theorem",
+    href: withBase("branches/number-theory/lessons/"),
+    text: "Compatible congruence systems, decomposition modulo coprime factors, constructive solutions, ring-theoretic interpretation, and applications to computation."
+  },
+  {
+    number: "05",
+    title: "Fermat, Euler, and Multiplicative Order",
+    href: withBase("branches/number-theory/lessons/"),
+    text: "Euler's totient function, Fermat's little theorem, Euler's theorem, multiplicative order, primitive roots, and the structure of units modulo n."
+  },
+  {
+    number: "06",
+    title: "Arithmetic Functions",
+    href: withBase("branches/number-theory/lessons/"),
+    text: "Multiplicative functions, Möbius inversion, divisor sums, Euler's phi function, Dirichlet convolution, and identities built from factorization."
+  },
+  {
+    number: "07",
+    title: "Quadratic Residues",
+    href: withBase("branches/number-theory/lessons/"),
+    text: "Squares modulo primes, the Legendre and Jacobi symbols, Euler's criterion, quadratic reciprocity, supplementary laws, and solvability of quadratic congruences."
+  },
+  {
+    number: "08",
+    title: "Diophantine Equations",
+    href: withBase("branches/number-theory/lessons/"),
+    text: "Integer solutions to polynomial equations, linear Diophantine equations, Pythagorean triples, descent, local obstructions, and elementary parametrization methods."
+  },
+  {
+    number: "09",
+    title: "Pell Equations and Continued Fractions",
+    href: withBase("branches/number-theory/lessons/"),
+    text: "Continued fractions, best rational approximations, periodic expansions of quadratic irrationals, Pell equations, and infinite families of integer solutions."
+  },
+  {
+    number: "10",
+    title: "Prime Distribution: An Elementary View",
+    href: withBase("branches/number-theory/lessons/"),
+    text: "Chebyshev estimates, Bertrand's postulate, primorial arguments, arithmetic progressions, and the first ideas behind the distribution of primes."
+  },
+  {
+    number: "11",
+    title: "Cryptographic Number Theory",
+    href: withBase("branches/number-theory/lessons/"),
+    text: "Modular exponentiation, RSA, discrete logarithms, Diffie–Hellman, primality testing, and the arithmetic assumptions behind public-key cryptography."
+  },
+  {
+    number: "12",
+    title: "Algebraic Integers and Number Fields",
+    href: withBase("branches/number-theory/lessons/"),
+    text: "Number fields, algebraic integers, norms, traces, embeddings, integral bases, and why unique factorization of elements can fail."
+  },
+  {
+    number: "13",
+    title: "Ideals and Factorization in Number Fields",
+    href: withBase("branches/number-theory/lessons/"),
+    text: "Ideals in rings of integers, prime ideals, ideal factorization, Dedekind domains, class groups, and the restoration of unique factorization at the ideal level."
+  },
+  {
+    number: "14",
+    title: "Units and the Geometry of Number Fields",
+    href: withBase("branches/number-theory/lessons/"),
+    text: "Units, roots of unity, Dirichlet's unit theorem, logarithmic embeddings, lattices, and geometric information encoded by arithmetic."
+  },
+  {
+    number: "15",
+    title: "p-adic Numbers",
+    href: withBase("branches/number-theory/lessons/"),
+    text: "p-adic valuations, completions, p-adic integers, convergence in non-Archimedean metrics, Hensel's lemma, and local arithmetic."
+  },
+  {
+    number: "16",
+    title: "Analytic Number Theory",
+    href: withBase("branches/number-theory/lessons/"),
+    text: "Dirichlet series, the Riemann zeta function, Euler products, prime-counting functions, characters, L-functions, and analytic methods in arithmetic."
+  },
+  {
+    number: "17",
+    title: "Additive Number Theory",
+    href: withBase("branches/number-theory/lessons/"),
+    text: "Sumsets, additive bases, partitions, Waring-type problems, Goldbach-type questions, and the interaction between addition and multiplicative structure."
+  },
+  {
+    number: "18",
+    title: "Elliptic Curves",
+    href: withBase("branches/number-theory/lessons/"),
+    text: "Plane cubic curves, rational points, the chord-tangent group law, torsion, rank, reduction modulo primes, and elliptic curves in arithmetic."
+  },
+  {
+    number: "19",
+    title: "Modular Forms",
+    href: withBase("branches/number-theory/lessons/"),
+    text: "Modular transformations, q-expansions, Eisenstein series, cusp forms, Hecke operators, and the arithmetic information carried by modular symmetry."
+  },
+  {
+    number: "20",
+    title: "Arithmetic Geometry: A First View",
+    href: withBase("branches/number-theory/lessons/"),
+    text: "Diophantine equations as geometric objects, rational and integral points, local-global principles, heights, curves over number fields, and the bridge to modern number theory."
+  }
+];
+---
+
+<BaseLayout
+  title="Number Theory Lessons"
+  description="A structured path through divisibility, congruences, primes, Diophantine equations, quadratic residues, algebraic number theory, p-adic methods, and analytic number theory."
+>
+  <section class="hub-page">
+    <NumberTheorySidebar />
+
+    <div class="hub-main">
+      <section class="hub-hero">
+        <span class="eyebrow">Number Theory · Lessons</span>
+
+        <h1>Lessons</h1>
+
+        <p>
+          A sequential route through the subject. The organization moves from foundational language and elementary methods toward increasingly structural and advanced viewpoints, while keeping each lesson broad enough to function as a coherent chapter rather than a single theorem.
+        </p>
+      </section>
+
+      <section class="hub-section lesson-index-section">
+        <div class="section-header">
+          <h2>Full lesson path</h2>
+
+          <p>
+            Each card represents a substantial conceptual unit rather than one
+            isolated result. Later lessons freely reuse the language, examples,
+            and proof methods established earlier in the sequence.
+          </p>
+        </div>
+
+        <div class="lesson-timeline">
+          {
+            lessons.map((lesson) => (
+              <a class="lesson-card" href={lesson.href}>
+                <span class="lesson-number">{lesson.number}</span>
+
+                <div>
+                  <h3>{lesson.title}</h3>
+                  <p>{lesson.text}</p>
+                </div>
+
+                <span class="lesson-arrow" aria-hidden="true">→</span>
+              </a>
+            ))
+          }
+        </div>
+      </section>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .lesson-index-section {
+    margin-top: clamp(2rem, 5vw, 4rem);
+  }
+
+  .lesson-card {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .lesson-arrow {
+    color: var(--accent, #71e6ff);
+    font-size: 1.15rem;
+    transition: transform 180ms ease;
+  }
+
+  .lesson-card:hover .lesson-arrow,
+  .lesson-card:focus-visible .lesson-arrow {
+    transform: translateX(4px);
+  }
+
+  @media (max-width: 640px) {
+    .lesson-card {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .lesson-arrow {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lesson-arrow {
+      transition: none;
+    }
+  }
+</style>

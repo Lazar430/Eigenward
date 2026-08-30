@@ -1,0 +1,239 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import QuantumMechanicsSidebar from "../../../components/QuantumMechanicsSidebar.astro";
+import { withBase } from "@/utils/paths";
+import katex from "katex";
+
+const formulaOne = katex.renderToString(
+  String.raw`i\hbar\frac{\partial}{\partial t}\lvert\psi(t)\rangle=H\lvert\psi(t)\rangle`,
+  {
+    displayMode: true,
+    throwOnError: false
+  }
+);
+
+const formulaTwo = katex.renderToString(
+  String.raw`\Delta A\,\Delta B\ge\frac12\left|\langle[A,B]\rangle\right|`,
+  {
+    displayMode: true,
+    throwOnError: false
+  }
+);
+
+const branchHref = withBase("branches/quantum-mechanics/");
+const lessonsHref = withBase("branches/quantum-mechanics/lessons/");
+const theoremsHref = withBase("branches/quantum-mechanics/theorems/");
+const definitionsHref = withBase("branches/quantum-mechanics/definitions/");
+
+const lessons = [
+  {
+    number: "01",
+    title: "Why Quantum Mechanics Needs a New Framework",
+    href: lessonsHref,
+    text: "Classical-state limitations, interference, quantization, measurement, amplitudes, superposition, and the experimental motivation for Hilbert-space mechanics."
+  },
+  {
+    number: "02",
+    title: "Complex Vector Spaces and Hilbert Spaces",
+    href: lessonsHref,
+    text: "Inner products, norms, orthogonality, completeness, bases, bra-ket notation, separable Hilbert spaces, and state-vector geometry."
+  },
+  {
+    number: "03",
+    title: "States, Observables, and Measurement",
+    href: lessonsHref,
+    text: "Pure states, rays, observables as self-adjoint operators, projective measurement, Born probabilities, expectation values, and variances."
+  },
+  {
+    number: "04",
+    title: "Operators and Spectral Theory",
+    href: lessonsHref,
+    text: "Linear operators, adjoints, self-adjointness, eigenvalues, spectra, projection-valued measures, bounded versus unbounded operators, and domains."
+  },
+  {
+    number: "05",
+    title: "Time Evolution",
+    href: lessonsHref,
+    text: "The Schrödinger equation, unitary groups, Hamiltonians, stationary states, propagators, and Stone's theorem."
+  },
+  {
+    number: "06",
+    title: "The Position and Momentum Representations",
+    href: lessonsHref,
+    text: "Wavefunctions, Fourier transforms, canonical commutation relations, differential operators, localization, and momentum-space descriptions."
+  },
+  {
+    number: "07",
+    title: "Uncertainty Relations",
+    href: lessonsHref,
+    text: "Robertson–Schrödinger uncertainty, commutators, incompatible observables, minimum-uncertainty states, and the geometry behind uncertainty."
+  },
+  {
+    number: "08",
+    title: "One-Dimensional Quantum Systems",
+    href: lessonsHref,
+    text: "Infinite and finite wells, barriers, tunneling, bound and scattering states, delta potentials, and matching conditions."
+  }
+];
+
+const problems = [
+  {
+    title: "Diagonalize a spin Hamiltonian",
+    text: "Find the eigenstates and time evolution of a two-level system in a magnetic field and interpret the motion on the Bloch sphere."
+  },
+  {
+    title: "Measure one half of an entangled pair",
+    text: "Compute the post-measurement states and conditional probabilities for a bipartite entangled state."
+  },
+  {
+    title: "Estimate a ground-state energy",
+    text: "Choose a trial wavefunction, evaluate the energy expectation, and use the variational principle to obtain a rigorous upper bound."
+  }
+];
+
+const theorems = [
+  "Spectral Theorem",
+  "Ehrenfest's Theorem",
+  "Robertson Uncertainty Relation",
+  "Bell's Theorem",
+  "No-Cloning Theorem",
+  "Wigner's Theorem"
+];
+
+const definitions = [
+  "Hilbert space",
+  "Quantum state",
+  "Observable",
+  "Self-adjoint operator",
+  "Wavefunction",
+  "Commutator",
+  "Entangled state",
+  "Density operator"
+];
+---
+
+<BaseLayout
+  title="Quantum Mechanics"
+  description="A structured path through Hilbert spaces, operators, measurement, Schrödinger dynamics, angular momentum, entanglement, approximation methods, and quantum information."
+>
+  <section class="hub-page">
+    <QuantumMechanicsSidebar />
+
+    <div class="hub-main">
+      <section class="hub-hero">
+        <span class="eyebrow">Branch prototype</span>
+
+        <h1>Quantum Mechanics</h1>
+
+        <p>
+          This page is the main entrance to the quantum mechanics section. The subject replaces deterministic classical states with vectors and operators in Hilbert space, making probability, superposition, spectral theory, symmetry, and measurement part of the fundamental mathematical framework.
+        </p>
+      </section>
+
+      <section class="hub-overview-grid">
+        <a class="hub-overview-card" href={branchHref}>
+          <span class="eyebrow">Core idea</span>
+
+          <h2>States, amplitudes, and operators</h2>
+
+          <p>
+            Quantum mechanics encodes physical states as rays in Hilbert space, observables as operators, and predictions as probabilities derived from complex amplitudes.
+          </p>
+        </a>
+
+        <a class="hub-overview-card formuhub-card" href={branchHref}>
+          <span class="eyebrow">Unitary time evolution</span>
+
+          <div class="hub-formula" set:html={formulaOne} />
+
+          <p>
+            The Schrödinger equation determines how a quantum state evolves under its Hamiltonian and turns dynamics into operator evolution on Hilbert space.
+          </p>
+        </a>
+
+        <a class="hub-overview-card formuhub-card" href={branchHref}>
+          <span class="eyebrow">Noncommutative uncertainty</span>
+
+          <div class="hub-formula" set:html={formulaTwo} />
+
+          <p>
+            Uncertainty is controlled by operator noncommutativity: incompatible observables cannot generally be simultaneously sharp in one state.
+          </p>
+        </a>
+      </section>
+
+      <section class="hub-section" id="lessons">
+        <div class="section-header">
+          <h2>Lessons</h2>
+
+          <p>
+            A sequential route through the central ideas. These cards show the
+            opening portion of the complete lesson path.
+          </p>
+        </div>
+
+        <div class="lesson-timeline">
+          {
+            lessons.map((lesson) => (
+              <a class="lesson-card" href={lesson.href}>
+                <span class="lesson-number">{lesson.number}</span>
+
+                <div>
+                  <h3>{lesson.title}</h3>
+                  <p>{lesson.text}</p>
+                </div>
+              </a>
+            ))
+          }
+        </div>
+      </section>
+
+      <section class="hub-section" id="problems">
+        <div class="section-header">
+          <h2>Highlighted problems</h2>
+
+          <p>
+            A small rotating shelf of representative problems, with the complete
+            archive living in the shared Problems section.
+          </p>
+        </div>
+
+        <div class="hub-problem-grid">
+          {
+            problems.map((problem) => (
+              <a class="hub-problem-card" href={withBase("problems/quantum-mechanics/")}>
+                <span class="eyebrow">Problem</span>
+
+                <h3>{problem.title}</h3>
+
+                <p>{problem.text}</p>
+              </a>
+            ))
+          }
+        </div>
+      </section>
+
+      <section class="hub-index-grid">
+        <a class="hub-index-card" id="theorems" href={theoremsHref}>
+          <span class="eyebrow">Theorem index</span>
+
+          <h2>Theorems</h2>
+
+          <ul>
+            {theorems.map((theorem) => <li>{theorem}</li>)}
+          </ul>
+        </a>
+
+        <a class="hub-index-card" id="definitions" href={definitionsHref}>
+          <span class="eyebrow">Definition index</span>
+
+          <h2>Definitions</h2>
+
+          <ul>
+            {definitions.map((definition) => <li>{definition}</li>)}
+          </ul>
+        </a>
+      </section>
+    </div>
+  </section>
+</BaseLayout>

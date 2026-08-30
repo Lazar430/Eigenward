@@ -3,36 +3,30 @@ import {
   createFourierDrawingPlayer2D,
   createMathScene2D,
   loadFourierDrawingAsset2D,
-  type FourierDrawingPlayer2D,
-  type MathScene2D,
 } from "../math-graphics";
+import {
+  createManagedAnimationHandle,
+  installManagedAnimationAutoMount,
+  type ManagedAnimationHandle,
+} from "../math-graphics/animation/ManagedAnimationHandle";
 
-const canvas = document.querySelector<HTMLCanvasElement>("#fourier-epicycles");
-
-if (!canvas) {
-  throw new Error("The Fourier epicycle test canvas could not be found.");
-}
-
-let scene: MathScene2D | null = null;
-let player: FourierDrawingPlayer2D | null = null;
-let destroyed = false;
-
-async function initialize(): Promise<void> {
+export async function mountFourierEpicycles(
+  canvas: HTMLCanvasElement,
+): Promise<ManagedAnimationHandle> {
   const assetUrl = new URL(
     "./assets/fourier.fourier.json",
     import.meta.url,
   );
+
   const asset = await loadFourierDrawingAsset2D(assetUrl);
 
-  if (destroyed) return;
-
-  scene = createMathScene2D(canvas, {
+  const scene = createMathScene2D(canvas, {
     viewHeight: 5.4,
     center: [0, 0],
     background: null,
   });
 
-  player = createFourierDrawingPlayer2D({
+  const player = createFourierDrawingPlayer2D({
     name: "fourier-batch4-portrait",
     scene,
     asset,
@@ -62,29 +56,26 @@ async function initialize(): Promise<void> {
     },
   });
 
+  const debugHandle = {
+    scene,
+    asset,
+    player,
+    replay: () => player.replay(),
+    complete: () => player.complete(),
+  };
+
   Object.assign(window, {
-    fourierEpicycleBatch4: {
-      scene,
-      asset,
-      player,
-      replay: () => player?.replay(),
-      complete: () => player?.complete(),
+    fourierEpicycleBatch4: debugHandle,
+  });
+
+  return createManagedAnimationHandle(scene, {
+    beforeDestroy() {
+      player.destroy();
+      if ((window as any).fourierEpicycleBatch4 === debugHandle) {
+        delete (window as any).fourierEpicycleBatch4;
+      }
     },
   });
 }
 
-void initialize().catch((error) => {
-  console.error("Could not initialize the Fourier epicycle demo.", error);
-});
-
-const destroy = (): void => {
-  if (destroyed) return;
-  destroyed = true;
-  player?.destroy();
-  player = null;
-  scene?.destroy();
-  scene = null;
-};
-
-window.addEventListener("pagehide", destroy, { once: true });
-document.addEventListener("astro:before-swap", destroy, { once: true });
+installManagedAnimationAutoMount("#fourier-epicycles", mountFourierEpicycles);

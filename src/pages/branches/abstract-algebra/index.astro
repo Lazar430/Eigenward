@@ -1,0 +1,325 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import AbstractAlgebraSidebar from "../../../components/AbstractAlgebraSidebar.astro";
+import { withBase } from "@/utils/paths";
+import katex from "katex";
+
+const groupAxioms = katex.renderToString(
+  String.raw`\begin{gathered}
+  (ab)c=a(bc),\\
+  \exists e\in G:\ ea=ae=a,\\
+  \forall a\in G\ \exists a^{-1}\in G:\ aa^{-1}=a^{-1}a=e
+  \end{gathered}`,
+  {
+    displayMode: true,
+    throwOnError: false
+  }
+);
+
+const homomorphismLaw = katex.renderToString(
+  String.raw`\varphi(xy)=\varphi(x)\varphi(y)`,
+  {
+    displayMode: true,
+    throwOnError: false
+  }
+);
+
+const branchHref = withBase("branches/abstract-algebra/");
+const lessonsHref = withBase("branches/abstract-algebra/lessons/");
+const theoremsHref = withBase("branches/abstract-algebra/theorems/");
+const definitionsHref = withBase("branches/abstract-algebra/definitions/");
+
+const lessons = [
+  {
+    number: "01",
+    title: "Algebraic Structures and Operations",
+    href: lessonsHref,
+    text: "Binary operations, closure, identities, inverses, associativity, commutativity, and the idea of studying structure independently of the objects carrying it."
+  },
+  {
+    number: "02",
+    title: "Groups and Subgroups",
+    href: lessonsHref,
+    text: "Group axioms, standard examples, subgroup tests, generated subgroups, cyclic groups, element orders, and elementary structural arguments."
+  },
+  {
+    number: "03",
+    title: "Cosets and Lagrange's Theorem",
+    href: lessonsHref,
+    text: "Left and right cosets, index, partitions by cosets, Lagrange's theorem, consequences for finite groups, and order computations."
+  },
+  {
+    number: "04",
+    title: "Normal Subgroups and Quotient Groups",
+    href: lessonsHref,
+    text: "Normality, kernels, quotient groups, well-defined operations on cosets, and the passage from a group to a simpler structural image."
+  },
+  {
+    number: "05",
+    title: "Homomorphisms and Isomorphism Theorems",
+    href: lessonsHref,
+    text: "Structure-preserving maps, kernels and images, isomorphisms, quotient constructions, and the first, second, and third isomorphism theorems."
+  },
+  {
+    number: "06",
+    title: "Group Actions and Symmetry",
+    href: lessonsHref,
+    text: "Actions, orbits, stabilizers, permutation representations, the orbit-stabilizer theorem, class equations, and symmetry through actions."
+  },
+  {
+    number: "07",
+    title: "Permutation Groups and Finite Groups",
+    href: lessonsHref,
+    text: "Symmetric and alternating groups, cycle notation, parity, Cayley's theorem, conjugacy, and the first structural tools for finite groups."
+  },
+  {
+    number: "08",
+    title: "Sylow Theory",
+    href: lessonsHref,
+    text: "p-groups, Sylow subgroups, the three Sylow theorems, counting arguments, and applications to the classification of finite groups of small order."
+  },
+  {
+    number: "09",
+    title: "Rings, Subrings, and Units",
+    href: lessonsHref,
+    text: "Ring axioms, commutative rings, units, zero divisors, integral domains, characteristic, subrings, and the contrast between additive and multiplicative structure."
+  },
+  {
+    number: "10",
+    title: "Ideals and Quotient Rings",
+    href: lessonsHref,
+    text: "Ideals, principal ideals, prime and maximal ideals, quotient rings, congruence modulo ideals, and the role ideals play in ring homomorphisms."
+  },
+  {
+    number: "11",
+    title: "Ring Homomorphisms and Isomorphism Theorems",
+    href: lessonsHref,
+    text: "Ring maps, kernels and images, quotient descriptions, correspondence, and the transfer of structural information through homomorphisms."
+  },
+  {
+    number: "12",
+    title: "Divisibility and Factorization in Domains",
+    href: lessonsHref,
+    text: "Divisibility, associates, irreducibles, primes, Euclidean domains, principal ideal domains, unique factorization domains, gcds, and Bézout identities."
+  },
+  {
+    number: "13",
+    title: "Polynomial Rings and Irreducibility",
+    href: lessonsHref,
+    text: "Polynomial arithmetic over rings and fields, division, factor and remainder theorems, irreducibility, Gauss's lemma, and Eisenstein's criterion."
+  },
+  {
+    number: "14",
+    title: "Fields and Field Extensions",
+    href: lessonsHref,
+    text: "Fields, subfields, extension degree, algebraic and transcendental elements, minimal polynomials, simple extensions, and the tower law."
+  },
+  {
+    number: "15",
+    title: "Finite Fields",
+    href: lessonsHref,
+    text: "Fields of prime-power order, multiplicative groups, constructions from irreducible polynomials, Frobenius maps, and uniqueness up to isomorphism."
+  },
+  {
+    number: "16",
+    title: "Modules over Rings",
+    href: lessonsHref,
+    text: "Modules as ring-linear analogues of vector spaces, submodules, quotient modules, homomorphisms, direct sums, free modules, and exactness at an introductory level."
+  },
+  {
+    number: "17",
+    title: "Structure over Principal Ideal Domains",
+    href: lessonsHref,
+    text: "Finitely generated modules over PIDs, invariant factors, elementary divisors, and the common structure theorem behind finite abelian groups and rational canonical form."
+  },
+  {
+    number: "18",
+    title: "Algebraic Extensions and Splitting Fields",
+    href: lessonsHref,
+    text: "Splitting fields, normal and separable extensions, algebraic closures, extension embeddings, and the preparation needed for Galois theory."
+  },
+  {
+    number: "19",
+    title: "Galois Theory",
+    href: lessonsHref,
+    text: "Automorphism groups of field extensions, fixed fields, the Galois correspondence, solvability by radicals, and the structural viewpoint on polynomial equations."
+  }
+];
+
+const problems = [
+  {
+    title: "Classify groups of order 15",
+    text: "Use Sylow counting and normality arguments to determine the possible group structures without constructing a multiplication table."
+  },
+  {
+    title: "Recognize a quotient",
+    text: "Given a homomorphism with a nontrivial kernel, identify the quotient represented by its image and make the first isomorphism theorem explicit."
+  },
+  {
+    title: "Factorization in a polynomial ring",
+    text: "Decide whether a polynomial is reducible over several coefficient fields and compare what changes when the base field changes."
+  }
+];
+
+const theorems = [
+  "Lagrange's Theorem",
+  "First Isomorphism Theorem",
+  "Cayley's Theorem",
+  "Orbit-Stabilizer Theorem",
+  "Sylow Theorems",
+  "Chinese Remainder Theorem",
+  "Gauss's Lemma",
+  "Fundamental Theorem of Finitely Generated Abelian Groups"
+];
+
+const definitions = [
+  "Group",
+  "Subgroup",
+  "Normal subgroup",
+  "Quotient group",
+  "Group homomorphism",
+  "Ring",
+  "Ideal",
+  "Integral domain",
+  "Field",
+  "Module"
+];
+---
+
+<BaseLayout
+  title="Abstract Algebra"
+  description="A structured path through groups, rings, fields, modules, homomorphisms, quotient structures, factorization, and Galois theory."
+>
+  <section class="hub-page">
+    <AbstractAlgebraSidebar />
+
+    <div class="hub-main">
+      <section class="hub-hero">
+        <span class="eyebrow">Branch prototype</span>
+
+        <h1>Abstract Algebra</h1>
+
+        <p>
+          This page is the main entrance to the abstract algebra section: a study
+          of mathematical structures through their operations, symmetries,
+          substructures, quotients, and structure-preserving maps. The same few
+          ideas recur in groups, rings, fields, modules, and many later branches
+          of mathematics.
+        </p>
+      </section>
+
+      <section class="hub-overview-grid">
+        <a class="hub-overview-card" href={branchHref}>
+          <span class="eyebrow">Core idea</span>
+
+          <h2>Structure before coordinates</h2>
+
+          <p>
+            Abstract algebra asks which conclusions depend only on a system's
+            operations and axioms, not on the accidental form of the objects
+            being manipulated.
+          </p>
+        </a>
+
+        <a class="hub-overview-card formuhub-card" href={branchHref}>
+          <span class="eyebrow">Prototype structure</span>
+
+          <div class="hub-formula" set:html={groupAxioms} />
+
+          <p>
+            A group packages one associative operation together with an identity
+            and inverses. From this compact definition emerges a theory of
+            symmetry, quotients, actions, and classification.
+          </p>
+        </a>
+
+        <a class="hub-overview-card formuhub-card" href={branchHref}>
+          <span class="eyebrow">Structural language</span>
+
+          <div class="hub-formula" set:html={homomorphismLaw} />
+
+          <p>
+            Homomorphisms preserve operations. Their kernels and images explain
+            how algebraic structures collapse, embed, decompose, and become
+            recognizable as quotients of one another.
+          </p>
+        </a>
+      </section>
+
+      <section class="hub-section" id="lessons">
+        <div class="section-header">
+          <h2>Lessons</h2>
+
+          <p>
+            A sequential route from algebraic operations and groups through
+            quotient structures, rings, fields, modules, and introductory
+            Galois theory.
+          </p>
+        </div>
+
+        <div class="lesson-timeline">
+          {
+            lessons.slice(0, 8).map((lesson) => (
+              <a class="lesson-card" href={lesson.href}>
+                <span class="lesson-number">{lesson.number}</span>
+
+                <div>
+                  <h3>{lesson.title}</h3>
+                  <p>{lesson.text}</p>
+                </div>
+              </a>
+            ))
+          }
+        </div>
+      </section>
+
+      <section class="hub-section" id="problems">
+        <div class="section-header">
+          <h2>Highlighted problems</h2>
+
+          <p>
+            A small shelf of structural problems: prove that an object must have
+            a certain form, identify a quotient or image, or exploit the axioms
+            without resorting to brute-force computation.
+          </p>
+        </div>
+
+        <div class="hub-problem-grid">
+          {
+            problems.map((problem) => (
+              <a class="hub-problem-card" href={branchHref}>
+                <span class="eyebrow">Problem</span>
+
+                <h3>{problem.title}</h3>
+
+                <p>{problem.text}</p>
+              </a>
+            ))
+          }
+        </div>
+      </section>
+
+      <section class="hub-index-grid">
+        <a class="hub-index-card" id="theorems" href={theoremsHref}>
+          <span class="eyebrow">Theorem index</span>
+
+          <h2>Theorems</h2>
+
+          <ul>
+            {theorems.map((theorem) => <li>{theorem}</li>)}
+          </ul>
+        </a>
+
+        <a class="hub-index-card" id="definitions" href={definitionsHref}>
+          <span class="eyebrow">Definition index</span>
+
+          <h2>Definitions</h2>
+
+          <ul>
+            {definitions.map((definition) => <li>{definition}</li>)}
+          </ul>
+        </a>
+      </section>
+    </div>
+  </section>
+</BaseLayout>

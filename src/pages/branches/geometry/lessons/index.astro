@@ -1,0 +1,238 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import GeometrySidebar from "../../../../components/GeometrySidebar.astro";
+import { withBase } from "@/utils/paths";
+
+const lessons = [
+  {
+    number: "01",
+    title: "Geometric Language and Axioms",
+    href: withBase("branches/geometry/lessons/"),
+    text: "Points, lines, planes, incidence, betweenness, congruence, distance, angle, transformations, and the distinction between axioms, definitions, constructions, and derived theorems."
+  },
+  {
+    number: "02",
+    title: "Triangles, Circles, and Euclidean Structure",
+    href: withBase("branches/geometry/lessons/"),
+    text: "Congruence and similarity, triangle centers, parallel lines, cyclic geometry, power of a point, classical area relations, and the main synthetic tools of the Euclidean plane."
+  },
+  {
+    number: "03",
+    title: "Euclidean Transformations and Symmetry",
+    href: withBase("branches/geometry/lessons/"),
+    text: "Translations, rotations, reflections, glide reflections, homotheties, similarities, compositions of transformations, fixed sets, and symmetry groups."
+  },
+  {
+    number: "04",
+    title: "Vectors and Inner-Product Geometry",
+    href: withBase("branches/geometry/lessons/"),
+    text: "Vectors, dot products, norms, angles, orthogonality, projections, Gram matrices, distances, affine subspaces, and Euclidean n-space."
+  },
+  {
+    number: "05",
+    title: "Analytic Geometry of Lines and Planes",
+    href: withBase("branches/geometry/lessons/"),
+    text: "Coordinate systems, vector and Cartesian equations, intersections, distances, angles between subspaces, coordinate changes, and loci described by equations."
+  },
+  {
+    number: "06",
+    title: "Conics and Quadrics",
+    href: withBase("branches/geometry/lessons/"),
+    text: "Ellipse, parabola, hyperbola, quadratic forms, discriminants, rotations and translations of axes, canonical forms, focal properties, and quadrics in higher dimensions."
+  },
+  {
+    number: "07",
+    title: "Affine Geometry",
+    href: withBase("branches/geometry/lessons/"),
+    text: "Affine spaces, affine combinations, barycentric coordinates, parallelism, affine dependence, affine maps, simplices, ratios on a line, and affine invariants."
+  },
+  {
+    number: "08",
+    title: "Projective Geometry",
+    href: withBase("branches/geometry/lessons/"),
+    text: "Projective space, homogeneous coordinates, points and hyperplanes at infinity, projective transformations, duality, perspectivities, cross-ratios, and projective conics."
+  },
+  {
+    number: "09",
+    title: "Classical Projective Theorems",
+    href: withBase("branches/geometry/lessons/"),
+    text: "Desargues, Pappus, Pascal, Brianchon, complete quadrilaterals, poles and polars, and how incidence theorems organize projective configurations."
+  },
+  {
+    number: "10",
+    title: "Convex Geometry",
+    href: withBase("branches/geometry/lessons/"),
+    text: "Convex combinations, convex hulls, supporting hyperplanes, separation, extreme points, Carathéodory, Helly, Radon, Minkowski sums, and polytopes."
+  },
+  {
+    number: "11",
+    title: "Polyhedra and Discrete Geometry",
+    href: withBase("branches/geometry/lessons/"),
+    text: "Convex polyhedra, face lattices, Euler characteristic, regular polytopes, packings, coverings, tilings, finite configurations, and geometric incidence problems."
+  },
+  {
+    number: "12",
+    title: "Computational Geometry",
+    href: withBase("branches/geometry/lessons/"),
+    text: "Convex hull algorithms, Voronoi diagrams, Delaunay triangulations, arrangements of lines, point location, visibility, intersections, and geometric complexity."
+  },
+  {
+    number: "13",
+    title: "Spherical Geometry",
+    href: withBase("branches/geometry/lessons/"),
+    text: "Great circles, poles, spherical segments, spherical angles, triangle inequalities, spherical trigonometry, Girard's theorem, rotations, and area on the sphere."
+  },
+  {
+    number: "14",
+    title: "Hyperbolic Geometry",
+    href: withBase("branches/geometry/lessons/"),
+    text: "The parallel postulate, hyperbolic lines and distance, the Poincaré disk and upper-half-plane models, isometries, angle defect, and hyperbolic trigonometry."
+  },
+  {
+    number: "15",
+    title: "Metric Geometry and Geodesic Spaces",
+    href: withBase("branches/geometry/lessons/"),
+    text: "Metrics, intrinsic metrics, length spaces, minimizing geodesics, metric balls, geodesic convexity, comparison ideas, and geometric information encoded purely by distance."
+  },
+  {
+    number: "16",
+    title: "Smooth Manifolds and Tangent Spaces",
+    href: withBase("branches/geometry/lessons/"),
+    text: "Charts, atlases, smooth compatibility, tangent vectors, tangent spaces, differentials, immersions, submersions, embeddings, and coordinate-independent geometry."
+  },
+  {
+    number: "17",
+    title: "Differential Geometry of Curves",
+    href: withBase("branches/geometry/lessons/"),
+    text: "Regular parametrized curves, arc length, curvature, torsion, Frenet–Serret frames, osculating circles, evolutes, and curves on surfaces."
+  },
+  {
+    number: "18",
+    title: "Differential Geometry of Surfaces",
+    href: withBase("branches/geometry/lessons/"),
+    text: "Regular surfaces, tangent planes, first and second fundamental forms, shape operator, principal curvatures, Gaussian and mean curvature, and the Gauss map."
+  },
+  {
+    number: "19",
+    title: "Geodesics and Intrinsic Curvature",
+    href: withBase("branches/geometry/lessons/"),
+    text: "Geodesics on surfaces, Christoffel symbols in coordinates, geodesic curvature, Theorema Egregium, Gauss–Bonnet, and the distinction between intrinsic and extrinsic geometry."
+  },
+  {
+    number: "20",
+    title: "Riemannian Geometry",
+    href: withBase("branches/geometry/lessons/"),
+    text: "Riemannian metrics, Levi-Civita connection, covariant derivatives, exponential maps, curvature tensors, sectional curvature, completeness, and global geometric consequences."
+  },
+  {
+    number: "21",
+    title: "Symplectic and Contact Geometry",
+    href: withBase("branches/geometry/lessons/"),
+    text: "Symplectic forms, Hamiltonian vector fields, canonical coordinates, Lagrangian submanifolds, contact structures, and the geometry underlying Hamiltonian mechanics."
+  },
+  {
+    number: "22",
+    title: "Complex Geometry",
+    href: withBase("branches/geometry/lessons/"),
+    text: "Complex manifolds, Hermitian metrics, holomorphic maps, complex curves, Kähler geometry at an introductory level, and the extra rigidity supplied by complex structure."
+  },
+  {
+    number: "23",
+    title: "Algebraic Geometry: A First View",
+    href: withBase("branches/geometry/lessons/"),
+    text: "Affine and projective varieties, polynomial equations, coordinate rings, singular and nonsingular points, morphisms, dimension, and the passage from equations to geometry."
+  }
+];
+---
+
+<BaseLayout
+  title="Geometry Lessons"
+  description="A sequential curriculum through Euclidean, analytic, affine, projective, convex, non-Euclidean, metric, and differential geometry."
+>
+  <section class="hub-page">
+    <GeometrySidebar />
+
+    <div class="hub-main">
+      <section class="hub-hero">
+        <span class="eyebrow">Geometry · Lessons</span>
+
+        <h1>Lessons</h1>
+
+        <p>
+          A sequential route from classical Euclidean geometry to increasingly
+          structural viewpoints. Coordinates lead to affine and projective
+          geometry; altered metrics lead to spherical and hyperbolic geometry;
+          smoothness and curvature lead to differential and Riemannian geometry.
+        </p>
+      </section>
+
+      <section class="hub-section lesson-index-section">
+        <div class="section-header">
+          <h2>Full lesson path</h2>
+
+          <p>
+            Each card represents a substantial geometric language or family of
+            techniques rather than an isolated theorem. The sequence emphasizes
+            what structure is retained or forgotten as one moves from one
+            geometry to another.
+          </p>
+        </div>
+
+        <div class="lesson-timeline">
+          {
+            lessons.map((lesson) => (
+              <a class="lesson-card" href={lesson.href}>
+                <span class="lesson-number">{lesson.number}</span>
+
+                <div>
+                  <h3>{lesson.title}</h3>
+                  <p>{lesson.text}</p>
+                </div>
+
+                <span class="lesson-arrow" aria-hidden="true">→</span>
+              </a>
+            ))
+          }
+        </div>
+      </section>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .lesson-index-section {
+    margin-top: clamp(2rem, 5vw, 4rem);
+  }
+
+  .lesson-card {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .lesson-arrow {
+    color: var(--accent, #71e6ff);
+    font-size: 1.15rem;
+    transition: transform 180ms ease;
+  }
+
+  .lesson-card:hover .lesson-arrow,
+  .lesson-card:focus-visible .lesson-arrow {
+    transform: translateX(4px);
+  }
+
+  @media (max-width: 640px) {
+    .lesson-card {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .lesson-arrow {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lesson-arrow {
+      transition: none;
+    }
+  }
+</style>

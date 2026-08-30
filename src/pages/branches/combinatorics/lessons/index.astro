@@ -1,0 +1,216 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import CombinatoricsSidebar from "../../../../components/CombinatoricsSidebar.astro";
+import { withBase } from "@/utils/paths";
+
+const lessons = [
+  {
+    number: "01",
+    title: "Counting Principles",
+    href: withBase("branches/combinatorics/lessons/"),
+    text: "Sum and product rules, bijective counting, complementary counting, double counting, and the role of combinatorial models."
+  },
+  {
+    number: "02",
+    title: "Permutations and Combinations",
+    href: withBase("branches/combinatorics/lessons/"),
+    text: "Permutations, combinations, binomial coefficients, multinomial coefficients, selections with repetition, and basic counting identities."
+  },
+  {
+    number: "03",
+    title: "The Pigeonhole Principle",
+    href: withBase("branches/combinatorics/lessons/"),
+    text: "Ordinary and generalized pigeonhole arguments, extremal applications, divisibility applications, and how local crowding forces global structure."
+  },
+  {
+    number: "04",
+    title: "Binomial Identities and Bijective Proofs",
+    href: withBase("branches/combinatorics/lessons/"),
+    text: "Pascal's identity, Vandermonde convolution, hockey-stick identities, combinatorial interpretations, and proving algebraic identities by counting the same set twice."
+  },
+  {
+    number: "05",
+    title: "Inclusion–Exclusion",
+    href: withBase("branches/combinatorics/lessons/"),
+    text: "Counting unions, derangements, surjections, restricted arrangements, Möbius-style inversion on subsets, and systematic overcount correction."
+  },
+  {
+    number: "06",
+    title: "Recurrences",
+    href: withBase("branches/combinatorics/lessons/"),
+    text: "Recursive structures, linear recurrences, characteristic equations, divide-and-conquer recurrences, Catalan-type recurrences, and combinatorial decomposition."
+  },
+  {
+    number: "07",
+    title: "Generating Functions",
+    href: withBase("branches/combinatorics/lessons/"),
+    text: "Ordinary and exponential generating functions, coefficient extraction, products as combinatorial composition, recurrence solving, and enumerative encoding."
+  },
+  {
+    number: "08",
+    title: "Partitions and Integer Compositions",
+    href: withBase("branches/combinatorics/lessons/"),
+    text: "Integer partitions, compositions, Ferrers diagrams, conjugation, partition identities, restricted partitions, and generating functions."
+  },
+  {
+    number: "09",
+    title: "Catalan Structures",
+    href: withBase("branches/combinatorics/lessons/"),
+    text: "Dyck paths, triangulations, balanced parentheses, binary trees, noncrossing partitions, Catalan recurrences, and bijections among Catalan families."
+  },
+  {
+    number: "10",
+    title: "Graph Theory Foundations",
+    href: withBase("branches/combinatorics/lessons/"),
+    text: "Graphs, digraphs, degrees, walks, paths, cycles, connectedness, bipartite graphs, trees, and the translation between combinatorial problems and graph models."
+  },
+  {
+    number: "11",
+    title: "Trees and Spanning Trees",
+    href: withBase("branches/combinatorics/lessons/"),
+    text: "Equivalent characterizations of trees, rooted trees, Prüfer codes, spanning trees, Cayley's formula, and the matrix-tree viewpoint."
+  },
+  {
+    number: "12",
+    title: "Matchings and Hall's Theorem",
+    href: withBase("branches/combinatorics/lessons/"),
+    text: "Matchings, perfect matchings, systems of distinct representatives, augmenting paths, Hall's marriage theorem, and bipartite assignment problems."
+  },
+  {
+    number: "13",
+    title: "Planar Graphs and Coloring",
+    href: withBase("branches/combinatorics/lessons/"),
+    text: "Planar embeddings, Euler's formula, faces, duality, graph coloring, chromatic polynomials, and structural constraints imposed by planarity."
+  },
+  {
+    number: "14",
+    title: "Extremal Combinatorics",
+    href: withBase("branches/combinatorics/lessons/"),
+    text: "Forcing substructures by size, Turán-type problems, forbidden configurations, extremal set systems, and stability intuition."
+  },
+  {
+    number: "15",
+    title: "Ramsey Theory",
+    href: withBase("branches/combinatorics/lessons/"),
+    text: "Ramsey numbers, monochromatic configurations, finite Ramsey phenomena, canonical examples, and the principle that sufficient size forces order."
+  },
+  {
+    number: "16",
+    title: "Partially Ordered Sets",
+    href: withBase("branches/combinatorics/lessons/"),
+    text: "Posets, chains, antichains, lattices, Dilworth and Mirsky theorems, linear extensions, and order-theoretic counting."
+  },
+  {
+    number: "17",
+    title: "Design Theory",
+    href: withBase("branches/combinatorics/lessons/"),
+    text: "Block designs, balanced incomplete block designs, finite projective planes, Steiner systems, incidence parameters, and combinatorial regularity."
+  },
+  {
+    number: "18",
+    title: "Coding Theory",
+    href: withBase("branches/combinatorics/lessons/"),
+    text: "Hamming distance, error-detecting and error-correcting codes, linear codes, bounds, syndrome decoding, and combinatorial geometry over finite fields."
+  },
+  {
+    number: "19",
+    title: "Probabilistic Method",
+    href: withBase("branches/combinatorics/lessons/"),
+    text: "Existence proofs by random choice, expectation arguments, deletion methods, first and second moment ideas, and random constructions in combinatorics."
+  },
+  {
+    number: "20",
+    title: "Algebraic Combinatorics: A First View",
+    href: withBase("branches/combinatorics/lessons/"),
+    text: "Group actions in counting, Burnside's lemma, Pólya enumeration, symmetric functions, association schemes, and algebraic structure behind enumeration."
+  }
+];
+---
+
+<BaseLayout
+  title="Combinatorics Lessons"
+  description="A structured path through enumeration, bijections, inclusion-exclusion, generating functions, graph theory, extremal combinatorics, Ramsey theory, posets, designs, and the probabilistic method."
+>
+  <section class="hub-page">
+    <CombinatoricsSidebar />
+
+    <div class="hub-main">
+      <section class="hub-hero">
+        <span class="eyebrow">Combinatorics · Lessons</span>
+
+        <h1>Lessons</h1>
+
+        <p>
+          A sequential route through the subject. The organization moves from foundational language and elementary methods toward increasingly structural and advanced viewpoints, while keeping each lesson broad enough to function as a coherent chapter rather than a single theorem.
+        </p>
+      </section>
+
+      <section class="hub-section lesson-index-section">
+        <div class="section-header">
+          <h2>Full lesson path</h2>
+
+          <p>
+            Each card represents a substantial conceptual unit rather than one
+            isolated result. Later lessons freely reuse the language, examples,
+            and proof methods established earlier in the sequence.
+          </p>
+        </div>
+
+        <div class="lesson-timeline">
+          {
+            lessons.map((lesson) => (
+              <a class="lesson-card" href={lesson.href}>
+                <span class="lesson-number">{lesson.number}</span>
+
+                <div>
+                  <h3>{lesson.title}</h3>
+                  <p>{lesson.text}</p>
+                </div>
+
+                <span class="lesson-arrow" aria-hidden="true">→</span>
+              </a>
+            ))
+          }
+        </div>
+      </section>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .lesson-index-section {
+    margin-top: clamp(2rem, 5vw, 4rem);
+  }
+
+  .lesson-card {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .lesson-arrow {
+    color: var(--accent, #71e6ff);
+    font-size: 1.15rem;
+    transition: transform 180ms ease;
+  }
+
+  .lesson-card:hover .lesson-arrow,
+  .lesson-card:focus-visible .lesson-arrow {
+    transform: translateX(4px);
+  }
+
+  @media (max-width: 640px) {
+    .lesson-card {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .lesson-arrow {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lesson-arrow {
+      transition: none;
+    }
+  }
+</style>

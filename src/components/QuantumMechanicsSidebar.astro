@@ -1,0 +1,19 @@
+---
+import { withBase } from "@/utils/paths";
+
+const items = [
+  { label: "Home", href: withBase("branches/quantum-mechanics/") },
+  { label: "Lessons", href: withBase("branches/quantum-mechanics/lessons/") },
+  { label: "Problems", href: withBase("problems/quantum-mechanics/") },
+  { label: "Theorems", href: withBase("branches/quantum-mechanics/theorems/") },
+  { label: "Definitions", href: withBase("branches/quantum-mechanics/definitions/") }
+];
+---
+
+<aside class="hub-sidebar" aria-label="Quantum Mechanics navigation">
+  <span class="hub-sidebar-title">Quantum Mechanics</span>
+
+  <nav>
+    {items.map((item) => <a href={item.href}>{item.label}</a>)}
+  </nav>
+</aside>

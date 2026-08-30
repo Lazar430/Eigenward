@@ -1,0 +1,228 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import QuantumMechanicsSidebar from "../../../../components/QuantumMechanicsSidebar.astro";
+import { withBase } from "@/utils/paths";
+
+const lessons = [
+  {
+    number: "01",
+    title: "Why Quantum Mechanics Needs a New Framework",
+    href: withBase("branches/quantum-mechanics/lessons/"),
+    text: "Classical-state limitations, interference, quantization, measurement, amplitudes, superposition, and the experimental motivation for Hilbert-space mechanics."
+  },
+  {
+    number: "02",
+    title: "Complex Vector Spaces and Hilbert Spaces",
+    href: withBase("branches/quantum-mechanics/lessons/"),
+    text: "Inner products, norms, orthogonality, completeness, bases, bra-ket notation, separable Hilbert spaces, and state-vector geometry."
+  },
+  {
+    number: "03",
+    title: "States, Observables, and Measurement",
+    href: withBase("branches/quantum-mechanics/lessons/"),
+    text: "Pure states, rays, observables as self-adjoint operators, projective measurement, Born probabilities, expectation values, and variances."
+  },
+  {
+    number: "04",
+    title: "Operators and Spectral Theory",
+    href: withBase("branches/quantum-mechanics/lessons/"),
+    text: "Linear operators, adjoints, self-adjointness, eigenvalues, spectra, projection-valued measures, bounded versus unbounded operators, and domains."
+  },
+  {
+    number: "05",
+    title: "Time Evolution",
+    href: withBase("branches/quantum-mechanics/lessons/"),
+    text: "The Schrödinger equation, unitary groups, Hamiltonians, stationary states, propagators, and Stone's theorem."
+  },
+  {
+    number: "06",
+    title: "The Position and Momentum Representations",
+    href: withBase("branches/quantum-mechanics/lessons/"),
+    text: "Wavefunctions, Fourier transforms, canonical commutation relations, differential operators, localization, and momentum-space descriptions."
+  },
+  {
+    number: "07",
+    title: "Uncertainty Relations",
+    href: withBase("branches/quantum-mechanics/lessons/"),
+    text: "Robertson–Schrödinger uncertainty, commutators, incompatible observables, minimum-uncertainty states, and the geometry behind uncertainty."
+  },
+  {
+    number: "08",
+    title: "One-Dimensional Quantum Systems",
+    href: withBase("branches/quantum-mechanics/lessons/"),
+    text: "Infinite and finite wells, barriers, tunneling, bound and scattering states, delta potentials, and matching conditions."
+  },
+  {
+    number: "09",
+    title: "The Harmonic Oscillator",
+    href: withBase("branches/quantum-mechanics/lessons/"),
+    text: "Ladder operators, number states, coherent states, Hermite functions, algebraic and differential solutions, and semiclassical structure."
+  },
+  {
+    number: "10",
+    title: "Angular Momentum",
+    href: withBase("branches/quantum-mechanics/lessons/"),
+    text: "Rotation generators, angular momentum algebra, ladder operators, spherical harmonics, orbital angular momentum, and quantized spectra."
+  },
+  {
+    number: "11",
+    title: "Spin and Two-Level Systems",
+    href: withBase("branches/quantum-mechanics/lessons/"),
+    text: "Pauli matrices, spin-1/2 states, Bloch sphere geometry, Stern–Gerlach measurements, spin rotations, and two-state dynamics."
+  },
+  {
+    number: "12",
+    title: "Composite Systems and Tensor Products",
+    href: withBase("branches/quantum-mechanics/lessons/"),
+    text: "Tensor products, product states, entangled states, reduced density operators, partial traces, and subsystem measurements."
+  },
+  {
+    number: "13",
+    title: "Identical Particles",
+    href: withBase("branches/quantum-mechanics/lessons/"),
+    text: "Bosons, fermions, symmetrization, antisymmetrization, exchange symmetry, Pauli exclusion, and many-particle Hilbert spaces."
+  },
+  {
+    number: "14",
+    title: "The Hydrogen Atom",
+    href: withBase("branches/quantum-mechanics/lessons/"),
+    text: "Central potentials, separation in spherical coordinates, radial equations, angular momentum, degeneracy, and hydrogenic spectra."
+  },
+  {
+    number: "15",
+    title: "Approximation Methods",
+    href: withBase("branches/quantum-mechanics/lessons/"),
+    text: "Variational methods, time-independent perturbation theory, degenerate perturbation theory, WKB approximation, and controlled approximations."
+  },
+  {
+    number: "16",
+    title: "Time-Dependent Perturbation Theory",
+    href: withBase("branches/quantum-mechanics/lessons/"),
+    text: "Interaction picture, transition amplitudes, Fermi's golden rule, driven systems, adiabatic evolution, and sudden approximations."
+  },
+  {
+    number: "17",
+    title: "Density Operators and Mixed States",
+    href: withBase("branches/quantum-mechanics/lessons/"),
+    text: "Density matrices, statistical mixtures, purity, reduced states, quantum channels, entropy, and ensemble descriptions."
+  },
+  {
+    number: "18",
+    title: "Quantum Information",
+    href: withBase("branches/quantum-mechanics/lessons/"),
+    text: "Qubits, entanglement, Bell inequalities, quantum gates, teleportation, no-cloning, measurement protocols, and information-theoretic viewpoints."
+  },
+  {
+    number: "19",
+    title: "Scattering Theory",
+    href: withBase("branches/quantum-mechanics/lessons/"),
+    text: "Wave operators, cross sections, Born approximation, partial waves, S-matrix ideas, resonances, and asymptotic states."
+  },
+  {
+    number: "20",
+    title: "Path Integrals and Semiclassical Mechanics",
+    href: withBase("branches/quantum-mechanics/lessons/"),
+    text: "Feynman path integrals, propagators, stationary phase, classical limits, Euclidean continuation, and links with statistical mechanics."
+  },
+  {
+    number: "21",
+    title: "Symmetry in Quantum Mechanics",
+    href: withBase("branches/quantum-mechanics/lessons/"),
+    text: "Unitary and antiunitary symmetries, Wigner's theorem, conserved quantities, representation theory, parity, time reversal, and selection rules."
+  },
+  {
+    number: "22",
+    title: "Quantum Field Theory: First Steps",
+    href: withBase("branches/quantum-mechanics/lessons/"),
+    text: "From particles to fields, Fock space, creation and annihilation operators, canonical quantization, relativistic wave equations, and why many-particle quantum theory becomes field theory."
+  }
+];
+---
+
+<BaseLayout
+  title="Quantum Mechanics Lessons"
+  description="A structured path through Hilbert spaces, operators, measurement, Schrödinger dynamics, angular momentum, entanglement, approximation methods, and quantum information."
+>
+  <section class="hub-page">
+    <QuantumMechanicsSidebar />
+
+    <div class="hub-main">
+      <section class="hub-hero">
+        <span class="eyebrow">Quantum Mechanics · Lessons</span>
+
+        <h1>Lessons</h1>
+
+        <p>
+          A sequential route through the subject, beginning with its core mathematical framework and moving toward more structural, geometric, and advanced formulations.
+        </p>
+      </section>
+
+      <section class="hub-section lesson-index-section">
+        <div class="section-header">
+          <h2>Full lesson path</h2>
+
+          <p>
+            Each card represents a substantial conceptual unit rather than a
+            single formula or isolated theorem, so later material can build on
+            a coherent physical and mathematical vocabulary.
+          </p>
+        </div>
+
+        <div class="lesson-timeline">
+          {
+            lessons.map((lesson) => (
+              <a class="lesson-card" href={lesson.href}>
+                <span class="lesson-number">{lesson.number}</span>
+
+                <div>
+                  <h3>{lesson.title}</h3>
+                  <p>{lesson.text}</p>
+                </div>
+
+                <span class="lesson-arrow" aria-hidden="true">→</span>
+              </a>
+            ))
+          }
+        </div>
+      </section>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .lesson-index-section {
+    margin-top: clamp(2rem, 5vw, 4rem);
+  }
+
+  .lesson-card {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .lesson-arrow {
+    color: var(--accent, #71e6ff);
+    font-size: 1.15rem;
+    transition: transform 180ms ease;
+  }
+
+  .lesson-card:hover .lesson-arrow,
+  .lesson-card:focus-visible .lesson-arrow {
+    transform: translateX(4px);
+  }
+
+  @media (max-width: 640px) {
+    .lesson-card {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .lesson-arrow {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lesson-arrow {
+      transition: none;
+    }
+  }
+</style>

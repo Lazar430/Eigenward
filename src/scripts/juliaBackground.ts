@@ -159,10 +159,21 @@ function prefersReducedMotion(): boolean {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
-function initializeCanvas(canvas: HTMLCanvasElement) {
-  if (canvas.dataset.juliaReady === "true") {
-    return;
-  }
+export interface JuliaBackgroundHandle {
+  readonly canvas: HTMLCanvasElement;
+  pause(): void;
+  resume(): void;
+  destroy(): void;
+}
+
+const juliaHandles = new WeakMap<HTMLCanvasElement, JuliaBackgroundHandle>();
+const activeJuliaHandles = new Set<JuliaBackgroundHandle>();
+
+function initializeCanvas(
+  canvas: HTMLCanvasElement,
+): JuliaBackgroundHandle | null {
+  const existing = juliaHandles.get(canvas);
+  if (existing) return existing;
 
   const gl = canvas.getContext("webgl", {
     alpha: false,
@@ -170,106 +181,216 @@ function initializeCanvas(canvas: HTMLCanvasElement) {
     depth: false,
     stencil: false,
     preserveDrawingBuffer: false,
-    powerPreference: "low-power"
+    powerPreference: "low-power",
   });
 
   if (!gl) {
     console.warn("WebGL is not available, so the Julia background was disabled.");
-    return;
+    return null;
   }
 
   const program = createProgram(
     gl,
     VERTEX_SHADER_SOURCE,
-    FRAGMENT_SHADER_SOURCE
+    FRAGMENT_SHADER_SOURCE,
   );
 
-  if (!program) {
-    return;
-  }
-
-  canvas.dataset.juliaReady = "true";
-
-  gl.useProgram(program);
+  if (!program) return null;
 
   const buffer = gl.createBuffer();
+  if (!buffer) {
+    gl.deleteProgram(program);
+    return null;
+  }
+
+  gl.useProgram(program);
   gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
   gl.bufferData(gl.ARRAY_BUFFER, FULLSCREEN_TRIANGLE, gl.STATIC_DRAW);
 
   const positionLocation = gl.getAttribLocation(program, "a_position");
-
-  if (positionLocation < 0) {
-    console.error("Could not find a_position attribute.");
-    return;
-  }
-
-  gl.enableVertexAttribArray(positionLocation);
-  gl.vertexAttribPointer(
-    positionLocation,
-    2,
-    gl.FLOAT,
-    false,
-    0,
-    0
-  );
-
   const resolutionLocation = gl.getUniformLocation(program, "u_resolution");
   const cLocation = gl.getUniformLocation(program, "u_c");
 
-  if (!resolutionLocation || !cLocation) {
-    console.error("Could not find one or more shader uniforms.");
-    return;
+  if (positionLocation < 0 || !resolutionLocation || !cLocation) {
+    console.error("Could not initialize the Julia background shader interface.");
+    gl.deleteBuffer(buffer);
+    gl.deleteProgram(program);
+    return null;
   }
 
+  gl.enableVertexAttribArray(positionLocation);
+  gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+
+  canvas.dataset.juliaReady = "true";
+
   const [baseCx, baseCy] = randomPreset();
+  const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 
   let tick = 0;
   let lastFrame = 0;
+  let animationFrame = 0;
+  let paused = false;
+  let destroyed = false;
+  let contextLost = false;
 
   const fps = 15;
   const frameDuration = 1000 / fps;
-
   const wiggle = 0.02;
   const speed = 0.03;
 
+  function cancelFrame() {
+    cancelAnimationFrame(animationFrame);
+    animationFrame = 0;
+  }
+
+  function requestFrame() {
+    if (
+      destroyed ||
+      paused ||
+      contextLost ||
+      document.hidden ||
+      animationFrame !== 0
+    ) {
+      return;
+    }
+
+    animationFrame = requestAnimationFrame(draw);
+  }
+
   function draw(now: number) {
+    animationFrame = 0;
+
+    if (destroyed || paused || contextLost || document.hidden) return;
+
     resizeCanvas(canvas, gl);
 
-    if (now - lastFrame >= frameDuration || prefersReducedMotion()) {
+    if (now - lastFrame >= frameDuration || reducedMotionQuery.matches) {
       lastFrame = now;
 
       const cx = baseCx + Math.cos(tick * speed) * wiggle;
       const cy = baseCy + Math.sin(tick * speed) * wiggle;
 
-      gl.clearColor(
-        CLEAR_COLOR[0],
-        CLEAR_COLOR[1],
-        CLEAR_COLOR[2],
-        CLEAR_COLOR[3]
-      );
-
+      gl.clearColor(...CLEAR_COLOR);
       gl.clear(gl.COLOR_BUFFER_BIT);
-
       gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
       gl.uniform2f(cLocation, cx, cy);
-
       gl.drawArrays(gl.TRIANGLES, 0, 3);
-
-      tick++;
+      tick += 1;
     }
 
-    if (!prefersReducedMotion()) {
-      requestAnimationFrame(draw);
-    }
+    if (!reducedMotionQuery.matches) requestFrame();
   }
 
-  requestAnimationFrame(draw);
+  const handleVisibility = () => {
+    if (document.hidden) cancelFrame();
+    else requestFrame();
+  };
+
+  const handleReducedMotionChange = () => {
+    cancelFrame();
+    requestFrame();
+  };
+
+  const handleResize = () => {
+    requestFrame();
+  };
+
+  const handleContextLost = (event: Event) => {
+    event.preventDefault();
+    contextLost = true;
+    cancelFrame();
+  };
+
+  const handleContextRestored = () => {
+    /*
+     * A restored WebGL1 context invalidates the old program/buffer objects.
+     * Recreating the lightweight background is safer than attempting to reuse
+     * them. The next startJuliaBackground() call will initialize this canvas.
+     */
+    handle.destroy();
+    delete canvas.dataset.juliaReady;
+    queueMicrotask(() => startJuliaBackground());
+  };
+
+  const handle: JuliaBackgroundHandle = {
+    canvas,
+
+    pause() {
+      if (destroyed || paused) return;
+      paused = true;
+      cancelFrame();
+    },
+
+    resume() {
+      if (destroyed || !paused) return;
+      paused = false;
+      lastFrame = 0;
+      requestFrame();
+    },
+
+    destroy() {
+      if (destroyed) return;
+      destroyed = true;
+      cancelFrame();
+
+      document.removeEventListener("visibilitychange", handleVisibility);
+      reducedMotionQuery.removeEventListener("change", handleReducedMotionChange);
+      window.removeEventListener("resize", handleResize);
+      canvas.removeEventListener("webglcontextlost", handleContextLost);
+      canvas.removeEventListener("webglcontextrestored", handleContextRestored);
+
+      gl.deleteBuffer(buffer);
+      gl.deleteProgram(program);
+
+      delete canvas.dataset.juliaReady;
+      juliaHandles.delete(canvas);
+      activeJuliaHandles.delete(handle);
+    },
+  };
+
+  document.addEventListener("visibilitychange", handleVisibility);
+  reducedMotionQuery.addEventListener("change", handleReducedMotionChange);
+  window.addEventListener("resize", handleResize);
+  canvas.addEventListener("webglcontextlost", handleContextLost);
+  canvas.addEventListener("webglcontextrestored", handleContextRestored);
+
+  juliaHandles.set(canvas, handle);
+  activeJuliaHandles.add(handle);
+  requestFrame();
+
+  return handle;
 }
 
-export function startJuliaBackground() {
+export function startJuliaBackground(): JuliaBackgroundHandle[] {
   const canvases = document.querySelectorAll<HTMLCanvasElement>(
-    "canvas[data-julia-background]"
+    "canvas[data-julia-background]",
   );
 
-  canvases.forEach(initializeCanvas);
+  return [...canvases]
+    .map(initializeCanvas)
+    .filter((handle): handle is JuliaBackgroundHandle => handle !== null);
+}
+
+export function stopJuliaBackground(): void {
+  for (const handle of [...activeJuliaHandles]) {
+    handle.destroy();
+  }
+}
+
+let juliaLifecycleInstalled = false;
+
+/** Install the Astro navigation hooks exactly once for the whole application. */
+export function installJuliaBackgroundLifecycle(): void {
+  startJuliaBackground();
+
+  if (juliaLifecycleInstalled) return;
+  juliaLifecycleInstalled = true;
+
+  document.addEventListener("astro:page-load", () => {
+    startJuliaBackground();
+  });
+
+  document.addEventListener("astro:before-swap", () => {
+    stopJuliaBackground();
+  });
 }

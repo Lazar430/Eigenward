@@ -1,0 +1,312 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import GeometrySidebar from "../../../../components/GeometrySidebar.astro";
+
+const items = [
+  "Angle Bisector Theorem",
+  "Bézout's Theorem for Plane Curves",
+  "Bonnet–Myers Theorem",
+  "Brianchon's Theorem",
+  "Carathéodory's Theorem",
+  "Cayley–Bacharach Theorem",
+  "Ceva's Theorem",
+  "Desargues' Theorem",
+  "Euler's Polyhedron Formula",
+  "Euler Line Theorem",
+  "Frenet–Serret Formulas",
+  "Gauss–Bonnet Theorem",
+  "Gauss's Theorema Egregium",
+  "Girard's Theorem",
+  "Helly's Theorem",
+  "Hilbert's Basis Theorem",
+  "Hopf–Rinow Theorem",
+  "Jordan Curve Theorem",
+  "Law of Cosines",
+  "Law of Sines",
+  "Menelaus' Theorem",
+  "Miquel's Theorem",
+  "Morley's Trisector Theorem",
+  "Napoleon's Theorem",
+  "Nine-Point Circle Theorem",
+  "Orbit Classification of Euclidean Plane Isometries",
+  "Pappus' Hexagon Theorem",
+  "Pascal's Theorem",
+  "Pick's Theorem",
+  "Poincaré–Hopf Theorem",
+  "Ptolemy's Theorem",
+  "Pythagorean Theorem",
+  "Radon's Theorem",
+  "Steiner's Theorem on Parallel Axes",
+  "Sylvester–Gallai Theorem",
+  "Thales' Theorem",
+  "Triangle Inequality",
+  "Van Aubel's Theorem"
+];
+
+const letters = [...new Set(items.map((item) => item[0].toUpperCase()))];
+
+const groups = letters.map((letter) => ({
+  letter,
+  items: items.filter((item) => item[0].toUpperCase() === letter)
+}));
+
+function slugify(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/['’]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+---
+
+<BaseLayout
+  title="Geometry Theorems"
+  description="An alphabetical index of geometry theorems."
+>
+  <section class="hub-page">
+    <GeometrySidebar />
+
+    <div class="hub-main">
+      <section class="hub-hero">
+        <span class="eyebrow">Geometry · Theorems</span>
+
+        <h1>Theorems</h1>
+
+        <p>
+          An alphabetical index of the principal named results, incidence theorems, metric and convexity theorems, non-Euclidean results, and global or local theorems used throughout the geometry section.
+        </p>
+      </section>
+
+      <section class="index-tools" aria-label="Theorems index controls">
+        <label class="search-control">
+          <span>Search theorems</span>
+
+          <input
+            id="theorem-search"
+            type="search"
+            placeholder="Try “Gauss”, “Ceva”, “projective”…"
+            autocomplete="off"
+          />
+        </label>
+
+        <nav class="alphabet-nav" aria-label="Jump to letter">
+          {
+            letters.map((letter) => (
+              <a href={`#theorems-${letter}`}>{letter}</a>
+            ))
+          }
+        </nav>
+
+        <output id="theorem-result-count" aria-live="polite">
+          {items.length} theorems
+        </output>
+      </section>
+
+      <div class="alphabet-index" id="theorem-index">
+        {
+          groups.map((group) => (
+            <section class="alphabet-group" data-alpha-group>
+              <h2 id={`$theorems-${group.letter}`}>{group.letter}</h2>
+
+              <div class="alphabet-entry-list">
+                {
+                  group.items.map((item) => {
+                    const slug = slugify(item);
+
+                    return (
+                      <a
+                        id={slug}
+                        class="index-entry"
+                        href={`#${slug}`}
+                        data-index-entry
+                        data-search-term={item.toLowerCase()}
+                      >
+                        <span>{item}</span>
+                        <span class="index-arrow" aria-hidden="true">→</span>
+                      </a>
+                    );
+                  })
+                }
+              </div>
+            </section>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const search = document.querySelector<HTMLInputElement>("#theorem-search");
+  const entries = Array.from(
+    document.querySelectorAll<HTMLElement>("[data-index-entry]"),
+  );
+  const groups = Array.from(
+    document.querySelectorAll<HTMLElement>("[data-alpha-group]"),
+  );
+  const resultCount =
+    document.querySelector<HTMLOutputElement>("#theorem-result-count");
+
+  const updateIndex = () => {
+    const query = search?.value.trim().toLowerCase() ?? "";
+    let visible = 0;
+
+    entries.forEach((entry) => {
+      const matches = (entry.dataset.searchTerm ?? "").includes(query);
+      entry.hidden = !matches;
+
+      if (matches) visible += 1;
+    });
+
+    groups.forEach((group) => {
+      const hasVisibleEntries = Array.from(
+        group.querySelectorAll<HTMLElement>("[data-index-entry]"),
+      ).some((entry) => !entry.hidden);
+
+      group.hidden = !hasVisibleEntries;
+    });
+
+    if (resultCount) {
+      resultCount.textContent =
+        query.length === 0
+          ? `${visible} theorems`
+          : `${visible} matching theorem${visible === 1 ? "" : "s"}`;
+    }
+  };
+
+  search?.addEventListener("input", updateIndex);
+</script>
+
+<style>
+  .index-tools {
+    display: grid;
+    gap: 1rem;
+    margin-top: clamp(2rem, 5vw, 4rem);
+    padding: 1.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 1.2rem;
+    background: rgba(17, 11, 37, 0.55);
+  }
+
+  .search-control {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .search-control span {
+    color: var(--accent, #71e6ff);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+  }
+
+  .search-control input {
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.11);
+    border-radius: 0.8rem;
+    padding: 0.85rem 1rem;
+    color: inherit;
+    background: rgba(5, 5, 18, 0.42);
+    font: inherit;
+  }
+
+  .search-control input:focus {
+    border-color: rgba(113, 230, 255, 0.48);
+    outline: none;
+  }
+
+  .alphabet-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .alphabet-nav a {
+    display: grid;
+    place-items: center;
+    min-width: 2.1rem;
+    min-height: 2.1rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.55rem;
+    color: rgba(239, 234, 255, 0.76);
+    text-decoration: none;
+  }
+
+  .alphabet-nav a:hover,
+  .alphabet-nav a:focus-visible {
+    border-color: rgba(113, 230, 255, 0.42);
+    color: var(--accent, #71e6ff);
+    outline: none;
+  }
+
+  #theorem-result-count {
+    color: rgba(239, 234, 255, 0.62);
+    font-size: 0.9rem;
+  }
+
+  .alphabet-index {
+    display: grid;
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .alphabet-group {
+    display: grid;
+    grid-template-columns: 72px minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .alphabet-group h2 {
+    position: sticky;
+    top: 1rem;
+    align-self: start;
+    margin: 0;
+    color: var(--accent, #71e6ff);
+    font-size: clamp(2rem, 5vw, 3.8rem);
+    line-height: 1;
+  }
+
+  .alphabet-entry-list {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .index-entry {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 0.8rem;
+    padding: 0.85rem 1rem;
+    color: inherit;
+    background: rgba(255, 255, 255, 0.025);
+    text-decoration: none;
+  }
+
+  .index-entry:hover,
+  .index-entry:focus-visible {
+    border-color: rgba(113, 230, 255, 0.32);
+    background: rgba(113, 230, 255, 0.045);
+    outline: none;
+  }
+
+  .index-arrow {
+    color: var(--accent, #71e6ff);
+  }
+
+  [hidden] {
+    display: none !important;
+  }
+
+  @media (max-width: 600px) {
+    .alphabet-group {
+      grid-template-columns: 1fr;
+    }
+
+    .alphabet-group h2 {
+      position: static;
+    }
+  }
+</style>

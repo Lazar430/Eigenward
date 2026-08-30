@@ -1,0 +1,19 @@
+---
+import { withBase } from "@/utils/paths";
+
+const items = [
+  { label: "Home", href: withBase("branches/probability/") },
+  { label: "Lessons", href: withBase("branches/probability/lessons/") },
+  { label: "Problems", href: withBase("problems/probability/") },
+  { label: "Theorems", href: withBase("branches/probability/theorems/") },
+  { label: "Definitions", href: withBase("branches/probability/definitions/") }
+];
+---
+
+<aside class="hub-sidebar" aria-label="Probability Theory navigation">
+  <span class="hub-sidebar-title">Probability Theory</span>
+
+  <nav>
+    {items.map((item) => <a href={item.href}>{item.label}</a>)}
+  </nav>
+</aside>

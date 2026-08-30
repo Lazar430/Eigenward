@@ -5,11 +5,7 @@
 ></canvas>
 
 <script>
-  import { startJuliaBackground } from "../scripts/juliaBackground";
+  import { installJuliaBackgroundLifecycle } from "../scripts/juliaBackground";
 
-  startJuliaBackground();
-
-  document.addEventListener("astro:page-load", () => {
-    startJuliaBackground();
-  });
+  installJuliaBackgroundLifecycle();
 </script>

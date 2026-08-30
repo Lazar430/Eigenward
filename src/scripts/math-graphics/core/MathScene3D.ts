@@ -78,6 +78,8 @@ export class MathScene3D {
   private previousTime = 0;
   private canvasVisible = true;
   private disposed = false;
+  private paused = false;
+  private contextLost = false;
 
   constructor(
     /** Public so reusable interaction helpers can attach pointer listeners. */
@@ -175,6 +177,8 @@ export class MathScene3D {
     this.intersectionObserver.observe(canvas);
 
     document.addEventListener("visibilitychange", this.handleVisibility);
+    canvas.addEventListener("webglcontextlost", this.handleContextLost);
+    canvas.addEventListener("webglcontextrestored", this.handleContextRestored);
     this.resize();
   }
 
@@ -315,6 +319,27 @@ export class MathScene3D {
     return this.raycaster.intersectObjects([...objects], recursive);
   }
 
+  /** Pause every scene-owned animation callback without destroying GPU state. */
+  pause(): this {
+    if (this.disposed || this.paused) return this;
+    this.paused = true;
+    this.cancelFrame();
+    return this;
+  }
+
+  /** Resume the shared frame loop while preserving the scene's current state. */
+  resume(): this {
+    if (this.disposed || !this.paused) return this;
+    this.paused = false;
+    this.previousTime = 0;
+    this.invalidate();
+    return this;
+  }
+
+  get isPaused(): boolean {
+    return this.paused;
+  }
+
   /** Explicit redraw request for direct Three.js property changes. */
   invalidate(): void {
     this.requestFrame();
@@ -338,6 +363,8 @@ export class MathScene3D {
     this.resizeObserver.disconnect();
     this.intersectionObserver.disconnect();
     document.removeEventListener("visibilitychange", this.handleVisibility);
+    this.canvas.removeEventListener("webglcontextlost", this.handleContextLost);
+    this.canvas.removeEventListener("webglcontextrestored", this.handleContextRestored);
     this.frameCallbacks.clear();
 
     disposeObjectTree(this.threeScene);
@@ -348,6 +375,20 @@ export class MathScene3D {
       this.labelContainer.style.position = this.previousContainerPosition;
     }
   }
+
+  private readonly handleContextLost = (event: Event): void => {
+    event.preventDefault();
+    this.contextLost = true;
+    this.cancelFrame();
+  };
+
+  private readonly handleContextRestored = (): void => {
+    if (this.disposed) return;
+    this.contextLost = false;
+    this.previousTime = 0;
+    this.resize();
+    this.invalidate();
+  };
 
   private readonly handleVisibility = (): void => {
     if (document.hidden) this.cancelFrame();
@@ -392,6 +433,8 @@ export class MathScene3D {
   private requestFrame(): void {
     if (
       this.disposed ||
+      this.paused ||
+      this.contextLost ||
       this.animationFrame !== 0 ||
       !this.canvasVisible ||
       document.hidden
@@ -411,7 +454,13 @@ export class MathScene3D {
   private readonly renderFrame = (time: number): void => {
     this.animationFrame = 0;
 
-    if (this.disposed || !this.canvasVisible || document.hidden) return;
+    if (
+      this.disposed ||
+      this.paused ||
+      this.contextLost ||
+      !this.canvasVisible ||
+      document.hidden
+    ) return;
 
     const deltaTime =
       this.previousTime === 0

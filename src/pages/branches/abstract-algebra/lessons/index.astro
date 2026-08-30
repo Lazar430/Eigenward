@@ -1,0 +1,220 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import AbstractAlgebraSidebar from "../../../../components/AbstractAlgebraSidebar.astro";
+import { withBase } from "@/utils/paths";
+
+const lessons = [
+  {
+    number: "01",
+    title: "Algebraic Structures and Operations",
+    href: withBase("branches/abstract-algebra/lessons/"),
+    text: "Binary operations, closure, identities, inverses, associativity, commutativity, algebraic laws, and the idea of studying a structure independently of the nature of its elements."
+  },
+  {
+    number: "02",
+    title: "Groups and Subgroups",
+    href: withBase("branches/abstract-algebra/lessons/"),
+    text: "Group axioms, standard examples, subgroup criteria, intersections of subgroups, generated subgroups, cyclic groups, and orders of elements."
+  },
+  {
+    number: "03",
+    title: "Cyclic Groups, Generators, and Orders",
+    href: withBase("branches/abstract-algebra/lessons/"),
+    text: "Generators, cyclic subgroups, additive and multiplicative notation, classification of cyclic groups, element orders, and arithmetic inside finite cyclic groups."
+  },
+  {
+    number: "04",
+    title: "Cosets and Lagrange's Theorem",
+    href: withBase("branches/abstract-algebra/lessons/"),
+    text: "Left and right cosets, index, coset partitions, Lagrange's theorem, consequences for orders of elements, and the first structural counting arguments."
+  },
+  {
+    number: "05",
+    title: "Normal Subgroups and Quotient Groups",
+    href: withBase("branches/abstract-algebra/lessons/"),
+    text: "Normality, equivalent criteria, kernels, quotient groups, well-defined operations on cosets, and the conceptual meaning of collapsing a normal subgroup."
+  },
+  {
+    number: "06",
+    title: "Homomorphisms and Isomorphism Theorems",
+    href: withBase("branches/abstract-algebra/lessons/"),
+    text: "Group homomorphisms, kernels and images, isomorphisms, quotient descriptions, correspondence, and the first, second, and third isomorphism theorems."
+  },
+  {
+    number: "07",
+    title: "Group Actions, Orbits, and Stabilizers",
+    href: withBase("branches/abstract-algebra/lessons/"),
+    text: "Actions on sets, orbits, stabilizers, faithful actions, orbit-stabilizer, conjugation actions, class equations, and counting through symmetry."
+  },
+  {
+    number: "08",
+    title: "Permutation Groups and Cayley's Theorem",
+    href: withBase("branches/abstract-algebra/lessons/"),
+    text: "Symmetric groups, cycle decomposition, parity, alternating groups, permutation representations, and Cayley's realization of every group as a permutation group."
+  },
+  {
+    number: "09",
+    title: "Finite Groups and Sylow Theory",
+    href: withBase("branches/abstract-algebra/lessons/"),
+    text: "p-groups, Sylow subgroups, the Sylow theorems, normal Sylow subgroups, semidirect-product intuition, and classification arguments for groups of small order."
+  },
+  {
+    number: "10",
+    title: "Rings, Subrings, and Units",
+    href: withBase("branches/abstract-algebra/lessons/"),
+    text: "Ring axioms, commutative rings, identity elements, units, zero divisors, nilpotents, characteristic, subrings, and standard examples from integers, matrices, and functions."
+  },
+  {
+    number: "11",
+    title: "Ideals and Quotient Rings",
+    href: withBase("branches/abstract-algebra/lessons/"),
+    text: "Ideals, principal ideals, generated ideals, prime and maximal ideals, quotient rings, congruence modulo ideals, and the role of ideals as ring-theoretic kernels."
+  },
+  {
+    number: "12",
+    title: "Ring Homomorphisms and Isomorphism Theorems",
+    href: withBase("branches/abstract-algebra/lessons/"),
+    text: "Ring homomorphisms, kernels and images, quotient representations, correspondence of ideals, and the ring versions of the isomorphism theorems."
+  },
+  {
+    number: "13",
+    title: "Integral Domains and Factorization",
+    href: withBase("branches/abstract-algebra/lessons/"),
+    text: "Divisibility, associates, irreducible and prime elements, gcds, Bézout identities, Euclidean domains, principal ideal domains, unique factorization domains, and their implications."
+  },
+  {
+    number: "14",
+    title: "Polynomial Rings and Irreducibility",
+    href: withBase("branches/abstract-algebra/lessons/"),
+    text: "Polynomial rings over domains and fields, division with remainder, roots and factors, irreducibility, Gauss's lemma, Eisenstein's criterion, and factorization over different coefficient fields."
+  },
+  {
+    number: "15",
+    title: "Fields and Field Extensions",
+    href: withBase("branches/abstract-algebra/lessons/"),
+    text: "Fields and subfields, extension degree, algebraic and transcendental elements, minimal polynomials, simple extensions, adjoining elements, and the tower law."
+  },
+  {
+    number: "16",
+    title: "Finite Fields",
+    href: withBase("branches/abstract-algebra/lessons/"),
+    text: "Fields of prime-power order, Frobenius maps, multiplicative groups, construction via irreducible polynomials, subfields, and uniqueness up to isomorphism."
+  },
+  {
+    number: "17",
+    title: "Modules over Rings",
+    href: withBase("branches/abstract-algebra/lessons/"),
+    text: "Modules, submodules, quotient modules, module homomorphisms, annihilators, cyclic modules, direct sums, free modules, bases, and the analogy with vector spaces."
+  },
+  {
+    number: "18",
+    title: "Structure over Principal Ideal Domains",
+    href: withBase("branches/abstract-algebra/lessons/"),
+    text: "Finitely generated modules over PIDs, torsion, invariant factors, elementary divisors, and the structure theorem linking module theory with finite abelian groups."
+  },
+  {
+    number: "19",
+    title: "Algebraic Extensions and Splitting Fields",
+    href: withBase("branches/abstract-algebra/lessons/"),
+    text: "Splitting fields, normal and separable extensions, algebraic closures, embeddings, derivative tests for separability, and preparation for the Galois correspondence."
+  },
+  {
+    number: "20",
+    title: "Galois Theory",
+    href: withBase("branches/abstract-algebra/lessons/"),
+    text: "Automorphisms of field extensions, fixed fields, Galois extensions, the fundamental theorem of Galois theory, and the structural study of solvability of polynomial equations."
+  }
+];
+---
+
+<BaseLayout
+  title="Abstract Algebra Lessons"
+  description="A sequential curriculum through groups, quotient structures, rings, ideals, factorization, fields, modules, finite fields, and introductory Galois theory."
+>
+  <section class="hub-page">
+    <AbstractAlgebraSidebar />
+
+    <div class="hub-main">
+      <section class="hub-hero">
+        <span class="eyebrow">Abstract Algebra · Lessons</span>
+
+        <h1>Lessons</h1>
+
+        <p>
+          A sequential route through the subject, beginning with operations and
+          groups, passing through quotients, actions, rings and factorization,
+          and ending with fields, modules, and introductory Galois theory. Later
+          lessons freely reuse the structural language established earlier.
+        </p>
+      </section>
+
+      <section class="hub-section lesson-index-section">
+        <div class="section-header">
+          <h2>Full lesson path</h2>
+
+          <p>
+            Each card represents a substantial conceptual unit rather than a
+            single theorem. The sequence is meant to expose the recurring ideas
+            — subobjects, quotients, morphisms, actions, and decomposition —
+            across several kinds of algebraic structure.
+          </p>
+        </div>
+
+        <div class="lesson-timeline">
+          {
+            lessons.map((lesson) => (
+              <a class="lesson-card" href={lesson.href}>
+                <span class="lesson-number">{lesson.number}</span>
+
+                <div>
+                  <h3>{lesson.title}</h3>
+                  <p>{lesson.text}</p>
+                </div>
+
+                <span class="lesson-arrow" aria-hidden="true">→</span>
+              </a>
+            ))
+          }
+        </div>
+      </section>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .lesson-index-section {
+    margin-top: clamp(2rem, 5vw, 4rem);
+  }
+
+  .lesson-card {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .lesson-arrow {
+    color: var(--accent, #71e6ff);
+    font-size: 1.15rem;
+    transition: transform 180ms ease;
+  }
+
+  .lesson-card:hover .lesson-arrow,
+  .lesson-card:focus-visible .lesson-arrow {
+    transform: translateX(4px);
+  }
+
+  @media (max-width: 640px) {
+    .lesson-card {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .lesson-arrow {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lesson-arrow {
+      transition: none;
+    }
+  }
+</style>

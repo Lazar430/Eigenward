@@ -1,0 +1,19 @@
+---
+import { withBase } from "@/utils/paths";
+
+const items = [
+  { label: "Home", href: withBase("branches/combinatorics/") },
+  { label: "Lessons", href: withBase("branches/combinatorics/lessons/") },
+  { label: "Problems", href: withBase("problems/combinatorics/") },
+  { label: "Theorems", href: withBase("branches/combinatorics/theorems/") },
+  { label: "Definitions", href: withBase("branches/combinatorics/definitions/") }
+];
+---
+
+<aside class="hub-sidebar" aria-label="Combinatorics navigation">
+  <span class="hub-sidebar-title">Combinatorics</span>
+
+  <nav>
+    {items.map((item) => <a href={item.href}>{item.label}</a>)}
+  </nav>
+</aside>

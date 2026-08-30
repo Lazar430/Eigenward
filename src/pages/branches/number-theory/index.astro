@@ -1,0 +1,239 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import NumberTheorySidebar from "../../../components/NumberTheorySidebar.astro";
+import { withBase } from "@/utils/paths";
+import katex from "katex";
+
+const formulaOne = katex.renderToString(
+  String.raw`a=bq+r,\qquad 0\le r<|b|`,
+  {
+    displayMode: true,
+    throwOnError: false
+  }
+);
+
+const formulaTwo = katex.renderToString(
+  String.raw`a^{\varphi(n)}\equiv 1\pmod n\qquad (\gcd(a,n)=1)`,
+  {
+    displayMode: true,
+    throwOnError: false
+  }
+);
+
+const branchHref = withBase("branches/number-theory/");
+const lessonsHref = withBase("branches/number-theory/lessons/");
+const theoremsHref = withBase("branches/number-theory/theorems/");
+const definitionsHref = withBase("branches/number-theory/definitions/");
+
+const lessons = [
+  {
+    number: "01",
+    title: "Divisibility and the Euclidean Algorithm",
+    href: lessonsHref,
+    text: "Divisibility, gcds, the Euclidean algorithm, Bézout identities, prime factorization, valuations, and the arithmetic structure of the integers."
+  },
+  {
+    number: "02",
+    title: "Prime Numbers and Unique Factorization",
+    href: lessonsHref,
+    text: "Prime and composite numbers, the fundamental theorem of arithmetic, Euclid's proof of infinitely many primes, prime-counting questions, and elementary consequences of unique factorization."
+  },
+  {
+    number: "03",
+    title: "Congruences and Residue Classes",
+    href: lessonsHref,
+    text: "Congruence modulo n, arithmetic of residue classes, complete and reduced residue systems, linear congruences, inverses modulo n, and systems of congruences."
+  },
+  {
+    number: "04",
+    title: "The Chinese Remainder Theorem",
+    href: lessonsHref,
+    text: "Compatible congruence systems, decomposition modulo coprime factors, constructive solutions, ring-theoretic interpretation, and applications to computation."
+  },
+  {
+    number: "05",
+    title: "Fermat, Euler, and Multiplicative Order",
+    href: lessonsHref,
+    text: "Euler's totient function, Fermat's little theorem, Euler's theorem, multiplicative order, primitive roots, and the structure of units modulo n."
+  },
+  {
+    number: "06",
+    title: "Arithmetic Functions",
+    href: lessonsHref,
+    text: "Multiplicative functions, Möbius inversion, divisor sums, Euler's phi function, Dirichlet convolution, and identities built from factorization."
+  },
+  {
+    number: "07",
+    title: "Quadratic Residues",
+    href: lessonsHref,
+    text: "Squares modulo primes, the Legendre and Jacobi symbols, Euler's criterion, quadratic reciprocity, supplementary laws, and solvability of quadratic congruences."
+  },
+  {
+    number: "08",
+    title: "Diophantine Equations",
+    href: lessonsHref,
+    text: "Integer solutions to polynomial equations, linear Diophantine equations, Pythagorean triples, descent, local obstructions, and elementary parametrization methods."
+  }
+];
+
+const problems = [
+  {
+    title: "A congruence with no obvious inverse",
+    text: "Solve a nonlinear congruence by reducing modulo prime powers and recombining the information with the Chinese remainder theorem."
+  },
+  {
+    title: "When is -1 a square modulo p?",
+    text: "Derive the solvability criterion for x² ≡ -1 mod p and connect it with Euler's criterion and quadratic reciprocity."
+  },
+  {
+    title: "A descent on an integer equation",
+    text: "Assume a smallest positive solution exists and construct a smaller one, turning infinite descent into a contradiction."
+  }
+];
+
+const theorems = [
+  "Fundamental Theorem of Arithmetic",
+  "Chinese Remainder Theorem",
+  "Fermat's Little Theorem",
+  "Euler's Theorem",
+  "Quadratic Reciprocity Law",
+  "Prime Number Theorem"
+];
+
+const definitions = [
+  "Prime number",
+  "Congruence",
+  "Greatest common divisor",
+  "Quadratic residue",
+  "Arithmetic function",
+  "Number field",
+  "p-adic number",
+  "Modular form"
+];
+---
+
+<BaseLayout
+  title="Number Theory"
+  description="A structured path through divisibility, congruences, primes, Diophantine equations, quadratic residues, algebraic number theory, p-adic methods, and analytic number theory."
+>
+  <section class="hub-page">
+    <NumberTheorySidebar />
+
+    <div class="hub-main">
+      <section class="hub-hero">
+        <span class="eyebrow">Branch prototype</span>
+
+        <h1>Number Theory</h1>
+
+        <p>
+          This page is the main entrance to the number theory section. The subject begins with the arithmetic of integers — divisibility, primes, congruences, and Diophantine equations — then branches toward algebraic, analytic, p-adic, and geometric methods for understanding arithmetic structure.
+        </p>
+      </section>
+
+      <section class="hub-overview-grid">
+        <a class="hub-overview-card" href={branchHref}>
+          <span class="eyebrow">Core idea</span>
+
+          <h2>Arithmetic structure</h2>
+
+          <p>
+            Number theory studies the rigid patterns hidden in the integers: divisibility, congruence, prime factorization, integer solutions of equations, and the arithmetic information encoded by larger algebraic structures.
+          </p>
+        </a>
+
+        <a class="hub-overview-card formuhub-card" href={branchHref}>
+          <span class="eyebrow">Euclidean backbone</span>
+
+          <div class="hub-formula" set:html={formulaOne} />
+
+          <p>
+            Division with remainder drives the Euclidean algorithm, gcd computations, Bézout identities, continued fractions, and much of elementary arithmetic.
+          </p>
+        </a>
+
+        <a class="hub-overview-card formuhub-card" href={branchHref}>
+          <span class="eyebrow">Modular structure</span>
+
+          <div class="hub-formula" set:html={formulaTwo} />
+
+          <p>
+            Euler's theorem packages the multiplicative structure of residue classes and leads naturally toward finite groups, cryptography, and deeper arithmetic questions.
+          </p>
+        </a>
+      </section>
+
+      <section class="hub-section" id="lessons">
+        <div class="section-header">
+          <h2>Lessons</h2>
+
+          <p>
+            A sequential path through the branch's central concepts. These are
+            the opening stages of the complete lesson sequence.
+          </p>
+        </div>
+
+        <div class="lesson-timeline">
+          {
+            lessons.map((lesson) => (
+              <a class="lesson-card" href={lesson.href}>
+                <span class="lesson-number">{lesson.number}</span>
+
+                <div>
+                  <h3>{lesson.title}</h3>
+                  <p>{lesson.text}</p>
+                </div>
+              </a>
+            ))
+          }
+        </div>
+      </section>
+
+      <section class="hub-section" id="problems">
+        <div class="section-header">
+          <h2>Highlighted problems</h2>
+
+          <p>
+            A small rotating shelf of representative problems, with the complete
+            archive living in the shared Problems section.
+          </p>
+        </div>
+
+        <div class="hub-problem-grid">
+          {
+            problems.map((problem) => (
+              <a class="hub-problem-card" href={withBase("problems/number-theory/")}>
+                <span class="eyebrow">Problem</span>
+
+                <h3>{problem.title}</h3>
+
+                <p>{problem.text}</p>
+              </a>
+            ))
+          }
+        </div>
+      </section>
+
+      <section class="hub-index-grid">
+        <a class="hub-index-card" id="theorems" href={theoremsHref}>
+          <span class="eyebrow">Theorem index</span>
+
+          <h2>Theorems</h2>
+
+          <ul>
+            {theorems.map((theorem) => <li>{theorem}</li>)}
+          </ul>
+        </a>
+
+        <a class="hub-index-card" id="definitions" href={definitionsHref}>
+          <span class="eyebrow">Definition index</span>
+
+          <h2>Definitions</h2>
+
+          <ul>
+            {definitions.map((definition) => <li>{definition}</li>)}
+          </ul>
+        </a>
+      </section>
+    </div>
+  </section>
+</BaseLayout>

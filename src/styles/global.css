@@ -2,6 +2,8 @@
 /* Design tokens                                                              */
 /* -------------------------------------------------------------------------- */
 
+@import url("https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap");
+
 :root {
     color-scheme: dark;
     --paper: #111120;
@@ -130,7 +132,43 @@ p {
 }
 
 .brand-text {
+    display: inline-block;
+
+    font-family: "Share Tech Mono", monospace;
     font-size: 3.08rem;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: 2px;
+
+    color: transparent;
+
+    background: linear-gradient(
+        90deg,
+        #64d8cb,
+        #ff6ec4,
+        #64d8cb
+    );
+    background-size: 200%;
+    background-clip: text;
+    -webkit-background-clip: text;
+
+    animation: eigenward-title-shine 5s linear infinite;
+
+    text-shadow:
+        0 0 50px #64d8cb66,
+        0 0 50px #64d8cb44;
+
+    transition: transform 0.3s ease;
+}
+
+.brand:hover .brand-text {
+    transform: scale(1.05);
+}
+
+@keyframes eigenward-title-shine {
+    to {
+        background-position: -200% center;
+    }
 }
 
 .main-nav {
@@ -426,8 +464,271 @@ p {
 /* Home page                                                                  */
 /* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
+/* Home page spatial journey                                                  */
+/* -------------------------------------------------------------------------- */
+
+/*
+ * Batch 3 keeps native vertical scrolling, but the page now lives in a much
+ * wider presentation world. While the reader crosses a connector, JavaScript
+ * translates each row horizontally so the next stop becomes the new camera
+ * focus. Translation is deliberately the ONLY transform applied to scene
+ * ancestors: Three.js canvases keep their exact CSS width/height.
+ */
+.home-spatial-journey {
+    position: relative;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    overflow-x: clip;
+}
+
+/*
+ * Prevent refresh/scroll-restoration FOUC. The tiny inline marker in
+ * index.astro is set before this track can paint. JavaScript then flips
+ * data-spatial-ready only after two synchronized layout frames. Without JS,
+ * the marker is absent and the ordinary static layout remains visible.
+ */
+html[data-home-spatial-js="true"]
+.home-spatial-track[data-spatial-ready="false"] {
+    opacity: 0;
+    pointer-events: none;
+}
+
+html[data-home-spatial-js="true"]
+.home-spatial-track[data-spatial-ready="true"] {
+    opacity: 1;
+    transition: opacity 110ms ease-out;
+}
+
+.home-spatial-track {
+    --home-path-color: rgba(126, 225, 239, 0.38);
+    --home-path-glow: rgba(100, 216, 203, 0.16);
+    --home-camera-x: 0px;
+    --home-world-width: clamp(1900px, 220vw, 3400px);
+
+    position: relative;
+    width: var(--home-world-width);
+    margin-left: calc((100vw - var(--home-world-width)) / 2);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    padding: clamp(10px, 1.5vw, 22px) 0 clamp(72px, 8vw, 110px);
+}
+
+.home-spatial-stop,
+.home-spatial-connector {
+    transform: translate3d(var(--home-camera-x), 0, 0);
+}
+
+.home-spatial-stop {
+    position: relative;
+    z-index: 2;
+    min-width: 0;
+    scroll-margin-top: clamp(84px, 10vh, 140px);
+}
+
+.home-spatial-stop > .front-section {
+    padding-block: 0;
+}
+
+.home-spatial-stop > .background-explainer {
+    margin-block: 0;
+}
+
+/*
+ * Stops are kept narrower than the actual viewport even though their world is
+ * over twice as wide. When the camera arrives, the whole stop therefore fits
+ * cleanly while the previous one is more than a viewport away vertically.
+ */
+.home-spatial-stop--intro {
+    width: min(1160px, calc(100vw - 48px));
+    justify-self: center;
+}
+
+.home-spatial-stop--branches {
+    width: min(1040px, calc(100vw - 48px));
+    justify-self: end;
+}
+
+.home-spatial-stop--featured {
+    width: min(1240px, calc(100vw - 32px));
+    justify-self: start;
+}
+
+.home-spatial-stop--oddity {
+    width: min(1080px, calc(100vw - 48px));
+    justify-self: end;
+}
+
+.home-spatial-stop--weekly {
+    width: min(980px, calc(100vw - 48px));
+    justify-self: start;
+}
+
+.home-spatial-stop--background {
+    width: min(900px, calc(100vw - 48px));
+    justify-self: end;
+}
+
+/*
+ * The route itself supplies the large vertical separation requested for the
+ * winding presentation. At desktop sizes every gap is roughly one full
+ * viewport tall, so by the time the next stop arrives the previous stop is no
+ * longer visible at all.
+ */
+.home-spatial-connector {
+    --home-route-hidden: 100%;
+
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: clamp(720px, 112svh, 1120px);
+    pointer-events: none;
+    user-select: none;
+}
+
+.home-spatial-connector svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    clip-path: inset(0 0 var(--home-route-hidden) 0);
+}
+
+.home-spatial-connector path {
+    fill: none;
+    stroke: var(--home-path-color);
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-dasharray: 4 12;
+    vector-effect: non-scaling-stroke;
+    filter: drop-shadow(0 0 8px var(--home-path-glow));
+}
+
+.home-spatial-connector[data-spatial-route-state="drawing"] path {
+    stroke: rgba(151, 237, 247, 0.52);
+}
+
+.home-spatial-connector[data-spatial-route-state="complete"] path {
+    stroke: var(--home-path-color);
+}
+
+/*
+ * Waypoints are invisible until their incoming connector is almost completely
+ * drawn. Arrival then produces a short pop instead of leaving every dot on the
+ * page permanently visible from first paint.
+ */
+.home-spatial-stop::before {
+    content: "";
+    position: absolute;
+    z-index: 5;
+    top: -0.42rem;
+    width: 0.68rem;
+    height: 0.68rem;
+    border-radius: 50%;
+    border: 1px solid rgba(202, 247, 255, 0.72);
+    background: rgba(100, 216, 203, 0.46);
+    box-shadow:
+        0 0 0 0 rgba(100, 216, 203, 0),
+        0 0 0 rgba(100, 216, 203, 0);
+    opacity: 0;
+    scale: 0.22;
+    pointer-events: none;
+    transition:
+        opacity 180ms ease,
+        scale 340ms cubic-bezier(.2, 1.5, .35, 1),
+        box-shadow 340ms ease,
+        background-color 180ms ease;
+}
+
+.home-spatial-stop[data-spatial-anchor="center"]::before {
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.home-spatial-stop[data-spatial-anchor="left"]::before {
+    left: 13%;
+}
+
+.home-spatial-stop[data-spatial-anchor="right"]::before {
+    right: 13%;
+}
+
+.home-spatial-stop--intro::before {
+    top: auto;
+    bottom: -0.42rem;
+}
+
+.home-spatial-stop[data-spatial-arrived="true"]::before {
+    opacity: 1;
+    scale: 1;
+    box-shadow:
+        0 0 0 7px rgba(100, 216, 203, 0.045),
+        0 0 22px rgba(100, 216, 203, 0.28);
+}
+
+.home-spatial-stop[data-spatial-current="true"]::before {
+    background: rgba(180, 246, 255, 0.92);
+    box-shadow:
+        0 0 0 8px rgba(100, 216, 203, 0.055),
+        0 0 30px rgba(100, 216, 203, 0.42);
+}
+
+/*
+ * On tablets/phones the content returns to the ordinary page width. The route
+ * still draws and the gaps remain substantial, but lateral camera motion is
+ * disabled by HomepageSpatialJourney so touch scrolling stays predictable.
+ */
+@media (max-width: 900px) {
+    .home-spatial-journey {
+        width: 100%;
+        margin-left: 0;
+        overflow-x: hidden;
+    }
+
+    .home-spatial-track {
+        --home-world-width: 100%;
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .home-spatial-stop--branches,
+    .home-spatial-stop--featured,
+    .home-spatial-stop--oddity,
+    .home-spatial-stop--weekly,
+    .home-spatial-stop--background {
+        width: 100%;
+        justify-self: stretch;
+    }
+
+    .home-spatial-connector {
+        height: clamp(300px, 58svh, 560px);
+    }
+}
+
+@media (max-width: 620px) {
+    .home-spatial-track {
+        padding-bottom: 34px;
+    }
+
+    .home-spatial-connector {
+        height: clamp(240px, 48svh, 420px);
+    }
+
+    .home-spatial-stop::before {
+        width: 0.58rem;
+        height: 0.58rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .home-spatial-stop::before {
+        transition: none;
+    }
+}
+
+
 .home-hero {
-    padding: 78px 0 34px;
+    padding: clamp(56px, 7vw, 78px) 0 34px;
     max-width: 980px;
 }
 
@@ -864,12 +1165,12 @@ p {
 }
 
 /*
- * One isolated scene host per article.
+ * One isolated host for the currently selected featured article.
  *
- * Do NOT replace this with canvas[hidden] or display:none:
- * keeping every slot laid out gives a newly imported math scene a non-zero
- * viewport immediately, while visibility:hidden suppresses the entire scene
- * subtree (canvas + CSS2D labels + any other DOM overlays).
+ * The homepage now reuses one physical canvas for all six preview animations,
+ * which prevents hover exploration from allocating one WebGL context per card.
+ * Keeping the host laid out gives a newly mounted math scene a stable non-zero
+ * viewport while visibility:hidden suppresses its canvas and CSS2D label layer.
  */
 .featured-hex-animation-slot {
     position: absolute;
@@ -1023,10 +1324,125 @@ p {
     width: 100%;
     height: 100%;
     background: transparent;
+    opacity: 0;
+    transition: opacity 220ms ease;
 
     /* The whole card is the link; preserve click behavior over the canvas. */
     pointer-events: none;
     user-select: none;
+}
+
+.oddity-exhibition-card[data-oddity-state="ready"]
+.oddity-exhibition-canvas {
+    opacity: 1;
+}
+
+/*
+ * The topology factories do a non-trivial amount of geometry work before the
+ * first frame exists, so a real percentage would be fictitious. This is an
+ * intentionally indeterminate preparation indicator that disappears only once
+ * the managed scene has mounted and survived two paint frames.
+ */
+.oddity-exhibition-loader {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 0.8rem;
+    padding: 1.5rem;
+    color: rgba(229, 247, 255, 0.82);
+    text-align: center;
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 180ms ease, visibility 180ms ease;
+}
+
+.oddity-exhibition-card[data-oddity-state="ready"]
+.oddity-exhibition-loader {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.oddity-loader-knot {
+    position: relative;
+    width: 3.4rem;
+    height: 3.4rem;
+    border: 2px solid rgba(100, 216, 203, 0.18);
+    border-top-color: rgba(159, 241, 249, 0.92);
+    border-right-color: rgba(214, 140, 255, 0.58);
+    border-radius: 50%;
+    box-shadow:
+        0 0 24px rgba(100, 216, 203, 0.10),
+        inset 0 0 18px rgba(214, 140, 255, 0.05);
+    animation: oddity-loader-spin 1.05s linear infinite;
+}
+
+.oddity-loader-knot::after {
+    content: "";
+    position: absolute;
+    inset: 0.72rem;
+    border: 1px solid rgba(255, 211, 128, 0.34);
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    animation: oddity-loader-spin 0.72s linear infinite reverse;
+}
+
+.oddity-loader-label {
+    font-size: 0.82rem;
+    font-weight: 720;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.oddity-loader-track {
+    position: relative;
+    width: min(13rem, 52vw);
+    height: 3px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.oddity-loader-track > span {
+    position: absolute;
+    inset-block: 0;
+    left: 0;
+    width: 36%;
+    border-radius: inherit;
+    background: linear-gradient(
+        90deg,
+        rgba(100, 216, 203, 0),
+        rgba(143, 237, 245, 0.88),
+        rgba(214, 140, 255, 0.62)
+    );
+    animation: oddity-loader-progress 1.15s ease-in-out infinite;
+}
+
+.oddity-exhibition-card[data-oddity-state="error"]
+.oddity-loader-knot,
+.oddity-exhibition-card[data-oddity-state="error"]
+.oddity-loader-track {
+    display: none;
+}
+
+@keyframes oddity-loader-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes oddity-loader-progress {
+    0% {
+        transform: translateX(-115%);
+    }
+    55% {
+        transform: translateX(135%);
+    }
+    100% {
+        transform: translateX(285%);
+    }
 }
 
 /*
@@ -1983,6 +2399,12 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
+    .oddity-loader-knot,
+    .oddity-loader-knot::after,
+    .oddity-loader-track > span {
+        animation: none;
+    }
+
     .oddity-exhibition-card,
     .featured-hex-card,
     .featured-hex-card h3,

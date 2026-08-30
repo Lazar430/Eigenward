@@ -1,0 +1,216 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import ClassicalMechanicsSidebar from "../../../../components/ClassicalMechanicsSidebar.astro";
+import { withBase } from "@/utils/paths";
+
+const lessons = [
+  {
+    number: "01",
+    title: "Kinematics in Euclidean Space",
+    href: withBase("branches/classical-mechanics/lessons/"),
+    text: "Position, velocity, acceleration, trajectories, reference frames, relative motion, coordinate descriptions, and geometric constraints."
+  },
+  {
+    number: "02",
+    title: "Newtonian Dynamics",
+    href: withBase("branches/classical-mechanics/lessons/"),
+    text: "Newton's laws, force fields, inertial frames, momentum, angular momentum, work, energy, impulses, and systems of particles."
+  },
+  {
+    number: "03",
+    title: "Conservation Laws",
+    href: withBase("branches/classical-mechanics/lessons/"),
+    text: "Linear momentum, angular momentum, energy, center-of-mass motion, symmetry intuition, and reduction of dynamical problems."
+  },
+  {
+    number: "04",
+    title: "Oscillations",
+    href: withBase("branches/classical-mechanics/lessons/"),
+    text: "Harmonic oscillators, coupled oscillators, normal modes, damping, forcing, resonance, and linear stability."
+  },
+  {
+    number: "05",
+    title: "Central-Force Motion",
+    href: withBase("branches/classical-mechanics/lessons/"),
+    text: "Two-body reduction, effective potentials, angular momentum barriers, Kepler orbits, scattering, and qualitative phase portraits."
+  },
+  {
+    number: "06",
+    title: "Rigid-Body Mechanics",
+    href: withBase("branches/classical-mechanics/lessons/"),
+    text: "Rotations, angular velocity, inertia tensor, Euler angles, principal axes, Euler equations, precession, and tops."
+  },
+  {
+    number: "07",
+    title: "Constraints and Generalized Coordinates",
+    href: withBase("branches/classical-mechanics/lessons/"),
+    text: "Holonomic and nonholonomic constraints, virtual displacements, generalized coordinates, degrees of freedom, and d'Alembert's principle."
+  },
+  {
+    number: "08",
+    title: "The Calculus of Variations",
+    href: withBase("branches/classical-mechanics/lessons/"),
+    text: "Functionals, Euler–Lagrange equations, constrained variation, geodesic-type problems, and the mathematical structure behind stationary action."
+  },
+  {
+    number: "09",
+    title: "Lagrangian Mechanics",
+    href: withBase("branches/classical-mechanics/lessons/"),
+    text: "Lagrangians, generalized momenta, Euler–Lagrange equations, cyclic coordinates, symmetries, Noether's theorem, and coordinate freedom."
+  },
+  {
+    number: "10",
+    title: "Hamiltonian Mechanics",
+    href: withBase("branches/classical-mechanics/lessons/"),
+    text: "Legendre transforms, phase space, Hamilton's equations, canonical coordinates, Poisson brackets, and symplectic flow."
+  },
+  {
+    number: "11",
+    title: "Canonical Transformations",
+    href: withBase("branches/classical-mechanics/lessons/"),
+    text: "Generating functions, symplectomorphisms, canonical invariants, Poisson-bracket criteria, and simplification of Hamiltonian systems."
+  },
+  {
+    number: "12",
+    title: "Hamilton–Jacobi Theory",
+    href: withBase("branches/classical-mechanics/lessons/"),
+    text: "Hamilton's principal function, Hamilton–Jacobi equation, complete integrals, action-angle variables, and links with geometric optics."
+  },
+  {
+    number: "13",
+    title: "Small Oscillations and Normal Modes",
+    href: withBase("branches/classical-mechanics/lessons/"),
+    text: "Linearization near equilibria, mass and stiffness matrices, generalized eigenvalue problems, normal coordinates, and stability."
+  },
+  {
+    number: "14",
+    title: "Nonlinear Dynamics",
+    href: withBase("branches/classical-mechanics/lessons/"),
+    text: "Phase portraits, fixed points, invariant sets, bifurcations, separatrices, perturbation methods, and qualitative mechanics."
+  },
+  {
+    number: "15",
+    title: "Hamiltonian Chaos",
+    href: withBase("branches/classical-mechanics/lessons/"),
+    text: "Poincaré sections, resonance, KAM ideas, homoclinic intersections, sensitivity, and the breakdown of integrability."
+  },
+  {
+    number: "16",
+    title: "Continuum Mechanics: First Principles",
+    href: withBase("branches/classical-mechanics/lessons/"),
+    text: "Material and spatial descriptions, deformation gradients, mass conservation, stress tensors, balance laws, and constitutive modeling."
+  },
+  {
+    number: "17",
+    title: "Fluid Mechanics",
+    href: withBase("branches/classical-mechanics/lessons/"),
+    text: "Euler and Navier–Stokes equations, vorticity, circulation, incompressibility, potential flow, Bernoulli's principle, and dimensional analysis."
+  },
+  {
+    number: "18",
+    title: "Elasticity",
+    href: withBase("branches/classical-mechanics/lessons/"),
+    text: "Strain, stress, Hooke's law, elastic energy, linear elasticity, waves in solids, and variational formulations."
+  },
+  {
+    number: "19",
+    title: "Relativistic Mechanics",
+    href: withBase("branches/classical-mechanics/lessons/"),
+    text: "Proper time, four-velocity, four-momentum, relativistic action principles, covariant force laws, and the transition from Newtonian to relativistic dynamics."
+  },
+  {
+    number: "20",
+    title: "Geometric Mechanics",
+    href: withBase("branches/classical-mechanics/lessons/"),
+    text: "Symplectic manifolds, cotangent bundles, momentum maps, Lie-group actions, reduction, rigid bodies, and mechanics expressed through geometry."
+  }
+];
+---
+
+<BaseLayout
+  title="Classical Mechanics Lessons"
+  description="A structured path through Newtonian, Lagrangian, Hamiltonian, rigid-body, continuum, and geometric mechanics."
+>
+  <section class="hub-page">
+    <ClassicalMechanicsSidebar />
+
+    <div class="hub-main">
+      <section class="hub-hero">
+        <span class="eyebrow">Classical Mechanics · Lessons</span>
+
+        <h1>Lessons</h1>
+
+        <p>
+          A sequential route through the subject, beginning with its core mathematical framework and moving toward more structural, geometric, and advanced formulations.
+        </p>
+      </section>
+
+      <section class="hub-section lesson-index-section">
+        <div class="section-header">
+          <h2>Full lesson path</h2>
+
+          <p>
+            Each card represents a substantial conceptual unit rather than a
+            single formula or isolated theorem, so later material can build on
+            a coherent physical and mathematical vocabulary.
+          </p>
+        </div>
+
+        <div class="lesson-timeline">
+          {
+            lessons.map((lesson) => (
+              <a class="lesson-card" href={lesson.href}>
+                <span class="lesson-number">{lesson.number}</span>
+
+                <div>
+                  <h3>{lesson.title}</h3>
+                  <p>{lesson.text}</p>
+                </div>
+
+                <span class="lesson-arrow" aria-hidden="true">→</span>
+              </a>
+            ))
+          }
+        </div>
+      </section>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .lesson-index-section {
+    margin-top: clamp(2rem, 5vw, 4rem);
+  }
+
+  .lesson-card {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .lesson-arrow {
+    color: var(--accent, #71e6ff);
+    font-size: 1.15rem;
+    transition: transform 180ms ease;
+  }
+
+  .lesson-card:hover .lesson-arrow,
+  .lesson-card:focus-visible .lesson-arrow {
+    transform: translateX(4px);
+  }
+
+  @media (max-width: 640px) {
+    .lesson-card {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .lesson-arrow {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lesson-arrow {
+      transition: none;
+    }
+  }
+</style>

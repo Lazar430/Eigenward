@@ -71,72 +71,129 @@ const featuredArticles = [
 ];
 
 /*
- * This is deliberately a one-ring version of the sunbursts used on the
- * Branches page. The colors below are exactly the same group palette.
+ * A compact hierarchical overview inspired by the full Branches-page
+ * sunbursts. This is intentionally a conceptual map rather than a claim that
+ * every parent is a strict prerequisite for every child. The containment is
+ * meant to suggest a useful progression from foundational languages toward
+ * more specialized subjects.
+ *
+ * Edit only `parent` to reorganize the homepage map. The angular layout and
+ * ring depths are derived automatically.
  */
-const overviewBranches = [
+type OverviewBranchId =
+  | "logic"
+  | "set-theory"
+  | "linear-algebra"
+  | "combinatorics"
+  | "probability"
+  | "topology"
+  | "analysis"
+  | "mathematical-physics"
+  | "abstract-algebra"
+  | "number-theory"
+  | "geometry";
+
+type OverviewBranch = {
+  id: OverviewBranchId;
+  label: string;
+  href: string;
+  color: string;
+  parent: OverviewBranchId | null;
+  minimumWeight?: number;
+};
+
+const overviewBranches: OverviewBranch[] = [
   {
+    id: "logic",
     label: "Logic",
     href: withBase("branches/logic/"),
-    color: "#8e7dff"
+    color: "#8e7dff",
+    parent: null,
+    minimumWeight: 1.35,
   },
   {
+    id: "set-theory",
     label: "Set Theory",
     href: withBase("branches/set-theory/"),
-    color: "#8e7dff"
+    color: "#8e7dff",
+    parent: null,
   },
   {
+    id: "linear-algebra",
     label: "Linear Algebra",
     href: withBase("branches/linear-algebra/"),
-    color: "#ff7597"
+    color: "#ff7597",
+    parent: null,
   },
+
+  /* Logic / discrete thread. */
   {
-    label: "Abstract Algebra",
-    href: withBase("branches/abstract-algebra/"),
-    color: "#ff7597"
-  },
-  {
-    label: "Number Theory",
-    href: withBase("branches/number-theory/"),
-    color: "#ffb04f"
-  },
-  {
-    label: "Geometry",
-    href: withBase("branches/geometry/"),
-    color: "#52ddc7"
-  },
-  {
-    label: "Topology",
-    href: withBase("branches/topology/"),
-    color: "#2fd6a3"
-  },
-  {
-    label: "Analysis",
-    href: withBase("branches/analysis/"),
-    color: "#65b7ff"
-  },
-  {
-    label: "Probability",
-    href: withBase("branches/probability-theory/"),
-    color: "#7fa0ff"
-  },
-  {
+    id: "combinatorics",
     label: "Combinatorics",
     href: withBase("branches/combinatorics/"),
-    color: "#f4bd61"
+    color: "#f4bd61",
+    parent: "logic",
   },
   {
+    id: "probability",
+    label: "Probability",
+    href: withBase("branches/probability/"),
+    color: "#7fa0ff",
+    parent: "combinatorics",
+  },
+
+  /* Set-theoretic / structural-and-continuous thread. */
+  {
+    id: "topology",
+    label: "Topology",
+    href: withBase("branches/topology/"),
+    color: "#2fd6a3",
+    parent: "set-theory",
+  },
+  {
+    id: "analysis",
+    label: "Real Analysis",
+    href: withBase("branches/real-analysis/"),
+    color: "#65b7ff",
+    parent: "set-theory",
+  },
+  {
+    id: "mathematical-physics",
     label: "Mathematical Physics",
     href: withBase("branches/mathematical-physics/"),
-    color: "#d68cff"
-  }
+    color: "#d68cff",
+    parent: "analysis",
+  },
+
+  /* Structural / algebraic continuation. */
+  {
+    id: "abstract-algebra",
+    label: "Abstract Algebra",
+    href: withBase("branches/abstract-algebra/"),
+    color: "#ff7597",
+    parent: "linear-algebra",
+  },
+  {
+    id: "number-theory",
+    label: "Number Theory",
+    href: withBase("branches/number-theory/"),
+    color: "#ffb04f",
+    parent: "abstract-algebra",
+  },
+  {
+    id: "geometry",
+    label: "Geometry",
+    href: withBase("branches/geometry/"),
+    color: "#52ddc7",
+    parent: "linear-algebra",
+  },
 ];
 
 const OVERVIEW_SIZE = 900;
 const OVERVIEW_CENTER = OVERVIEW_SIZE / 2;
-const OVERVIEW_INNER_RADIUS = 145;
-const OVERVIEW_OUTER_RADIUS = 335;
-const OVERVIEW_GAP = 0.008;
+const OVERVIEW_INNER_RADIUS = 112;
+const OVERVIEW_OUTER_RADIUS = 390;
+const OVERVIEW_GAP = 0.010;
 
 function clamp(value: number, minimum: number, maximum: number) {
   return Math.min(maximum, Math.max(minimum, value));
@@ -171,11 +228,9 @@ function polar(radius: number, angle: number): [number, number] {
 }
 
 /*
- * Use an explicitly sampled polygon instead of SVG A/arcs for the annular
- * sectors. The visual result is indistinguishable at this resolution, but it
- * avoids Firefox/WebRender's cached arc-tessellation path, which can leave a
- * triangular "chip" missing from a sector after the SVG leaves and re-enters
- * the viewport.
+ * Keep the sampled-polygon sector implementation from the previous homepage.
+ * It avoids the Firefox/WebRender arc-tessellation artifact that used to leave
+ * a triangular chip missing after the chart left and re-entered the viewport.
  */
 function annularSectorPath(
   innerRadius: number,
@@ -185,7 +240,7 @@ function annularSectorPath(
 ): string {
   const start = startAngle + OVERVIEW_GAP;
   const end = endAngle - OVERVIEW_GAP;
-  const samples = 28;
+  const samples = 32;
 
   const outerPoints = Array.from({ length: samples + 1 }, (_, index) => {
     const t = index / samples;
@@ -223,38 +278,134 @@ function splitLabel(label: string): string[] {
   ];
 }
 
-const overviewSectorAngle = (Math.PI * 2) / overviewBranches.length;
-const overviewTextRadius =
-  (OVERVIEW_INNER_RADIUS + OVERVIEW_OUTER_RADIUS) / 2;
+type OverviewNode = OverviewBranch & {
+  children: OverviewNode[];
+  depth: number;
+  weight: number;
+  startAngle: number;
+  endAngle: number;
+};
 
-const overviewSectors = overviewBranches.map((branch, index) => {
-  const startAngle = -Math.PI / 2 + index * overviewSectorAngle;
-  const endAngle = startAngle + overviewSectorAngle;
-  const midAngle = (startAngle + endAngle) / 2;
-  const [textX, textY] = polar(overviewTextRadius, midAngle);
+const overviewNodeMap = new Map<OverviewBranchId, OverviewNode>(
+  overviewBranches.map((branch) => [
+    branch.id,
+    {
+      ...branch,
+      children: [],
+      depth: 1,
+      weight: 1,
+      startAngle: 0,
+      endAngle: 0,
+    },
+  ]),
+);
+
+const overviewRoots: OverviewNode[] = [];
+
+for (const node of overviewNodeMap.values()) {
+  const parent = node.parent ? overviewNodeMap.get(node.parent) : undefined;
+
+  if (parent && parent !== node) parent.children.push(node);
+  else overviewRoots.push(node);
+}
+
+function assignOverviewDepth(node: OverviewNode, depth: number): void {
+  node.depth = depth;
+  for (const child of node.children) assignOverviewDepth(child, depth + 1);
+}
+
+for (const root of overviewRoots) assignOverviewDepth(root, 1);
+
+function assignOverviewWeight(node: OverviewNode): number {
+  const childWeight = node.children.reduce(
+    (sum, child) => sum + assignOverviewWeight(child),
+    0,
+  );
+
+  node.weight = Math.max(
+    node.minimumWeight ?? 1,
+    childWeight,
+  );
+
+  return node.weight;
+}
+
+for (const root of overviewRoots) assignOverviewWeight(root);
+
+function assignOverviewAngles(
+  nodes: OverviewNode[],
+  startAngle: number,
+  endAngle: number,
+): void {
+  const totalWeight = nodes.reduce((sum, node) => sum + node.weight, 0);
+  const totalSpan = endAngle - startAngle;
+  let cursor = startAngle;
+
+  for (const node of nodes) {
+    const span = totalSpan * (node.weight / totalWeight);
+    node.startAngle = cursor;
+    node.endAngle = cursor + span;
+
+    if (node.children.length > 0) {
+      assignOverviewAngles(node.children, node.startAngle, node.endAngle);
+    }
+
+    cursor += span;
+  }
+}
+
+assignOverviewAngles(
+  overviewRoots,
+  -Math.PI / 2,
+  Math.PI * 1.5,
+);
+
+const overviewNodes = Array.from(overviewNodeMap.values());
+const overviewMaximumDepth = Math.max(...overviewNodes.map((node) => node.depth));
+const overviewRadiusBoundaries = Array.from(
+  { length: overviewMaximumDepth + 1 },
+  (_, index) =>
+    OVERVIEW_INNER_RADIUS +
+    ((OVERVIEW_OUTER_RADIUS - OVERVIEW_INNER_RADIUS) * index) /
+      overviewMaximumDepth,
+);
+
+const overviewSectors = overviewNodes.map((node) => {
+  const innerRadius = overviewRadiusBoundaries[node.depth - 1];
+  const outerRadius = overviewRadiusBoundaries[node.depth];
+  const midRadius = (innerRadius + outerRadius) / 2;
+  const midAngle = (node.startAngle + node.endAngle) / 2;
+  const [textX, textY] = polar(midRadius, midAngle);
 
   let rotation = (midAngle * 180) / Math.PI + 90;
   const normalized = ((rotation % 360) + 360) % 360;
 
-  if (normalized > 90 && normalized < 270) {
-    rotation += 180;
-  }
+  if (normalized > 90 && normalized < 270) rotation += 180;
 
-  const lines = splitLabel(branch.label);
-  const fontSize = lines.length === 1 ? 19 : 17;
+  const lines = splitLabel(node.label);
+  const fontSize = node.depth === 1
+    ? 18
+    : lines.length === 1
+      ? 17
+      : 15.5;
   const lineHeight = fontSize * 1.08;
+  const darkness = 0.08 + (node.depth - 1) * 0.075;
 
   return {
-    ...branch,
+    id: node.id,
+    parentId: node.parent,
+    label: node.label,
+    href: node.href,
+    depth: node.depth,
     path: annularSectorPath(
-      OVERVIEW_INNER_RADIUS,
-      OVERVIEW_OUTER_RADIUS,
-      startAngle,
-      endAngle
+      innerRadius,
+      outerRadius,
+      node.startAngle,
+      node.endAngle,
     ),
-    fill: mixHex(branch.color, "#1c1432", 0.10),
-    fillOpacity: 0.86,
-    stroke: mixHex(branch.color, "#120b24", 0.62),
+    fill: mixHex(node.color, "#1c1432", darkness),
+    fillOpacity: clamp(0.90 - (node.depth - 1) * 0.045, 0.80, 0.90),
+    stroke: mixHex(node.color, "#120b24", 0.62),
     textX,
     textY,
     rotation,
@@ -264,10 +415,10 @@ const overviewSectors = overviewBranches.map((branch, index) => {
       dy:
         lineIndex === 0
           ? lines.length === 1
-          ? "0"
-          : `${-lineHeight / 2}px`
-          : `${lineHeight}px`
-    }))
+            ? "0"
+            : `${-lineHeight / 2}px`
+          : `${lineHeight}px`,
+    })),
   };
 });
 ---
@@ -276,444 +427,712 @@ const overviewSectors = overviewBranches.map((branch, index) => {
   title="Home"
   description="A mathematical library of proofs, problems, animations, essays, and research notes."
 >
-  <section class="home-hero">
-    <p class="home-kicker">
-      Proofs · problems · animations · research notes
-    </p>
+  <!--
+    Batch 3: native vertical scrolling now drives a horizontal presentation
+    camera while the reader crosses the long winding route between stops.
 
-    <h1>A finitely large napkin.</h1>
+    The camera uses translation only. That is deliberate: descendant
+    MathScene2D/MathScene3D canvases keep exactly the same measured CSS size
+    while the page appears to travel left and right through the larger world.
+  -->
+  <script is:inline>
+    /*
+     * Mark this document as spatial-JS-capable before the journey can paint.
+     * CSS uses the marker to suppress the one-frame unpositioned flash while
+     * the controller synchronizes with restored scroll position.
+     */
+    document.documentElement.dataset.homeSpatialJs = "true";
+  </script>
 
-    <p class="home-lead">
-      For those seeking guidance, look to eigenward.
-    </p>
-  </section>
-
-  <figure class="sanderson-quote">
-    <blockquote>
-      “The devils in the upper right quadrant aren't nearly appreciative enough
-      of projective geometry”
-    </blockquote>
-
-    <figcaption>— Grant Sanderson</figcaption>
-  </figure>
-
-  <section class="front-section">
-    <div class="section-header">
-      <h2>Rough sketch of topics</h2>
-
-      <p>
-        For a more detailed overview of stuff you can find in here, check the
-        Branches page.
-      </p>
-    </div>
-
-    <div
-      class="home-sunburst-viewport"
-      data-home-sunburst-viewport
-      aria-label="Overview of the main branches of mathematics"
-    >
-      <canvas
-        class="home-sunburst-canvas"
-        data-home-sunburst-canvas
-        aria-hidden="true"
-      ></canvas>
-
-      <!--
-        The SVG is now ONLY an invisible interaction map. Nothing visible is
-        painted with SVG paths anymore, so the old triangular sector chip
-        cannot be a visible SVG/WebRender artifact.
-      -->
-      <svg
-        class="home-sunburst-hit-map"
-        viewBox={`0 0 ${OVERVIEW_SIZE} ${OVERVIEW_SIZE}`}
-        aria-hidden="true"
-      >
-        {overviewSectors.map((sector, index) => (
-          <a
-            class="home-sunburst-hit-sector"
-            href={sector.href}
-            aria-label={sector.label}
-            data-sunburst-sector
-            data-index={index}
-            data-path={sector.path}
-            data-fill={sector.fill}
-            data-stroke={sector.stroke}
-            data-text-x={sector.textX}
-            data-text-y={sector.textY}
-            data-rotation={sector.rotation}
-            data-font-size={sector.fontSize}
-            data-lines={sector.lines.map((line) => line.text).join("|")}
-          >
-            <path
-              d={sector.path}
-              fill="rgba(255, 255, 255, 0.001)"
-              stroke="none"
-            ></path>
-          </a>
-        ))}
-
-        <a
-          class="home-sunburst-hit-center"
-          href={withBase("branches/")}
-          aria-label="Open the full Branches page"
-          data-sunburst-center
-        >
-          <circle
-            cx={OVERVIEW_CENTER}
-            cy={OVERVIEW_CENTER}
-            r={OVERVIEW_INNER_RADIUS - 5}
-            fill="rgba(255, 255, 255, 0.001)"
-          ></circle>
-        </a>
-      </svg>
-    </div>
-  </section>
-
-  <section
-    class="front-section featured-articles-section"
-    aria-labelledby="featured-articles-heading"
+  <div class="home-spatial-journey" data-home-spatial-journey>
+  <div
+    class="home-spatial-track"
+    data-home-spatial-track
+    data-spatial-ready="false"
+    aria-label="Homepage journey"
   >
-    <div
-      class="featured-hex-orbit"
-      aria-label="Featured articles"
-    >
-      <a
-        class="featured-hex-center"
-        href={withBase("articles/")}
-        aria-label="Browse all articles"
-        data-featured-hex-center
-        data-preview-active="false"
-      >
-        <h2 id="featured-articles-heading">
-          Featured
-          <span>Articles</span>
-        </h2>
+  <div
+    class="home-spatial-stop home-spatial-stop--intro"
+    data-spatial-stop
+    data-spatial-key="intro"
+    data-spatial-index="0"
+    data-spatial-arrived="false"
+    data-spatial-current="false"
+    data-spatial-x="0"
+    data-spatial-rotation="0"
+    data-spatial-anchor="center"
+  >
+    <section class="home-hero">
+      <p class="home-kicker">
+        Proofs · problems · animations · research notes
+      </p>
 
-        <div
-          class="featured-hex-animation-stage"
+      <h1>A finitely large napkin.</h1>
+
+      <p class="home-lead">
+        For those seeking guidance, look to eigenward.
+      </p>
+    </section>
+
+    <figure class="sanderson-quote">
+      <blockquote>
+        “The devils in the upper right quadrant aren't nearly appreciative enough
+        of projective geometry”
+      </blockquote>
+
+      <figcaption>— Grant Sanderson</figcaption>
+    </figure>
+  </div>
+  <div
+    class="home-spatial-connector"
+    data-spatial-connector="center-right"
+    aria-hidden="true"
+  >
+    <svg viewBox="0 0 1000 180" preserveAspectRatio="none" focusable="false">
+      <path data-spatial-route-path d="M 500 4 C 500 78 720 92 955 176"></path>
+    </svg>
+  </div>
+  <div
+    class="home-spatial-stop home-spatial-stop--right home-spatial-stop--branches"
+    data-spatial-stop
+    data-spatial-key="branches"
+    data-spatial-index="1"
+    data-spatial-arrived="false"
+    data-spatial-current="false"
+    data-spatial-x="0.56"
+    data-spatial-rotation="1.2"
+    data-spatial-anchor="right"
+  >
+    <section class="front-section">
+      <div class="section-header">
+        <h2>Rough sketch of topics</h2>
+
+        <p>
+          For a more detailed overview of stuff you can find in here, check the
+          Branches page.
+        </p>
+      </div>
+
+      <div
+        class="home-sunburst-viewport"
+        data-home-sunburst-viewport
+        aria-label="Overview of the main branches of mathematics"
+      >
+        <canvas
+          class="home-sunburst-canvas"
+          data-home-sunburst-canvas
+          aria-hidden="true"
+        ></canvas>
+
+        <!--
+          The SVG is now ONLY an invisible interaction map. Nothing visible is
+          painted with SVG paths anymore, so the old triangular sector chip
+          cannot be a visible SVG/WebRender artifact.
+        -->
+        <svg
+          class="home-sunburst-hit-map"
+          viewBox={`0 0 ${OVERVIEW_SIZE} ${OVERVIEW_SIZE}`}
           aria-hidden="true"
         >
-          {
-            featuredArticles.map((article) => (
-              <div
-                class="featured-hex-animation-slot"
-                data-featured-preview-slot
-                data-preview-key={article.previewKey}
-                data-preview-active="false"
-                aria-hidden="true"
-              >
-                <!--
-                  Every animation gets its OWN parent element.
+          {overviewSectors.map((sector, index) => (
+            <a
+              class="home-sunburst-hit-sector"
+              href={sector.href}
+              aria-label={sector.label}
+              data-sunburst-sector
+              data-index={index}
+              data-sector-id={sector.id}
+              data-parent-id={sector.parentId ?? ""}
+              data-depth={sector.depth}
+              data-path={sector.path}
+              data-fill={sector.fill}
+              data-fill-opacity={sector.fillOpacity}
+              data-stroke={sector.stroke}
+              data-text-x={sector.textX}
+              data-text-y={sector.textY}
+              data-rotation={sector.rotation}
+              data-font-size={sector.fontSize}
+              data-lines={sector.lines.map((line) => line.text).join("|")}
+            >
+              <path
+                d={sector.path}
+                fill="rgba(255, 255, 255, 0.001)"
+                stroke="none"
+              ></path>
+            </a>
+          ))}
 
-                  This is important for MathScene2D/MathScene3D because the
-                  engines may append DOM/CSS label layers to the canvas parent.
-                  Hiding only the canvas allowed those extra layers from
-                  different scenes to remain visible together.
-                -->
-                <div class="featured-hex-animation-mount">
-                  <canvas
-                    id={article.canvasId}
-                    class="featured-hex-animation-canvas"
-                    data-featured-preview-canvas
-                    data-preview-key={article.previewKey}
-                    aria-hidden="true"
-                  ></canvas>
-                </div>
-              </div>
-            ))
-          }
-        </div>
-      </a>
-
-      {
-        featuredArticles.map((article, index) => (
           <a
-            class="featured-hex-card"
-            href={article.href}
-            aria-label={`Read ${article.title}`}
-            data-hex-position={index}
-            data-featured-preview-trigger
-            data-preview-key={article.previewKey}
+            class="home-sunburst-hit-center"
+            href={withBase("branches/")}
+            aria-label="Open the full Branches page"
+            data-sunburst-center
           >
-            <h3>{article.title}</h3>
-
-            <div class="featured-hex-hover">
-              <span class="featured-hex-eyebrow">{article.eyebrow}</span>
-
-              <p>{article.text}</p>
-            </div>
+            <circle
+              cx={OVERVIEW_CENTER}
+              cy={OVERVIEW_CENTER}
+              r={OVERVIEW_INNER_RADIUS - 5}
+              fill="rgba(255, 255, 255, 0.001)"
+            ></circle>
           </a>
-        ))
-      }
-    </div>
-  </section>
+        </svg>
+      </div>
+    </section>
 
-  <section
-    class="front-section oddity-exhibition-section"
-    aria-labelledby="oddity-exhibition-heading"
+  </div>
+  <div
+    class="home-spatial-connector"
+    data-spatial-connector="right-left"
+    aria-hidden="true"
   >
-    <h2
-      id="oddity-exhibition-heading"
-      class="oddity-exhibition-title"
+    <svg viewBox="0 0 1000 180" preserveAspectRatio="none" focusable="false">
+      <path data-spatial-route-path d="M 955 4 C 790 86 210 94 45 176"></path>
+    </svg>
+  </div>
+  <div
+    class="home-spatial-stop home-spatial-stop--left home-spatial-stop--featured"
+    data-spatial-stop
+    data-spatial-key="featured-articles"
+    data-spatial-index="2"
+    data-spatial-arrived="false"
+    data-spatial-current="false"
+    data-spatial-x="-0.62"
+    data-spatial-rotation="-1.4"
+    data-spatial-anchor="left"
+  >
+    <section
+      class="front-section featured-articles-section"
+      aria-labelledby="featured-articles-heading"
     >
-      Oddity Exhibition
-    </h2>
-
-    <a
-      class="oddity-exhibition-card"
-      data-oddity-exhibition-link
-      href={withBase("")}
-      aria-label="Open the Oddity Exhibition"
-    >
-      <canvas
-        class="oddity-exhibition-canvas"
-        data-oddity-exhibition-canvas
-        aria-hidden="true"
-      ></canvas>
-    </a>
-  </section>
-
-  <section class="front-section">
-    <div class="home-weekly-stack">
-      <a
-        class="problem-card home-weekly-card"
-        href={withBase("problems/")}
-        aria-label="Open the problem of the week"
+      <div
+        class="featured-hex-orbit"
+        aria-label="Featured articles"
       >
-        <header class="problem-card-header">
-          <span class="problem-branch">Problem of the week</span>
-
-          <h2>A sum of cubes</h2>
-        </header>
-
-        <div
-          class="problem-formula"
-          role="img"
-          aria-label="Sum of cubes identity"
-          set:html={problemFormula}
-        />
-
-        <p class="problem-description">
-          🤤🍆
-        </p>
-
-        <span class="read-label" aria-hidden="true">
-          View problem <span>→</span>
-        </span>
-      </a>
-
-      <a
-        class="article-card home-weekly-card theorem-card"
-        href={withBase("articles/")}
-        aria-label="Read the theorem of the week"
-      >
-        <header class="article-card-header">
-          <span class="article-branch">Theorem of the week</span>
-
-          <h2>Euler's identity</h2>
-        </header>
-
-        <div
-          class="problem-formula"
-          role="img"
-          aria-label="Euler's identity"
-          set:html={theoremFormula}
-        />
-
-        <p class="article-description">
-          Now WHO was this Leonard Euler REALLY?
-        </p>
-
-        <span class="read-label" aria-hidden="true">
-          Read theorem <span>→</span>
-        </span>
-      </a>
-
-      <a
-        class="article-card home-weekly-card mathematician-card"
-        href={withBase("articles/")}
-        aria-label="Read about the mathematician of the month, Emmy Noether"
-      >
-        <header class="article-card-header">
-          <span class="article-branch">Mathematician of the month</span>
-
-          <h2>Emmy Noether</h2>
-        </header>
-
-        <div
-          class="article-canvas home-mathematician-canvas"
-          role="img"
-          aria-label="Reserved animation canvas for Emmy Noether"
+        <a
+          class="featured-hex-center"
+          href={withBase("articles/")}
+          aria-label="Browse all articles"
+          data-featured-hex-center
+          data-preview-active="false"
         >
-          <canvas
-            id="fourier-epicycles"
+          <h2 id="featured-articles-heading">
+            Featured
+            <span>Articles</span>
+          </h2>
+
+          <div
+            class="featured-hex-animation-stage"
             aria-hidden="true"
-          ></canvas>
+          >
+            <!--
+              One physical WebGL canvas is deliberately reused by every featured
+              article preview. Each article still has its own loader/animation,
+              but exploring six hexagons can no longer allocate six persistent
+              WebGL contexts. The active scene is destroyed before the next one
+              mounts, including its CSS2D label layer.
+            -->
+            <div
+              class="featured-hex-animation-slot"
+              data-featured-preview-slot
+              data-preview-active="false"
+              aria-hidden="true"
+            >
+              <div class="featured-hex-animation-mount">
+                <canvas
+                  id="featured-article-preview-canvas"
+                  class="featured-hex-animation-canvas"
+                  data-featured-preview-canvas
+                  aria-hidden="true"
+                ></canvas>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        {
+          featuredArticles.map((article, index) => (
+            <a
+              class="featured-hex-card"
+              href={article.href}
+              aria-label={`Read ${article.title}`}
+              data-hex-position={index}
+              data-featured-preview-trigger
+              data-preview-key={article.previewKey}
+              data-preview-canvas-id={article.canvasId}
+            >
+              <h3>{article.title}</h3>
+
+              <div class="featured-hex-hover">
+                <span class="featured-hex-eyebrow">{article.eyebrow}</span>
+
+                <p>{article.text}</p>
+              </div>
+            </a>
+          ))
+        }
+      </div>
+    </section>
+
+  </div>
+  <div
+    class="home-spatial-connector"
+    data-spatial-connector="left-right"
+    aria-hidden="true"
+  >
+    <svg viewBox="0 0 1000 180" preserveAspectRatio="none" focusable="false">
+      <path data-spatial-route-path d="M 45 4 C 210 86 790 94 955 176"></path>
+    </svg>
+  </div>
+  <div
+    class="home-spatial-stop home-spatial-stop--right home-spatial-stop--oddity"
+    data-spatial-stop
+    data-spatial-key="oddity-exhibition"
+    data-spatial-index="3"
+    data-spatial-arrived="false"
+    data-spatial-current="false"
+    data-spatial-x="0.62"
+    data-spatial-rotation="1.15"
+    data-spatial-anchor="right"
+  >
+    <section
+      class="front-section oddity-exhibition-section"
+      aria-labelledby="oddity-exhibition-heading"
+    >
+      <h2
+        id="oddity-exhibition-heading"
+        class="oddity-exhibition-title"
+      >
+        Oddity Exhibition
+      </h2>
+
+      <a
+        class="oddity-exhibition-card"
+        data-oddity-exhibition-link
+        data-oddity-state="idle"
+        href={withBase("")}
+        aria-label="Open the Oddity Exhibition"
+      >
+        <div
+          class="oddity-exhibition-loader"
+          data-oddity-exhibition-loader
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          <span class="oddity-loader-knot" aria-hidden="true"></span>
+          <span class="oddity-loader-label" data-oddity-loader-label>
+            Preparing exhibit…
+          </span>
+          <span class="oddity-loader-track" aria-hidden="true">
+            <span></span>
+          </span>
         </div>
 
-        <p class="article-description">
-         Her iconic 1910 digital portrait that looks conspicuously similar to the figure of Joseph Fourier.
-        </p>
-
-        <span class="read-label" aria-hidden="true">
-          Read profile <span>→</span>
-        </span>
+        <canvas
+          class="oddity-exhibition-canvas"
+          data-oddity-exhibition-canvas
+          aria-hidden="true"
+        ></canvas>
       </a>
-    </div>
-  </section>
+    </section>
 
-  <section class="background-explainer">
-    <div>
-      <span class="eyebrow">About the background</span>
+  </div>
+  <div
+    class="home-spatial-connector"
+    data-spatial-connector="right-left"
+    aria-hidden="true"
+  >
+    <svg viewBox="0 0 1000 180" preserveAspectRatio="none" focusable="false">
+      <path data-spatial-route-path d="M 955 4 C 790 86 210 94 45 176"></path>
+    </svg>
+  </div>
+  <div
+    class="home-spatial-stop home-spatial-stop--left home-spatial-stop--weekly"
+    data-spatial-stop
+    data-spatial-key="weekly"
+    data-spatial-index="4"
+    data-spatial-arrived="false"
+    data-spatial-current="false"
+    data-spatial-x="-0.54"
+    data-spatial-rotation="-0.9"
+    data-spatial-anchor="left"
+  >
+    <section class="front-section">
+      <div class="home-weekly-stack">
+        <a
+          class="problem-card home-weekly-card"
+          href={withBase("problems/")}
+          aria-label="Open the problem of the week"
+        >
+          <header class="problem-card-header">
+            <span class="problem-branch">Problem of the week</span>
 
-      <h2>What are Julia sets?</h2>
+            <h2>A sum of cubes</h2>
+          </header>
 
-      <p>
-        For those who might be wondering what are the
-        definitely-not-distracting-from-the-actual-content things in the
-        background.
-      </p>
-    </div>
+          <div
+            class="problem-formula"
+            role="img"
+            aria-label="Sum of cubes identity"
+            set:html={problemFormula}
+          />
 
-    <a
-      class="button secondary"
-      href={withBase("articles/julia-background/")}
-    >
-      How was this animated?
-    </a>
-  </section>
+          <p class="problem-description">
+            🤤🍆
+          </p>
+
+          <span class="read-label" aria-hidden="true">
+            View problem <span>→</span>
+          </span>
+        </a>
+
+        <a
+          class="article-card home-weekly-card theorem-card"
+          href={withBase("articles/")}
+          aria-label="Read the theorem of the week"
+        >
+          <header class="article-card-header">
+            <span class="article-branch">Theorem of the week</span>
+
+            <h2>Euler's identity</h2>
+          </header>
+
+          <div
+            class="problem-formula"
+            role="img"
+            aria-label="Euler's identity"
+            set:html={theoremFormula}
+          />
+
+          <p class="article-description">
+            Now WHO was this Leonard Euler REALLY?
+          </p>
+
+          <span class="read-label" aria-hidden="true">
+            Read theorem <span>→</span>
+          </span>
+        </a>
+
+        <a
+          class="article-card home-weekly-card mathematician-card"
+          href={withBase("articles/")}
+          aria-label="Read about the mathematician of the month, Emmy Noether"
+        >
+          <header class="article-card-header">
+            <span class="article-branch">Mathematician of the month</span>
+
+            <h2>Emmy Noether</h2>
+          </header>
+
+          <div
+            class="article-canvas home-mathematician-canvas"
+            role="img"
+            aria-label="Reserved animation canvas for Emmy Noether"
+          >
+            <canvas
+              id="fourier-epicycles"
+              aria-hidden="true"
+            ></canvas>
+          </div>
+
+          <p class="article-description">
+           Her iconic 1910 digital portrait that looks conspicuously similar to the figure of Joseph Fourier.
+          </p>
+
+          <span class="read-label" aria-hidden="true">
+            Read profile <span>→</span>
+          </span>
+        </a>
+      </div>
+    </section>
+
+  </div>
+  <div
+    class="home-spatial-connector"
+    data-spatial-connector="left-right"
+    aria-hidden="true"
+  >
+    <svg viewBox="0 0 1000 180" preserveAspectRatio="none" focusable="false">
+      <path data-spatial-route-path d="M 45 4 C 210 86 790 94 955 176"></path>
+    </svg>
+  </div>
+  <div
+    class="home-spatial-stop home-spatial-stop--right home-spatial-stop--background"
+    data-spatial-stop
+    data-spatial-key="background"
+    data-spatial-index="5"
+    data-spatial-arrived="false"
+    data-spatial-current="false"
+    data-spatial-x="0.42"
+    data-spatial-rotation="0.6"
+    data-spatial-anchor="right"
+  >
+    <section class="background-explainer">
+      <div>
+        <span class="eyebrow">About the background</span>
+
+        <h2>What are Julia sets?</h2>
+
+        <p>
+          For those who might be wondering what are the
+          definitely-not-distracting-from-the-actual-content things in the
+          background.
+        </p>
+      </div>
+
+      <a
+        class="button secondary"
+        href={withBase("articles/julia-background/")}
+      >
+        How was this animated?
+      </a>
+    </section>
+
+  </div>
+  </div>
+  </div>
 
   <script>
-    const oddityCanvas = document.querySelector(
-      "[data-oddity-exhibition-canvas]"
-    );
+  import { HomepageSceneController } from "../scripts/homepage/HomepageSceneController";
 
-    const oddityCard = document.querySelector(
-      "[data-oddity-exhibition-link]"
-    );
+  const oddityCanvas = document.querySelector<HTMLCanvasElement>(
+    "[data-oddity-exhibition-canvas]",
+  );
 
-    /*
-     * ODDITY EXHIBITION SELECTION
-     * ---------------------------
-     * Add future choices here. Each entry owns the canvas id expected by its
-     * existing animation module, the lazy module loader, and its click target.
-     */
-    const oddityChoices = [
-      {
-        key: "cow-to-sphere",
-        canvasId: "cow-to-sphere-scene",
-        href: oddityCard?.getAttribute("href") ?? "/",
-        load: () =>
-          import(
-            "../scripts/animations/lessons/topology/cowToSphere"
-          )
+  const oddityCard = document.querySelector<HTMLAnchorElement>(
+    "[data-oddity-exhibition-link]",
+  );
+
+  const oddityLoaderLabel = document.querySelector<HTMLElement>(
+    "[data-oddity-loader-label]",
+  );
+
+  const oddityChoices = [
+    {
+      key: "cow-to-sphere",
+      canvasId: "cow-to-sphere-scene",
+      href: oddityCard?.getAttribute("href") ?? "/",
+      load: async () => {
+        const module = await import(
+          "../scripts/animations/lessons/topology/cowToSphere"
+        );
+        return module.mountCowToSphere;
       },
-      {
-        key: "mug-to-donut",
-        canvasId: "mug-to-donut-scene",
-        href: oddityCard?.getAttribute("href") ?? "/",
-        load: () =>
-          import(
-            "../scripts/animations/lessons/topology/mugToDonut"
-          )
-      }
-    ];
+    },
+    {
+      key: "mug-to-donut",
+      canvasId: "mug-to-donut-scene",
+      href: oddityCard?.getAttribute("href") ?? "/",
+      load: async () => {
+        const module = await import(
+          "../scripts/animations/lessons/topology/mugToDonut"
+        );
+        return module.mountMugToDonut;
+      },
+    },
+  ];
 
-    const oddityChoice =
-      oddityChoices[
-        Math.floor(
-          Math.random() * oddityChoices.length
-        )
-      ];
+  const oddityChoice =
+    oddityChoices[Math.floor(Math.random() * oddityChoices.length)];
 
-    let oddityLoaded = false;
+  const oddityScenes = new HomepageSceneController({
+    maxMounted: 1,
+    idleDestroyMs: 25_000,
+  });
+
+  let oddityWanted = false;
+  let oddityActivationTicket = 0;
+
+  function setOddityState(
+    state: "idle" | "loading" | "ready" | "error",
+  ): void {
+    if (!oddityCard) return;
+    oddityCard.dataset.oddityState = state;
+
+    if (!oddityLoaderLabel) return;
+
+    oddityLoaderLabel.textContent =
+      state === "error"
+        ? "Exhibit could not be prepared."
+        : "Preparing exhibit…";
+  }
+
+  function afterTwoFrames(): Promise<void> {
+    return new Promise((resolve) => {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => resolve());
+      });
+    });
+  }
+
+  async function activateOddity(): Promise<void> {
+    if (!oddityCanvas || !oddityCard || !oddityChoice) return;
+
+    oddityWanted = true;
+    const ticket = ++oddityActivationTicket;
+
+    if (!oddityScenes.isMounted(oddityChoice.key)) {
+      setOddityState("loading");
+    }
+
+    const handle = await oddityScenes.activate(oddityChoice.key);
 
     if (
-      oddityCanvas instanceof HTMLCanvasElement &&
-      oddityCard instanceof HTMLAnchorElement &&
-      oddityChoice
+      ticket !== oddityActivationTicket ||
+      !oddityWanted
     ) {
-      /*
-       * Both topology modules query their expected canvas id as soon as the
-       * module evaluates, so assign the chosen id BEFORE importing it.
-       */
-      oddityCanvas.id = oddityChoice.canvasId;
-      oddityCanvas.dataset.oddityKey = oddityChoice.key;
-      oddityCard.dataset.oddityKey = oddityChoice.key;
-      oddityCard.href = oddityChoice.href;
+      return;
     }
 
-    async function loadOddityExhibition() {
-      if (
-        oddityLoaded ||
-        !oddityChoice ||
-        !(oddityCanvas instanceof HTMLCanvasElement)
-      ) {
-        return;
-      }
-
-      oddityLoaded = true;
-
-      try {
-        await oddityChoice.load();
-      } catch (error) {
-        oddityLoaded = false;
-        console.error(
-          `Failed to load Oddity Exhibition animation "${oddityChoice.key}".`,
-          error
-        );
-      }
+    if (!handle) {
+      setOddityState("error");
+      return;
     }
 
     /*
-     * Initialize the selected automatic animation only once the card is at
-     * least 15% in view, matching the rest of the site's animation convention.
+     * Mounting a Three.js scene is not quite the same thing as having pixels
+     * ready to reveal. Give the renderer and its resize/visibility observers
+     * two browser frames to settle before fading the canvas in.
      */
-    const oddityObserver =
-      oddityCard && "IntersectionObserver" in window
-        ? new IntersectionObserver(
-            ([entry]) => {
-              if (
-                entry?.isIntersecting &&
-                entry.intersectionRatio >= 0.15
-              ) {
-                oddityObserver?.disconnect();
-                loadOddityExhibition();
-              }
-            },
-            { threshold: 0.15 }
-          )
-        : null;
+    await afterTwoFrames();
 
-    if (oddityCard) {
-      if (oddityObserver) {
-        oddityObserver.observe(oddityCard);
-      } else {
-        loadOddityExhibition();
-      }
+    if (
+      ticket === oddityActivationTicket &&
+      oddityWanted
+    ) {
+      setOddityState("ready");
     }
+  }
 
-    document.addEventListener(
-      "astro:before-swap",
-      () => oddityObserver?.disconnect(),
-      { once: true }
-    );
-  </script>
+  function deactivateOddity(): void {
+    if (!oddityChoice) return;
+
+    oddityWanted = false;
+    oddityActivationTicket += 1;
+
+    oddityScenes.deactivate(oddityChoice.key, {
+      destroyAfterMs: 25_000,
+    });
+  }
+
+  if (oddityCanvas && oddityCard && oddityChoice) {
+    oddityCanvas.id = oddityChoice.canvasId;
+    oddityCanvas.dataset.oddityKey = oddityChoice.key;
+    oddityCard.dataset.oddityKey = oddityChoice.key;
+    oddityCard.href = oddityChoice.href;
+
+    oddityScenes.register({
+      key: oddityChoice.key,
+      canvas: oddityCanvas,
+      load: oddityChoice.load,
+    });
+  }
+
+  /*
+   * The enlarged root begins preparing the selected 3D exhibit while the user
+   * is still travelling down the incoming winding connector. This is a bounded
+   * one-scene prewarm, not an eager load of every homepage animation.
+   */
+  const oddityObserver =
+    oddityCard && oddityChoice && "IntersectionObserver" in window
+      ? new IntersectionObserver(
+          ([entry]) => {
+            if (!entry) return;
+
+            if (entry.isIntersecting && entry.intersectionRatio >= 0.15) {
+              void activateOddity();
+            } else {
+              deactivateOddity();
+            }
+          },
+          {
+            threshold: [0, 0.15, 1],
+            rootMargin: "65% 0px 65% 0px",
+          },
+        )
+      : null;
+
+  if (oddityCard && oddityChoice) {
+    if (oddityObserver) oddityObserver.observe(oddityCard);
+    else void activateOddity();
+  }
+
+  document.addEventListener(
+    "astro:before-swap",
+    () => {
+      oddityWanted = false;
+      oddityActivationTicket += 1;
+      oddityObserver?.disconnect();
+      oddityScenes.destroyAll();
+    },
+    { once: true },
+  );
+</script>
 
   <script>
-    /*
-     * This one still belongs to the Mathematician-of-the-month card below.
-     * Featured-article preview modules are loaded lazily in the preview
-     * controller so two preview scenes are never initialized into one shared
-     * host at page load.
-     */
-    import "../scripts/demos/fourierEpicycles";
-  </script>
+  import { HomepageSceneController } from "../scripts/homepage/HomepageSceneController";
+
+  const fourierCanvas = document.querySelector<HTMLCanvasElement>(
+    "#fourier-epicycles",
+  );
+
+  const fourierViewport =
+    fourierCanvas?.closest<HTMLElement>(".home-mathematician-canvas") ??
+    fourierCanvas;
+
+  const fourierScenes = new HomepageSceneController({
+    maxMounted: 1,
+    idleDestroyMs: 30_000,
+  });
+
+  if (fourierCanvas) {
+    fourierScenes.register({
+      key: "fourier-epicycles",
+      canvas: fourierCanvas,
+      load: async () => {
+        const module = await import("../scripts/demos/fourierEpicycles");
+        return module.mountFourierEpicycles;
+      },
+    });
+  }
+
+  const fourierObserver =
+    fourierViewport && "IntersectionObserver" in window
+      ? new IntersectionObserver(
+          ([entry]) => {
+            if (!entry) return;
+
+            if (entry.isIntersecting && entry.intersectionRatio >= 0.15) {
+              void fourierScenes.activate("fourier-epicycles");
+            } else {
+              fourierScenes.deactivate("fourier-epicycles", {
+                destroyAfterMs: 30_000,
+              });
+            }
+          },
+          { threshold: [0, 0.15, 1] },
+        )
+      : null;
+
+  if (fourierViewport) {
+    if (fourierObserver) fourierObserver.observe(fourierViewport);
+    else void fourierScenes.activate("fourier-epicycles");
+  }
+
+  document.addEventListener(
+    "astro:before-swap",
+    () => {
+      fourierObserver?.disconnect();
+      fourierScenes.destroyAll();
+    },
+    { once: true },
+  );
+</script>
 
   <script>
     const SUNBURST_SIZE = 900;
     const SUNBURST_CENTER = SUNBURST_SIZE / 2;
-    const SUNBURST_INNER_RADIUS = 145;
+    const SUNBURST_INNER_RADIUS = 112;
 
     const sunburstViewport = document.querySelector(
       "[data-home-sunburst-viewport]"
@@ -737,7 +1156,11 @@ const overviewSectors = overviewBranches.map((branch, index) => {
       link,
       index: Number(link.dataset.index ?? 0),
       path: new Path2D(link.dataset.path ?? ""),
+      id: link.dataset.sectorId ?? "",
+      parentId: link.dataset.parentId || null,
+      depth: Number(link.dataset.depth ?? 1),
       fill: link.dataset.fill ?? "rgb(80, 72, 112)",
+      fillOpacity: Number(link.dataset.fillOpacity ?? 0.86),
       stroke: link.dataset.stroke ?? "rgb(30, 24, 50)",
       textX: Number(link.dataset.textX ?? 0),
       textY: Number(link.dataset.textY ?? 0),
@@ -748,6 +1171,44 @@ const overviewSectors = overviewBranches.map((branch, index) => {
 
     let activeSector = null;
     let centerActive = false;
+
+    function relatedSectorIds(activeIndex) {
+      if (activeIndex === null) return new Set();
+
+      const active = parsedSectors.find(
+        (sector) => sector.index === activeIndex
+      );
+
+      if (!active) return new Set();
+
+      const related = new Set([active.id]);
+
+      /* Walk inward through the active sector's ancestry. */
+      let parentId = active.parentId;
+      while (parentId) {
+        related.add(parentId);
+        parentId =
+          parsedSectors.find((sector) => sector.id === parentId)?.parentId ?? null;
+      }
+
+      /* Then walk outward through every descendant of the active sector. */
+      let changed = true;
+      while (changed) {
+        changed = false;
+        for (const sector of parsedSectors) {
+          if (
+            sector.parentId &&
+            related.has(sector.parentId) &&
+            !related.has(sector.id)
+          ) {
+            related.add(sector.id);
+            changed = true;
+          }
+        }
+      }
+
+      return related;
+    }
 
     function drawSunburst() {
       if (!(sunburstCanvas instanceof HTMLCanvasElement)) return;
@@ -813,6 +1274,8 @@ const overviewSectors = overviewBranches.map((branch, index) => {
       context.lineJoin = "round";
       context.lineCap = "round";
 
+      const relatedIds = relatedSectorIds(activeSector);
+
       for (const sector of parsedSectors) {
         context.save();
 
@@ -820,7 +1283,7 @@ const overviewSectors = overviewBranches.map((branch, index) => {
          * Match the original SVG appearance: colored sectors are translucent,
          * so the Julia background remains visible through the sunburst.
          */
-        context.globalAlpha = 0.86;
+        context.globalAlpha = sector.fillOpacity;
         context.fillStyle = sector.fill;
         context.fill(sector.path);
 
@@ -834,11 +1297,13 @@ const overviewSectors = overviewBranches.map((branch, index) => {
         context.stroke(sector.path);
 
         if (activeSector === sector.index) {
-          /*
-           * Very restrained hover brightening. Because this is canvas-rendered
-           * there is no per-SVG-path compositing layer involved anymore.
-           */
-          context.globalAlpha = 0.075;
+          /* Active node: strongest lift. */
+          context.globalAlpha = 0.085;
+          context.fillStyle = "#ffffff";
+          context.fill(sector.path);
+        } else if (relatedIds.has(sector.id)) {
+          /* Parent/child lineage: enough lift to make the hierarchy readable. */
+          context.globalAlpha = 0.028;
           context.fillStyle = "#ffffff";
           context.fill(sector.path);
         }
@@ -1098,561 +1563,314 @@ const overviewSectors = overviewBranches.map((branch, index) => {
   </script>
 
   <script>
-    const featuredOrbit = document.querySelector(
-      ".featured-hex-orbit"
-    );
+  import { HomepageSceneController } from "../scripts/homepage/HomepageSceneController";
 
-    const featuredCenter = featuredOrbit?.querySelector(
-      "[data-featured-hex-center]"
-    );
+  const featuredOrbit = document.querySelector<HTMLElement>(
+    ".featured-hex-orbit",
+  );
 
-    const featuredTriggers = Array.from(
-      featuredOrbit?.querySelectorAll(
-        "[data-featured-preview-trigger]"
-      ) ?? []
-    );
+  const featuredCenter = featuredOrbit?.querySelector<HTMLElement>(
+    "[data-featured-hex-center]",
+  );
 
-    const featuredPreviewSlots = Array.from(
-      featuredOrbit?.querySelectorAll(
-        "[data-featured-preview-slot]"
-      ) ?? []
-    );
+  const featuredTriggers = Array.from(
+    featuredOrbit?.querySelectorAll<HTMLElement>(
+      "[data-featured-preview-trigger]",
+    ) ?? [],
+  );
 
-    /*
-     * FEATURED PREVIEW NATIVE VIEWPORT
-     * --------------------------------
-     *
-     * Every preview scene is created at this SAME ordinary 16:9 canvas size.
-     * The math engine therefore lays out geometry, camera bounds and CSS2D
-     * labels exactly as it would in a normal MathCanvas2D.
-     *
-     * Only AFTER the scene has initialized do we scale the complete DOM subtree
-     * down as one visual object to fit inside the center hexagon.
-     *
-     * Do not use these values as "make preview smaller" controls. They define
-     * the scene's native logical viewport. The miniature display size is
-     * determined automatically from the hexagon.
-     */
-    /*
-     * CONSTANT NATIVE PREVIEW DIMENSIONS
-     * ----------------------------------
-     *
-     * Every featured animation is always initialized as the same ordinary
-     * 16:9 scene. These dimensions are intentionally not article-specific and
-     * are not used as visual-size controls.
-     */
-    const FEATURED_PREVIEW_NATIVE_WIDTH = 960;
-    const FEATURED_PREVIEW_NATIVE_HEIGHT = 540;
+  const featuredPreviewSlot = featuredOrbit?.querySelector<HTMLElement>(
+    "[data-featured-preview-slot]",
+  );
 
-    let activePreviewKey = null;
+  const featuredPreviewMount = featuredPreviewSlot?.querySelector<HTMLElement>(
+    ".featured-hex-animation-mount",
+  );
 
-    /*
-     * Preview scenes are imported only when their corresponding article is
-     * first activated.
-     */
-    const featuredPreviewLoaders = new Map([
-      [
-        "about-primitives-scene",
-        () => import("../scripts/demos/aboutPrimitivesScene")
-      ],
-      [
-        "about-curve-scene",
-        () =>
-          import(
-            "../scripts/demos/aboutCurveScene"
-          )
-      ],
-      [
-        "about-lissajous-scene",
-        () =>
-          import(
-            "../scripts/demos/aboutLissajousScene"
-          )
-      ],
-      [
-        "about-determinant-transformation-scene",
-        () =>
-          import(
-            "../scripts/demos/aboutDeterminantTransformationScene"
-          )
-      ],
-      [
-        "factorial-shuffling",
-        () =>
-          import(
-            "../scripts/demos/factorialShuffling"
-          )
-      ],
-      [
-        "about-function-graph-scene",
-        () =>
-          import(
-            "../scripts/demos/aboutFunctionGraphScene"
-          )
-      ]
-    ]);
+  const featuredPreviewCanvas = featuredPreviewSlot?.querySelector<HTMLCanvasElement>(
+    "[data-featured-preview-canvas]",
+  );
 
-    const featuredPreviewLoadPromises =
-      new Map();
+  const FEATURED_PREVIEW_NATIVE_WIDTH = 960;
+  const FEATURED_PREVIEW_NATIVE_HEIGHT = 540;
+  const FEATURED_PREVIEW_IDLE_DESTROY_MS = 12_000;
 
-    const featuredPreviewReadyKeys =
-      new Set();
+  const featuredScenes = new HomepageSceneController({
+    maxMounted: 1,
+    idleDestroyMs: FEATURED_PREVIEW_IDLE_DESTROY_MS,
+  });
 
-    function getPreviewMount(slot) {
-      return slot.querySelector(
-        ".featured-hex-animation-mount"
-      );
-    }
-
-    function preparePreviewAtNativeSize(slot) {
-      if (!(slot instanceof HTMLElement)) {
-        return;
-      }
-
-      const mount =
-        getPreviewMount(slot);
-
-      if (!(mount instanceof HTMLElement)) {
-        return;
-      }
-
-      /*
-       * Crucial: scale MUST be 1 while the scene constructor runs.
-       *
-       * MathScene2D/3D measure canvas.getBoundingClientRect(). If an ancestor
-       * is already transformed, the engine sees the visually shrunken size and
-       * recomputes the camera/labels for that small box. That is not a miniature
-       * of the normal scene; it is a different viewport.
-       */
-      mount.style.width =
-        `${FEATURED_PREVIEW_NATIVE_WIDTH}px`;
-
-      mount.style.height =
-        `${FEATURED_PREVIEW_NATIVE_HEIGHT}px`;
-
-      mount.style.setProperty(
-        "--featured-preview-scale",
-        "1"
-      );
-    }
-
-    /*
-     * Largest centered rectangle of a given aspect ratio that is fully inside
-     * the exact CSS hexagon:
-     *
-     *   polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%)
-     *
-     * This is better than multiplying width/height by arbitrary percentages:
-     * the corners of a 16:9 rectangle otherwise hit the sloping sides first.
-     */
-    function fittedPreviewScale() {
-      if (!(featuredCenter instanceof HTMLElement)) {
-        return 1;
-      }
-
-      const rectangle =
-        featuredCenter.getBoundingClientRect();
-
-      const hexWidth =
-        rectangle.width;
-
-      const hexHeight =
-        rectangle.height;
-
-      if (
-        hexWidth <= 0 ||
-        hexHeight <= 0
-      ) {
-        return 1;
-      }
-
-      const nativeWidth =
-        FEATURED_PREVIEW_NATIVE_WIDTH;
-
-      const nativeHeight =
-        FEATURED_PREVIEW_NATIVE_HEIGHT;
-
-      /*
-       * At vertical distance y from the hex center, a flat-top hexagon's
-       * horizontal half-width is:
-       *
-       *   W/2 - (W/(2H)) y
-       *
-       * Solving that boundary simultaneously for a centered rectangle gives
-       * the scale below. The vertical constraint is included separately.
-       */
-      const sideConstraint =
-        hexWidth /
-        (
-          nativeWidth +
-          hexWidth *
-            nativeHeight /
-            (2 * hexHeight)
+  const featuredPreviewLoaders = new Map([
+    [
+      "about-primitives-scene",
+      async () => {
+        const module = await import("../scripts/demos/aboutPrimitivesScene");
+        return module.mountAboutPrimitivesScene;
+      },
+    ],
+    [
+      "about-curve-scene",
+      async () => {
+        const module = await import("../scripts/demos/aboutCurveScene");
+        return module.mountAboutCurveScene;
+      },
+    ],
+    [
+      "about-lissajous-scene",
+      async () => {
+        const module = await import("../scripts/demos/aboutLissajousScene");
+        return module.mountAboutLissajousScene;
+      },
+    ],
+    [
+      "about-determinant-transformation-scene",
+      async () => {
+        const module = await import(
+          "../scripts/demos/aboutDeterminantTransformationScene"
         );
+        return module.mountAboutDeterminantTransformationScene;
+      },
+    ],
+    [
+      "factorial-shuffling",
+      async () => {
+        const module = await import("../scripts/demos/factorialShuffling");
+        return module.mountFactorialShuffling;
+      },
+    ],
+    [
+      "about-function-graph-scene",
+      async () => {
+        const module = await import("../scripts/demos/aboutFunctionGraphScene");
+        return module.mountAboutFunctionGraphScene;
+      },
+    ],
+  ]);
 
-      const verticalConstraint =
-        hexHeight /
-        nativeHeight;
+  function preparePreviewAtNativeSize(): void {
+    if (!featuredPreviewMount) return;
 
-      return Math.min(
-        sideConstraint,
-        verticalConstraint
+    featuredPreviewMount.style.width = `${FEATURED_PREVIEW_NATIVE_WIDTH}px`;
+    featuredPreviewMount.style.height = `${FEATURED_PREVIEW_NATIVE_HEIGHT}px`;
+    featuredPreviewMount.style.setProperty("--featured-preview-scale", "1");
+  }
+
+  function fittedPreviewScale(): number {
+    if (!featuredCenter) return 1;
+
+    const rectangle = featuredCenter.getBoundingClientRect();
+    const hexWidth = rectangle.width;
+    const hexHeight = rectangle.height;
+
+    if (hexWidth <= 0 || hexHeight <= 0) return 1;
+
+    const sideConstraint =
+      hexWidth /
+      (
+        FEATURED_PREVIEW_NATIVE_WIDTH +
+        (hexWidth * FEATURED_PREVIEW_NATIVE_HEIGHT) / (2 * hexHeight)
       );
-    }
 
-    function applyMiniatureScale() {
-      const scale =
-        fittedPreviewScale();
+    const verticalConstraint =
+      hexHeight / FEATURED_PREVIEW_NATIVE_HEIGHT;
 
-      for (const slot of featuredPreviewSlots) {
-        if (!(slot instanceof HTMLElement)) {
-          continue;
-        }
+    return Math.min(sideConstraint, verticalConstraint);
+  }
 
-        const previewKey =
-          slot.dataset.previewKey ?? null;
-
-        if (
-          previewKey === null ||
-          !featuredPreviewReadyKeys.has(
-            previewKey
-          )
-        ) {
-          /*
-           * Uninitialized scenes remain at native scale so their future
-           * constructor will measure the real 960x540 viewport.
-           */
-          preparePreviewAtNativeSize(
-            slot
-          );
-
-          continue;
-        }
-
-        const mount =
-          getPreviewMount(slot);
-
-        if (!(mount instanceof HTMLElement)) {
-          continue;
-        }
-
-        mount.style.width =
-          `${FEATURED_PREVIEW_NATIVE_WIDTH}px`;
-
-        mount.style.height =
-          `${FEATURED_PREVIEW_NATIVE_HEIGHT}px`;
-
-        mount.style.setProperty(
-          "--featured-preview-scale",
-          String(scale)
-        );
-      }
-    }
-
-    async function ensureFeaturedPreviewLoaded(
-      previewKey
+  function applyMiniatureScale(): void {
+    if (
+      !featuredPreviewMount ||
+      featuredPreviewSlot?.dataset.previewReady !== "true"
     ) {
-      if (
-        previewKey === null ||
-        featuredPreviewReadyKeys.has(
-          previewKey
-        )
-      ) {
-        return;
-      }
-
-      const slot =
-        featuredPreviewSlots.find(
-          (candidate) =>
-            candidate instanceof HTMLElement &&
-            candidate.dataset.previewKey ===
-              previewKey
-        );
-
-      if (!(slot instanceof HTMLElement)) {
-        return;
-      }
-
-      /*
-       * Establish the NORMAL scene dimensions before module evaluation.
-       */
-      preparePreviewAtNativeSize(
-        slot
-      );
-
-      const loader =
-        featuredPreviewLoaders.get(
-          previewKey
-        );
-
-      if (!loader) {
-        /*
-         * Empty future-preview canvas: still mark it ready so the empty canvas
-         * follows the same miniature sizing behavior.
-         */
-        featuredPreviewReadyKeys.add(
-          previewKey
-        );
-
-        applyMiniatureScale();
-        return;
-      }
-
-      const existing =
-        featuredPreviewLoadPromises.get(
-          previewKey
-        );
-
-      if (existing) {
-        await existing;
-        return;
-      }
-
-      /*
-       * Keep the active slot invisible during native-size initialization. This
-       * prevents one frame of the 960x540 scene from flashing through the
-       * hexagon before it is reduced.
-       */
-      slot.dataset.previewInitializing =
-        "true";
-
-      const promise =
-        loader()
-          .then(
-            () =>
-              new Promise((resolve) => {
-                /*
-                 * MathScene constructors resize synchronously, but waiting two
-                 * browser frames also allows their CSS2D renderer/label layer
-                 * and ResizeObserver bookkeeping to settle at native size.
-                 */
-                requestAnimationFrame(() => {
-                  requestAnimationFrame(
-                    resolve
-                  );
-                });
-              })
-          )
-          .then(() => {
-            featuredPreviewReadyKeys.add(
-              previewKey
-            );
-
-            slot.dataset.previewInitializing =
-              "false";
-
-            slot.dataset.previewReady =
-              "true";
-
-            applyMiniatureScale();
-          })
-          .catch((error) => {
-            featuredPreviewLoadPromises.delete(
-              previewKey
-            );
-
-            slot.dataset.previewInitializing =
-              "false";
-
-            console.error(
-              `Failed to load featured preview "${previewKey}".`,
-              error
-            );
-          });
-
-      featuredPreviewLoadPromises.set(
-        previewKey,
-        promise
-      );
-
-      await promise;
+      return;
     }
 
-    const featuredPreviewResizeObserver =
-      featuredCenter &&
-      "ResizeObserver" in window
-        ? new ResizeObserver(
-            applyMiniatureScale
-          )
-        : null;
+    featuredPreviewMount.style.width = `${FEATURED_PREVIEW_NATIVE_WIDTH}px`;
+    featuredPreviewMount.style.height = `${FEATURED_PREVIEW_NATIVE_HEIGHT}px`;
+    featuredPreviewMount.style.setProperty(
+      "--featured-preview-scale",
+      String(fittedPreviewScale()),
+    );
+  }
+
+  if (featuredPreviewCanvas) {
+    for (const [key, load] of featuredPreviewLoaders) {
+      featuredScenes.register({
+        key,
+        canvas: featuredPreviewCanvas,
+        load,
+      });
+    }
+  }
+
+  preparePreviewAtNativeSize();
+
+  let activePreviewKey: string | null = null;
+
+  async function setFeaturedPreview(previewKey: string | null): Promise<void> {
+    const previousKey = activePreviewKey;
+    activePreviewKey = previewKey;
 
     if (featuredCenter) {
-      featuredPreviewResizeObserver?.observe(
-        featuredCenter
+      featuredCenter.dataset.previewActive =
+        previewKey === null ? "false" : "true";
+    }
+
+    if (featuredPreviewSlot) {
+      featuredPreviewSlot.dataset.previewActive =
+        previewKey === null ? "false" : "true";
+      featuredPreviewSlot.setAttribute(
+        "aria-hidden",
+        previewKey === null ? "true" : "false",
       );
     }
 
-    async function setFeaturedPreview(
-      previewKey
-    ) {
-      activePreviewKey =
-        previewKey;
-
-      if (featuredCenter) {
-        featuredCenter.dataset.previewActive =
-          previewKey === null
-            ? "false"
-            : "true";
-      }
-
-      let activeCanvas = null;
-      let activeSlot = null;
-
+    if (previousKey && previousKey !== previewKey) {
       /*
-       * Exactly one COMPLETE scene subtree can be active. This includes the
-       * WebGL canvas and every CSS2D/DOM layer the scene appended to its mount.
+       * Destroy before switching. Because all six previews reuse one canvas,
+       * this removes the previous WebGLRenderer/CSS2D layer before the next
+       * scene is allowed to mount.
        */
-      for (const slot of featuredPreviewSlots) {
-        if (!(slot instanceof HTMLElement)) {
-          continue;
-        }
+      featuredScenes.deactivate(previousKey, { destroyAfterMs: 0 });
+    }
 
-        const active =
-          previewKey !== null &&
-          slot.dataset.previewKey ===
-            previewKey;
-
-        slot.dataset.previewActive =
-          active
-            ? "true"
-            : "false";
-
-        slot.setAttribute(
-          "aria-hidden",
-          active
-            ? "false"
-            : "true"
-        );
-
-        if (active) {
-          activeSlot =
-            slot;
-
-          activeCanvas =
-            slot.querySelector(
-              "[data-featured-preview-canvas]"
-            );
-        }
+    if (previewKey === null) {
+      if (previousKey) {
+        featuredScenes.deactivate(previousKey, {
+          destroyAfterMs: FEATURED_PREVIEW_IDLE_DESTROY_MS,
+        });
       }
 
-      if (
-        previewKey !== null
-      ) {
-        await ensureFeaturedPreviewLoaded(
-          previewKey
-        );
-
-        /*
-         * The pointer may have moved to another article while the dynamic
-         * import was resolving. Do not reveal a stale preview.
-         */
-        if (
-          activePreviewKey !==
-          previewKey
-        ) {
-          return;
-        }
-
-        applyMiniatureScale();
+      if (featuredPreviewSlot) {
+        featuredPreviewSlot.dataset.previewReady = "false";
+        featuredPreviewSlot.dataset.previewInitializing = "false";
       }
 
       featuredOrbit?.dispatchEvent(
-        new CustomEvent(
-          "featured-article-preview-change",
-          {
-            detail: {
-              previewKey,
-              canvas: activeCanvas,
-              slot: activeSlot
-            }
-          }
-        )
+        new CustomEvent("featured-article-preview-change", {
+          detail: { previewKey: null, canvas: null, slot: null },
+        }),
       );
+      return;
     }
 
-    function clearFeaturedPreviewIfInactive(
-      trigger
-    ) {
-      requestAnimationFrame(() => {
-        const stillHovered =
-          trigger.matches(":hover");
+    if (!featuredPreviewCanvas || !featuredPreviewSlot) return;
 
-        const stillFocused =
-          document.activeElement ===
-          trigger;
+    const trigger = featuredTriggers.find(
+      (candidate) => candidate.dataset.previewKey === previewKey,
+    );
 
-        if (
-          !stillHovered &&
-          !stillFocused &&
-          activePreviewKey ===
-            trigger.dataset.previewKey
-        ) {
-          setFeaturedPreview(
-            null
-          );
-        }
-      });
+    const canvasId = trigger?.dataset.previewCanvasId;
+    if (canvasId) featuredPreviewCanvas.id = canvasId;
+    featuredPreviewCanvas.dataset.previewKey = previewKey;
+
+    featuredPreviewSlot.dataset.previewReady = "false";
+    featuredPreviewSlot.dataset.previewInitializing = "true";
+    preparePreviewAtNativeSize();
+
+    const handle = await featuredScenes.activate(previewKey);
+
+    if (!handle) {
+      featuredPreviewSlot.dataset.previewInitializing = "false";
+      featuredPreviewSlot.dataset.previewReady = "false";
+
+      if (activePreviewKey === previewKey) {
+        activePreviewKey = null;
+        featuredPreviewSlot.dataset.previewActive = "false";
+        featuredPreviewSlot.setAttribute("aria-hidden", "true");
+        if (featuredCenter) featuredCenter.dataset.previewActive = "false";
+      }
+      return;
     }
 
-    /*
-     * Start every potential scene host at true native dimensions. No CSS
-     * presentation scaling is applied until that scene has initialized.
-     */
-    for (
-      const slot of
-      featuredPreviewSlots
-    ) {
-      preparePreviewAtNativeSize(
-        slot
-      );
-    }
+    if (activePreviewKey !== previewKey) return;
 
-    for (const trigger of featuredTriggers) {
-      trigger.addEventListener(
-        "pointerenter",
-        () => {
-          setFeaturedPreview(
-            trigger.dataset.previewKey ??
-              null
-          );
-        }
-      );
+    featuredPreviewSlot.dataset.previewInitializing = "false";
+    featuredPreviewSlot.dataset.previewReady = "true";
+    applyMiniatureScale();
 
-      trigger.addEventListener(
-        "pointerleave",
-        () => {
-          clearFeaturedPreviewIfInactive(
-            trigger
-          );
-        }
-      );
+    featuredOrbit?.dispatchEvent(
+      new CustomEvent("featured-article-preview-change", {
+        detail: {
+          previewKey,
+          canvas: featuredPreviewCanvas,
+          slot: featuredPreviewSlot,
+        },
+      }),
+    );
+  }
 
-      trigger.addEventListener(
-        "focus",
-        () => {
-          setFeaturedPreview(
-            trigger.dataset.previewKey ??
-              null
-          );
-        }
-      );
+  function clearFeaturedPreviewIfInactive(trigger: HTMLElement): void {
+    requestAnimationFrame(() => {
+      const stillHovered = trigger.matches(":hover");
+      const stillFocused = document.activeElement === trigger;
 
-      trigger.addEventListener(
-        "blur",
-        () => {
-          clearFeaturedPreviewIfInactive(
-            trigger
-          );
-        }
-      );
-    }
+      if (
+        !stillHovered &&
+        !stillFocused &&
+        activePreviewKey === trigger.dataset.previewKey
+      ) {
+        void setFeaturedPreview(null);
+      }
+    });
+  }
+
+  for (const trigger of featuredTriggers) {
+    trigger.addEventListener("pointerenter", () => {
+      void setFeaturedPreview(trigger.dataset.previewKey ?? null);
+    });
+
+    trigger.addEventListener("pointerleave", () => {
+      clearFeaturedPreviewIfInactive(trigger);
+    });
+
+    trigger.addEventListener("focus", () => {
+      void setFeaturedPreview(trigger.dataset.previewKey ?? null);
+    });
+
+    trigger.addEventListener("blur", () => {
+      clearFeaturedPreviewIfInactive(trigger);
+    });
+  }
+
+  const featuredPreviewResizeObserver =
+    featuredCenter && "ResizeObserver" in window
+      ? new ResizeObserver(applyMiniatureScale)
+      : null;
+
+  if (featuredCenter) featuredPreviewResizeObserver?.observe(featuredCenter);
+
+  document.addEventListener(
+    "astro:before-swap",
+    () => {
+      featuredPreviewResizeObserver?.disconnect();
+      featuredScenes.destroyAll();
+    },
+    { once: true },
+  );
+</script>
+
+  <script>
+    import { mountHomepageSpatialJourney } from "../scripts/homepage/HomepageSpatialJourney";
+
+    const spatialTrack = document.querySelector<HTMLElement>(
+      "[data-home-spatial-track]",
+    );
+
+    const spatialJourney = spatialTrack
+      ? mountHomepageSpatialJourney(spatialTrack, {
+          desktopQuery: "(min-width: 901px)",
+          cameraLeadIn: 0.12,
+          cameraLeadOut: 0.10,
+          focusViewportRatio: 0.52,
+          arrivalProgress: 0.92,
+        })
+      : null;
 
     document.addEventListener(
       "astro:before-swap",
-      () => {
-        featuredPreviewResizeObserver?.disconnect();
-      },
-      { once: true }
+      () => spatialJourney?.destroy(),
+      { once: true },
     );
   </script>
 

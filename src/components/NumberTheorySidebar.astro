@@ -1,0 +1,19 @@
+---
+import { withBase } from "@/utils/paths";
+
+const items = [
+  { label: "Home", href: withBase("branches/number-theory/") },
+  { label: "Lessons", href: withBase("branches/number-theory/lessons/") },
+  { label: "Problems", href: withBase("problems/number-theory/") },
+  { label: "Theorems", href: withBase("branches/number-theory/theorems/") },
+  { label: "Definitions", href: withBase("branches/number-theory/definitions/") }
+];
+---
+
+<aside class="hub-sidebar" aria-label="Number Theory navigation">
+  <span class="hub-sidebar-title">Number Theory</span>
+
+  <nav>
+    {items.map((item) => <a href={item.href}>{item.label}</a>)}
+  </nav>
+</aside>

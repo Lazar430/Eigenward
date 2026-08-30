@@ -1,0 +1,19 @@
+---
+import { withBase } from "@/utils/paths";
+
+const items = [
+  { label: "Home", href: withBase("branches/classical-mechanics/") },
+  { label: "Lessons", href: withBase("branches/classical-mechanics/lessons/") },
+  { label: "Problems", href: withBase("problems/classical-mechanics/") },
+  { label: "Theorems", href: withBase("branches/classical-mechanics/theorems/") },
+  { label: "Definitions", href: withBase("branches/classical-mechanics/definitions/") }
+];
+---
+
+<aside class="hub-sidebar" aria-label="Classical Mechanics navigation">
+  <span class="hub-sidebar-title">Classical Mechanics</span>
+
+  <nav>
+    {items.map((item) => <a href={item.href}>{item.label}</a>)}
+  </nav>
+</aside>
