@@ -1,0 +1,107 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import DifferentialGeometrySidebar from "../../../../components/DifferentialGeometrySidebar.astro";
+import { withBase } from "@/utils/paths";
+
+const lessons = [
+  {
+    number: "01",
+    title: "TODO Lesson 1",
+    href: withBase("branches/differential-geometry/lessons/ever-wanted-to-parameterize-curves/"),
+    text: "TODO: Add a short description for this lesson."
+  },
+  {
+    number: "02",
+    title: "TODO Lesson 2",
+    href: withBase("branches/differential-geometry/lessons/"),
+    text: "TODO: Add a short description for this lesson."
+  },
+  {
+    number: "03",
+    title: "TODO Lesson 3",
+    href: withBase("branches/differential-geometry/lessons/"),
+    text: "TODO: Add a short description for this lesson."
+  },
+  {
+    number: "04",
+    title: "TODO Lesson 4",
+    href: withBase("branches/differential-geometry/lessons/"),
+    text: "TODO: Add a short description for this lesson."
+  },
+  {
+    number: "05",
+    title: "TODO Lesson 5",
+    href: withBase("branches/differential-geometry/lessons/"),
+    text: "TODO: Add a short description for this lesson."
+  },
+  {
+    number: "06",
+    title: "TODO Lesson 6",
+    href: withBase("branches/differential-geometry/lessons/"),
+    text: "TODO: Add a short description for this lesson."
+  },
+  {
+    number: "07",
+    title: "TODO Lesson 7",
+    href: withBase("branches/differential-geometry/lessons/"),
+    text: "TODO: Add a short description for this lesson."
+  },
+  {
+    number: "08",
+    title: "TODO Lesson 8",
+    href: withBase("branches/differential-geometry/lessons/"),
+    text: "TODO: Add a short description for this lesson."
+  },
+];
+---
+
+<BaseLayout
+  title="Differential Geometry Lessons"
+  description="TODO: Write a short description for the Differential Geometry lesson path."
+>
+  <section class="hub-page">
+    <DifferentialGeometrySidebar />
+
+    <div class="hub-main">
+      <section class="hub-hero">
+        <span class="eyebrow">Differential Geometry · Lessons</span>
+        <h1>Lessons</h1>
+        <p>
+          TODO: Describe the intended route through the Differential Geometry curriculum.
+        </p>
+      </section>
+
+      <section class="hub-section lesson-index-section">
+        <div class="section-header">
+          <h2>Full lesson path</h2>
+          <p>
+            TODO: Explain how the lesson sequence is organized and how later
+            material depends on earlier material.
+          </p>
+        </div>
+
+        <div class="lesson-timeline">
+          {lessons.map((lesson) => (
+            <a class="lesson-card" href={lesson.href}>
+              <span class="lesson-number">{lesson.number}</span>
+              <div>
+                <h3>{lesson.title}</h3>
+                <p>{lesson.text}</p>
+              </div>
+              <span class="lesson-arrow" aria-hidden="true">→</span>
+            </a>
+          ))}
+        </div>
+      </section>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .lesson-index-section { margin-top: clamp(2rem, 5vw, 4rem); }
+  .lesson-card { grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; }
+  .lesson-arrow { color: var(--accent, #71e6ff); font-size: 1.15rem; transition: transform 180ms ease; }
+  .lesson-card:hover .lesson-arrow, .lesson-card:focus-visible .lesson-arrow { transform: translateX(4px); }
+  @media (max-width: 640px) { .lesson-card { grid-template-columns: auto minmax(0, 1fr); } .lesson-arrow { display: none; } }
+  @media (prefers-reduced-motion: reduce) { .lesson-arrow { transition: none; } }
+</style>

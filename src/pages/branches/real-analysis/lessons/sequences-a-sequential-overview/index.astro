@@ -1,0 +1,85 @@
+---
+import BaseLayout from "../../../../../layouts/BaseLayout.astro";
+import RealAnalysisSidebar from "../../../../../components/RealAnalysisSidebar.astro";
+import Math from "../../../../../components/Math.astro";
+import Equation from "../../../../../components/Equation.astro";
+import MathCanvas2D from "../../../../../components/math-graphics/MathCanvas2D.astro";
+---
+<BaseLayout
+  title="Sequences (A Sequential Overview)"
+  description="TODO: Write a short description for Sequences (A Sequential Overview)."
+>
+  <section class="la-page">
+    <RealAnalysisSidebar />
+
+    <article class="topic-article">
+      <header class="topic-hero">
+        <span class="eyebrow">Real Analysis · Lesson</span>
+        <h1>Sequences (A Sequential Overview)</h1>
+
+        <p>
+          TODO: Write the opening paragraph for this lesson.
+        </p>
+      </header>
+
+      <nav class="topic-toc" aria-label="Page sections">
+        <a href="#broad-stroke">Broad Stroke</a>
+        <a href="#main-idea">Main Idea</a>
+        <a href="#a-deeper-look">A Deeper Look</a>
+	<a href="#three-big-theorems">Three Big Theorems</a>
+      </nav>
+
+      <section class="topic-section" id="broad-stroke">
+        <h2>Broad Stroke</h2>
+
+        <p>
+          TODO: Introduce the subject. Here is some inline mathematics:
+          <Math tex="x \in \mathbb{R}" />.
+        </p>
+
+        <Equation
+          tex={String.raw`f(x) = x^2 + 1.`}
+        />
+      </section>
+
+      <section class="topic-section" id="main-idea">
+        <h2>Main Idea</h2>
+
+        <p>
+          TODO: Develop the main construction, example, or argument here.
+        </p>
+
+        <MathCanvas2D
+          id="sequences-a-sequential-overview-canvas"
+          label="Placeholder visualization for Sequences (A Sequential Overview)."
+          aspectRatio="16 / 9"
+        />
+      </section>
+
+      <section class="topic-section" id="a-deeper-look">
+        <h2>A Deeper Look</h2>
+
+        <p>
+          TODO: Continue with a proof, derivation, generalization, or deeper
+          interpretation. For example, refer to
+          <Math tex="\varepsilon > 0" /> inline.
+        </p>
+
+        <Equation
+          tex={String.raw`\sum_{k=1}^n k = \frac{n(n+1)}{2}.`}
+        />
+      </section>
+
+      <section class="topic-section" id="three-big-theorems">
+        <h2>Three Big Theorems</h2>
+
+        <p>
+          <span class="emph"> Monotone Convergence Theorem: </span> A bounded monotone sequence is convergent. More so, depending on whether it is monotone increasing,
+	  or monotone decreasing, it either converges to its least upper bound, or its greatest lower bound respectivelly.
+        </p>
+
+      </section>
+      
+    </article>
+  </section>
+</BaseLayout>

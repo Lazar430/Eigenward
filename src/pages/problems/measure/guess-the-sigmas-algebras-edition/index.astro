@@ -1,0 +1,435 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import ProblemsSidebar from "../../../../components/ProblemsSidebar.astro";
+import Math from "../../../../components/Math.astro";
+import Equation from "../../../../components/Equation.astro";
+import MathCanvas2D from "../../../../components/math-graphics/MathCanvas2D.astro";
+---
+<BaseLayout
+  title="Guess The Sigmas (Algebras Edition)"
+  description="TODO: Write a short description for Guess The Sigmas (Algebras Edition)."
+>
+  <section class="la-page">
+    <ProblemsSidebar />
+
+    <article class="topic-article">
+      <header class="topic-hero">
+        <span class="eyebrow">Measure · Problems</span>
+        <h1>Guess The Sigmas (Algebras Edition)</h1>
+
+        <p>
+          TODO: Write a short introduction to this problem set.
+        </p>
+      </header>
+
+      <nav class="topic-toc" aria-label="Problem rounds">
+        <a href="#round-i">Round I</a>
+        <a href="#round-ii">Round II</a>
+        <a href="#round-iii">Round III</a>
+        <a href="#round-iv">Round IV</a>
+        <a href="#round-v">Round V</a>
+      </nav>
+
+      <section class="topic-section" id="round-i">
+        <h2>Round I</h2>
+
+        <p>
+	  Consider a set <Math tex="X"/> and a family of its subsets <Math tex="\mathcal{A} \subset \mathcal{P}(X)"/>. Given the axioms:
+        </p>
+
+        <Equation
+          tex={String.raw`
+	  (P1) \emptyset, X \in \mathcal{A};
+          `}
+        />
+
+	<Equation
+          tex={String.raw`
+	  (P2) \forall \{A_i\}_{i \in I} \subset \mathcal{A} \Rightarrow \bigcup_{i \in I}A_i \in \mathcal{A};
+          `}
+        />
+
+	<Equation
+          tex={String.raw`
+	  (P3) \forall \{A_n\}_{n \in \mathbb{N}} \subset \mathcal{A} \Rightarrow \bigcup_{n \in \mathbb{N}}A_n \in \mathcal{A};
+          `}
+        />
+
+	<Equation
+          tex={String.raw`
+	  (P4) \forall A_1, A_2 \in \mathcal{A} \Rightarrow A_1 \cup A_2 \in \mathcal{A};
+          `}
+        />
+
+	<Equation
+          tex={String.raw`
+	  (P5) \forall A_1, A_2 \in \mathcal{A} \Rightarrow A_1 \cap A_2 \in \mathcal{A};
+          `}
+        />
+
+	<Equation
+          tex={String.raw`
+	  (P6) \forall A \in \mathcal{A} \Rightarrow \complement A \in \mathcal{A},
+          `}
+        />
+
+	study which of the following family of sets verify them:
+
+	<Equation
+          tex={String.raw`
+	  (i) \mathcal{A} = \{ (a, \infty) : a \in \mathbb{R} \} \cup \{ \emptyset, \mathbb{R} \} \subset \mathcal{P}(\mathbb{R});
+          `}
+        />
+
+	<Equation
+          tex={String.raw`
+	  (ii) \mathcal{A} = \{ A \subset \mathbb{R} : |A| < \aleph_0 \lor |\complement A| < \aleph_0 \} \subset \mathcal{P}(\mathbb{R});
+          `}
+        />
+
+	<Equation
+          tex={String.raw`
+	  (iii) \mathcal{A} = \{ A \subset \mathbb{R} : |A| \leq \aleph_0 \lor |\complement A| \leq \aleph_0 \} \subset \mathcal{P}(\mathbb{R});
+          `}
+        />
+
+	<Equation
+          tex={String.raw`
+	  (iv) \mathcal{A} = \left\{ \bigcup_{k = 1}^{n}[a_k, b_k) : n \in \N^{*}, 0 \leq a_k \leq b_k \leq 1, k = \overline{1, n} \right\} \subset \mathcal{P}([0, 1)).
+          `}
+        />
+
+        <details class="drop-example">
+          <summary>Solution</summary>
+
+          <div class="drop-content">
+
+	    <p>
+	      First, observe how <Math tex = "(P_2) \Rightarrow (P_3) \Rightarrow (P_4)"/>.
+	    </p>
+
+	    <details class="drop-example">
+              <summary>(i)</summary>
+
+              <div class="drop-content">
+
+		<p> (P1) is trivially true. </p>
+
+		<p> To verify (P2), we consider three separate cases. </p>
+
+		<p> I. One of the sets <Math tex="A_i"/> is <Math tex="\mathbb{R}"/>: </p>
+
+		<Equation
+		  tex={String.raw`
+		  \bigcup_{i \in I}A_i = \R \in \mathcal{A}.
+                  `}
+		/>
+
+		<p> II. All sets <Math tex="A_i"/> are <Math tex="\emptyset"/>: </p>
+
+		<Equation
+		  tex={String.raw`
+		  \bigcup_{i \in I}A_i = \emptyset \in \mathcal{A}.
+                  `}
+		/>
+
+		<p> III. None of the sets <Math tex="A_i"/> equal <Math tex="\mathbb{R}"/> and some are nonempty: we have to consider the union </p>
+
+		<Equation
+		  tex={String.raw`
+		  \bigcup_{i \in I}(a_i, \infty).
+                  `}
+		/>
+
+		<p> By defining the set <Math tex="S := \{ a_i : i \in I \}"/>, we can look at whether <Math tex="S"/> is either bounded or unbounded below. </p>
+
+		<p> If <Math tex="S"/> is bounded below, then </p>
+
+		<Equation
+		  tex={String.raw`
+		  \bigcup_{i \in I}(a_i, \infty) = (\inf S, \infty).
+                  `}
+		/>
+
+		<p> Otherwise, </p>
+
+		<Equation
+		  tex={String.raw`
+		  \bigcup_{i \in I}(a_i, \infty) = \mathbb{R}.
+                  `}
+		/>
+
+		<p> Verifying (P5) is straightforward: <Math tex="(a, \infty) \cap (b, \infty) = (\max\{a, b\}, \infty)"/>. </p>
+
+		<p> (P6) on the other hand is false, since <Math tex="\complement (a, \infty) = (-\infty, a]"/>. </p>
+	    
+              </div>
+            </details>
+
+	    <details class="drop-example">
+              <summary>(ii)</summary>
+
+              <div class="drop-content">
+
+		<p>
+		  (P3) is false, because countable unions of singletons allow us to consider <Math tex="\bigcup_{n \in \N}\{n\}"/>, which yields <Math tex="\mathbb{N}"/>.
+		  <Math tex="\mathbb{N}"/> is neither finite, nor cofinite.
+		</p>
+
+		<p> By modus tolens, failure of (P3) implies failure of (P2). </p>
+
+		<p> (P4) requires more careful verification when at least one of the sets is cofinite. Using de Morgan, </p>
+
+		<Equation
+		  tex={String.raw`\complement (A \cup B) = \complement A \cap \complement B \subseteq \complement A,`}
+		/>
+
+		meaning <Math tex = "A \cup B"/> is cofinite.
+
+		<p> (P5) is interesting when both are cofinite. We'll use de Morgan once more: </p>
+
+		<Equation
+		  tex={String.raw`\complement (A \cap B) = \complement A \cup \complement B,`}
+		/>
+
+		meaning <Math tex = "A \cap B"/> is cofinite.
+
+		
+              </div>
+            </details>
+
+	    <details class="drop-example">
+              <summary>(iii)</summary>
+
+              <div class="drop-content">
+
+		<p> (P3) is of course true for countable unions of at most countable sets. If at least one of them is cocountable, say <Math tex = "A_0"/>, then </p>
+
+		<Equation
+		  tex={String.raw`A_0 \subseteq \bigcup_{n \in \N}A_n \iff \complement \left( \bigcup_{n \in \N}A_n \right) \subseteq \complement A_0,`}
+		/>
+
+		which makes the union cocountable.
+
+		<p> (P4) is worth considering when both sets are cocountable. We have </p>
+
+		<Equation
+		  tex={String.raw`\complement (A \cap B) = \complement A \cup \complement B,`}
+		/>
+
+		meaning <Math tex = "A \cap B"/> is cocountable.
+
+		<p>
+		  (P2) is false, because arbitrary unions of singletons allow us to consider <Math tex = "\bigcup_{i \in I}\{ x_i \}"/>, where <Math tex = "x_i \in [0, \infty)"/>,
+		  which yields <Math tex = "[0, \infty)"/>. The interval <Math tex = "[0, \infty)"/> is neither at most countable neither cocountable.
+		</p>
+		
+              </div>
+            </details>
+
+	    <details class="drop-example">
+              <summary>(iv)</summary>
+
+              <div class="drop-content">
+	    
+              </div>
+            </details>
+	    
+          </div>
+        </details>
+	
+      </section>
+      <section class="topic-section" id="round-ii">
+        <h2>Round II</h2>
+
+        <p>
+         Let <Math tex = "X"/> be a set, and
+        </p>
+
+	<Equation
+	  tex={String.raw`\mathcal{A} = \{ A \subset X : |A| \leq \aleph_0 \lor |\complement A| \leq \aleph_0 \}.`}
+	/>
+
+	<p>
+	  (i) Show <Math tex = "\mathcal{A}"/> is a <Math tex = "\sigma"/>-algebra;
+        </p>
+
+	<p>
+	  (ii) If <Math tex = "\epsilon = \{ \{ x \} : x \in X \}"/>, find <Math tex = "\sigma(\epsilon)"/>.
+        </p>
+
+        <details class="drop-example">
+          <summary>Solution</summary>
+
+          <div class="drop-content">
+
+	    <details class="drop-example">
+              <summary>(ii)</summary>
+
+              <div class="drop-content">
+
+		<p> We propose that <Math tex = "\sigma(\epsilon) = \mathcal{A}"/>. We'll show inclusion holds on both sides. </p>
+
+		<p>
+		  We already know that <Math tex = "\mathcal{A}"/> is a <Math tex = "\sigma"/>-algebra and clearly
+		  <Math tex = "\epsilon \subseteq \mathcal{A}"/>.
+		  Since <Math tex = "\sigma(\epsilon)"/> is the smallest <Math tex = "\sigma"/>-algebra that includes <Math tex = "\epsilon"/>, it must be that
+		  <Math tex = "\sigma(\epsilon) \subseteq A"/>.
+		</p>
+
+		<p> Now consider <Math tex = "A \in \mathcal{A}"/>. There are two cases here. </p>
+
+		<p>
+		  I. If <Math tex = "A"/> is countable, since <Math tex = "\sigma(\epsilon)"/> is a <Math tex = "\sigma"/>-algebra, we can take an either finite union of singletons,
+		</p>
+
+		<Equation
+		  tex={String.raw`\bigcup_{k = 1}^{n}\{ x_k \},`}
+		/>
+
+		<p> or a countable one, </p>
+
+		<Equation
+		  tex={String.raw`\bigcup_{n \in \N}\{ x_n \},`}
+		/>
+
+		<p> in order to generate <Math tex = "A"/>. Therefore, <Math tex = "A \in \sigma(\epsilon)"/>. </p>
+
+		<p>
+		  II. If <Math tex = "A"/> is cocountable, based on the previous reasoning we have
+		</p>
+
+		<Equation
+		  tex={String.raw`\complement A \in \sigma(\epsilon) \iff A \in \sigma(\epsilon).`}
+		/>
+
+		<p> Cases I. and II. reveal that  <Math tex = "A \subseteq \sigma(\epsilon)"/>. </p>
+
+		<p> We have thus shown that <Math tex = "\sigma(\epsilon) = A"/>. </p>
+		
+              </div>
+            </details>
+	    
+          </div>
+        </details>
+	
+      </section>
+      <section class="topic-section" id="round-iii">
+        <h2>Round III</h2>
+
+        <p>
+          Let <Math tex = "(X, \mathcal{A})"/> be a measurable space, and <Math tex = "M \subset X"/> an arbitrary set. Say we want, given the larger notion of measurability
+	  we've already established, to find exactly what parts of <Math tex = "M"/> should we regard as measurable. The most natural contruction for this purpose is the one
+	  obtained by cutting down the sets <Math tex = "A \in \mathcal{A}"/> to the parts belonging to <Math tex = "M"/> as well:
+        </p>
+
+        <Equation
+          tex={String.raw`\mathcal{A}_M = \{ A \cap M : A \in \mathcal{A} \}.`}
+        />
+
+	<p> This is know as the <span class="emph"> trace <Math tex = "\sigma"/>-algebra </span> on <Math tex = "M"/>. </p>
+
+	<p> (i) Prove <Math tex = "\mathcal{A}_M"/> is a <Math tex = "\sigma"/>-algebra; </p>
+	<p> (ii) If <Math tex = "M \in \mathcal{A}"/> then <Math tex = "\mathcal{A}_M = \{ A \in \mathcal{A} : A \subset M \}"/>. </p> 
+
+        <details class="drop-example">
+          <summary>Solution</summary>
+
+          <div class="drop-content">
+
+	    <details class="drop-example">
+              <summary>(i)</summary>
+
+              <div class="drop-content">
+
+		<p> Firstly, since <Math tex = "X \in \mathcal{A} \Rightarrow M \cap X = M \in \mathcal{A}_M"/>. </p>
+
+		<p>
+		  To see how <Math tex = "\mathcal{A}_M"/> is closed under complements,
+                  take <Math tex = "\complement (M \cap A) = M \setminus (M \cap A) = M \setminus A = M \cap \complement A \in \mathcal{A}_M"/>. That is because we already know
+		  <Math tex = "\mathcal{A}"/> is closed under complements, meaning <Math tex = "\complement A \in \mathcal{A}"/>.
+		</p>
+
+		<p> Now consider the countable union </p>
+
+		<Equation
+		  tex={String.raw`\bigcup_{n \in \mathbb{N}}(M \cap A) = M \cap \bigcup_{n \in \mathbb{N}}A \in \mathcal{A}_M.`}
+		/>
+
+		<p> Thus, we have shown <Math tex = "\mathcal{A}_M"/> verifies the axioms of a <Math tex = "\sigma"/>-algebra. </p>
+		
+              </div>
+            </details>
+
+	    <details class="drop-example">
+              <summary>(ii)</summary>
+
+              <div class="drop-content">
+
+		<p>
+		  Take <Math tex = "A \cap M \in \mathcal{A}_M"/>. Since <Math tex = "M \in \mathcal{A}, A \cap M \in \mathcal{A}"/> and
+                  clearly <Math tex = "A \cap M \subset M"/>.
+		</p>
+
+		<p>
+		  Conversely, if <Math tex = "A \in \mathcal{A}"/> and <Math tex = "A \subset M"/>, then <Math tex = "A \cap M = A"/>, so clearly <Math tex = "A \in \mathcal{A}_M"/>.
+		</p>
+		
+              </div>
+            </details>
+	    
+          </div>
+        </details>
+	
+      </section>
+      <section class="topic-section" id="round-iv">
+        <h2>Round IV</h2>
+
+        <p>
+          TODO: Add the exercises for Round IV. You can use inline
+          mathematics such as <Math tex="n \in \mathbb{N}" /> directly in the
+          problem statement.
+        </p>
+
+        <Equation
+          tex={String.raw`a_{n+1} = a_n + 1.`}
+        />
+
+        <details class="drop-example">
+          <summary>Solution</summary>
+
+          <div class="drop-content">
+            <p>
+              TODO: Write the solution, proof, hint sequence, or discussion for
+              Round IV.
+            </p>
+          </div>
+        </details>
+      </section>
+      <section class="topic-section" id="round-v">
+        <h2>Round V</h2>
+
+        <p>
+          TODO: Add the exercises for Round V. You can use inline
+          mathematics such as <Math tex="n \in \mathbb{N}" /> directly in the
+          problem statement.
+        </p>
+
+        <Equation
+          tex={String.raw`a_{n+1} = a_n + 1.`}
+        />
+
+        <details class="drop-example">
+          <summary>Solution</summary>
+
+          <div class="drop-content">
+            <p>
+              TODO: Write the solution, proof, hint sequence, or discussion for
+              Round V.
+            </p>
+          </div>
+        </details>
+      </section>
+    </article>
+  </section>
+</BaseLayout>

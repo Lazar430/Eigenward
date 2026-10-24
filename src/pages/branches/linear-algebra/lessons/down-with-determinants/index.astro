@@ -1,0 +1,73 @@
+---
+import BaseLayout from "../../../../../layouts/BaseLayout.astro";
+import LinearAlgebraSidebar from "../../../../../components/LinearAlgebraSidebar.astro";
+import Math from "../../../../../components/Math.astro";
+import Equation from "../../../../../components/Equation.astro";
+import MathCanvas2D from "../../../../../components/math-graphics/MathCanvas2D.astro";
+---
+<BaseLayout
+  title="(Down With) Determinants"
+  description="TODO: Write a short description for (Down With) Determinants."
+>
+  <section class="la-page">
+    <LinearAlgebraSidebar />
+
+    <article class="topic-article">
+      <header class="topic-hero">
+        <span class="eyebrow">Linear Algebra · Lesson</span>
+        <h1>(Down With) Determinants</h1>
+
+        <p>
+          TODO: Write the opening paragraph for this lesson.
+        </p>
+      </header>
+
+      <nav class="topic-toc" aria-label="Page sections">
+        <a href="#broad-stroke">Broad Stroke</a>
+        <a href="#main-idea">Main Idea</a>
+        <a href="#a-deeper-look">A Deeper Look</a>
+      </nav>
+
+      <section class="topic-section" id="broad-stroke">
+        <h2>Broad Stroke</h2>
+
+        <p>
+          TODO: Introduce the subject. Here is some inline mathematics:
+          <Math tex="x \in \mathbb{R}" />.
+        </p>
+
+        <Equation
+          tex={String.raw`f(x) = x^2 + 1.`}
+        />
+      </section>
+
+      <section class="topic-section" id="main-idea">
+        <h2>Main Idea</h2>
+
+        <p>
+          TODO: Develop the main construction, example, or argument here.
+        </p>
+
+        <MathCanvas2D
+          id="down-with-determinants-canvas"
+          label="Placeholder visualization for (Down With) Determinants."
+          aspectRatio="16 / 9"
+        />
+      </section>
+
+      <section class="topic-section" id="a-deeper-look">
+        <h2>A Deeper Look</h2>
+
+        <p>
+          TODO: Continue with a proof, derivation, generalization, or deeper
+          interpretation. For example, refer to
+          <Math tex="\varepsilon > 0" /> inline.
+        </p>
+
+        <Equation
+          tex={String.raw`\sum_{k=1}^n k = \frac{n(n+1)}{2}.`}
+        />
+      </section>
+    </article>
+  </section>
+</BaseLayout>

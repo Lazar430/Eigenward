@@ -8,8 +8,9 @@ import MathCanvas2D from "../../components/math-graphics/MathCanvas2D.astro";
     <header class="page-heading">
       <p class="eyebrow">Math graphics laboratory</p>
       <h1>About</h1>
+
       <section class="topic-section" id="broad-stroke">
-      <p> Idk, man. </p>
+        <p>Idk, man.</p>
       </section>
     </header>
 
@@ -24,7 +25,7 @@ import MathCanvas2D from "../../components/math-graphics/MathCanvas2D.astro";
       label="An explicit function graph with exact axis intersections and a draggable point"
       aspectRatio="16 / 9"
     />
-    
+
     <MathCanvas2D
       id="circle-chords-proof-scene"
       label="Step-by-step mock geometry proof of a problem involving perpendicular circle chords"
@@ -48,7 +49,6 @@ import MathCanvas2D from "../../components/math-graphics/MathCanvas2D.astro";
       aspectRatio="16 / 9"
     />
 
-
     <MathCanvas2D
       id="about-reference-angles-scene"
       label="Trig elements"
@@ -60,7 +60,7 @@ import MathCanvas2D from "../../components/math-graphics/MathCanvas2D.astro";
       label="Trig elements"
       aspectRatio="16 / 9"
     />
-    
+
     <!--MathCanvas2D
       id="about-primitives-scene"
       label="Animated circles and polygons"
@@ -97,6 +97,43 @@ import MathCanvas2D from "../../components/math-graphics/MathCanvas2D.astro";
       shader parameters rather than rebuilding geometry each frame.
     </p>
   </section>
+
+  <!--
+    Keep the identity scenes outside .simple-page so they get the same
+    article-content sizing rules as ordinary Eigenward article pages.
+  -->
+  <section class="la-page">
+    <article class="topic-article">
+      <header class="topic-hero">
+        <span class="eyebrow">Algebra · Visual identities</span>
+        <h2>Shorthand identities</h2>
+
+        <p>
+          Geometric decompositions of three standard algebraic identities.
+        </p>
+      </header>
+
+      <section class="topic-section">
+        <MathCanvas2D
+          id="binomial-square-sum-scene"
+          label="Geometric animation illustrating (a + b)^2"
+          aspectRatio="16 / 9"
+        />
+
+        <MathCanvas2D
+          id="binomial-square-difference-scene"
+          label="Geometric animation illustrating (a - b)^2"
+          aspectRatio="16 / 9"
+        />
+
+        <MathCanvas2D
+          id="difference-of-squares-scene"
+          label="Geometric animation illustrating (a + b)(a - b) = a^2 - b^2"
+          aspectRatio="16 / 9"
+        />
+      </section>
+    </article>
+  </section>
 </BaseLayout>
 
 <script>
@@ -113,6 +150,10 @@ import MathCanvas2D from "../../components/math-graphics/MathCanvas2D.astro";
   //import "../../scripts/demos/aboutDeterminantInteractiveScene";
   //import "../../scripts/demos/aboutDeterminantTransformationScene";
   import "../../scripts/demos/aboutFunctionGraphScene";
+
+  import "../../scripts/demos/binomialSquareSum";
+  import "../../scripts/demos/binomialSquareDifference";
+  import "../../scripts/demos/differenceOfSquaresIdentity";
 </script>
 
 <style>

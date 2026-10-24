@@ -1,0 +1,34 @@
+---
+import { withBase } from "@/utils/paths";
+
+const items = [
+  {
+    label: "Home",
+    href: withBase("branches/differential-geometry/")
+  },
+  {
+    label: "Lessons",
+    href: withBase("branches/differential-geometry/lessons/")
+  },
+  {
+    label: "Problems",
+    href: withBase("problems/differential-geometry/")
+  },
+  {
+    label: "Theorems",
+    href: withBase("branches/differential-geometry/theorems/")
+  },
+  {
+    label: "Definitions",
+    href: withBase("branches/differential-geometry/definitions/")
+  }
+];
+---
+
+<aside class="hub-sidebar" aria-label="Differential geometry navigation">
+  <span class="hub-sidebar-title">Differential Geometry</span>
+
+  <nav>
+    {items.map((item) => <a href={item.href}>{item.label}</a>)}
+  </nav>
+</aside>

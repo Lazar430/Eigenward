@@ -1,0 +1,161 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import ProblemsSidebar from "../../../../components/ProblemsSidebar.astro";
+import Math from "../../../../components/Math.astro";
+import Equation from "../../../../components/Equation.astro";
+import MathCanvas2D from "../../../../components/math-graphics/MathCanvas2D.astro";
+---
+<BaseLayout
+  title="Functional Equations: The Ins and Outs"
+  description="TODO: Write a short description for Functional Equations: The Ins and Outs."
+>
+  <section class="la-page">
+    <ProblemsSidebar />
+
+    <article class="topic-article">
+      <header class="topic-hero">
+        <span class="eyebrow">Algebra · Problems</span>
+        <h1>Functional Equations: The Ins and Outs</h1>
+
+        <p>
+          TODO: Write a short introduction to this problem set.
+        </p>
+      </header>
+
+      <nav class="topic-toc" aria-label="Problem rounds">
+        <a href="#round-i">Round I</a>
+        <a href="#round-ii">Round II</a>
+        <a href="#round-iii">Round III</a>
+        <a href="#round-iv">Round IV</a>
+        <a href="#round-v">Round V</a>
+      </nav>
+
+      <section class="topic-section" id="round-i">
+        <h2>Round I</h2>
+
+        <p>
+          TODO: State the first group of exercises. For example, let
+          <Math tex="x, y \in \mathbb{R}" /> and investigate the identity below.
+        </p>
+
+        <Equation
+          tex={String.raw`(x+y)^2 = x^2 + 2xy + y^2.`}
+        />
+
+        <MathCanvas2D
+          id="functional-equations-the-ins-and-outs-canvas"
+          label="Placeholder visualization for Functional Equations: The Ins and Outs."
+          aspectRatio="16 / 9"
+        />
+
+        <details class="drop-example">
+          <summary>Solution</summary>
+
+          <div class="drop-content">
+            <p>
+              TODO: Write the solution, proof, hint sequence, or discussion for
+              Round I.
+            </p>
+          </div>
+        </details>
+      </section>
+      <section class="topic-section" id="round-ii">
+        <h2>Round II</h2>
+
+        <p>
+          TODO: Add the exercises for Round II. You can use inline
+          mathematics such as <Math tex="n \in \mathbb{N}" /> directly in the
+          problem statement.
+        </p>
+
+        <Equation
+          tex={String.raw`a_{n+1} = a_n + 1.`}
+        />
+
+        <details class="drop-example">
+          <summary>Solution</summary>
+
+          <div class="drop-content">
+            <p>
+              TODO: Write the solution, proof, hint sequence, or discussion for
+              Round II.
+            </p>
+          </div>
+        </details>
+      </section>
+      <section class="topic-section" id="round-iii">
+        <h2>Round III</h2>
+
+        <p>
+          TODO: Add the exercises for Round III. You can use inline
+          mathematics such as <Math tex="n \in \mathbb{N}" /> directly in the
+          problem statement.
+        </p>
+
+        <Equation
+          tex={String.raw`a_{n+1} = a_n + 1.`}
+        />
+
+        <details class="drop-example">
+          <summary>Solution</summary>
+
+          <div class="drop-content">
+            <p>
+              TODO: Write the solution, proof, hint sequence, or discussion for
+              Round III.
+            </p>
+          </div>
+        </details>
+      </section>
+      <section class="topic-section" id="round-iv">
+        <h2>Round IV</h2>
+
+        <p>
+          TODO: Add the exercises for Round IV. You can use inline
+          mathematics such as <Math tex="n \in \mathbb{N}" /> directly in the
+          problem statement.
+        </p>
+
+        <Equation
+          tex={String.raw`a_{n+1} = a_n + 1.`}
+        />
+
+        <details class="drop-example">
+          <summary>Solution</summary>
+
+          <div class="drop-content">
+            <p>
+              TODO: Write the solution, proof, hint sequence, or discussion for
+              Round IV.
+            </p>
+          </div>
+        </details>
+      </section>
+      <section class="topic-section" id="round-v">
+        <h2>Round V</h2>
+
+        <p>
+          Find all functions <Math tex="f : \mathbb{Q} \rightarrow \mathbb{Q}" /> satisfying:
+        </p>
+
+        <Equation
+          tex={String.raw`f(1) = 2;`}
+        />
+	<Equation
+          tex={String.raw`f(xy) = f(x)f(y) - f(x + y) + 1.`}
+        />
+
+        <details class="drop-example">
+          <summary>Solution</summary>
+
+          <div class="drop-content">
+            <p>
+              TODO: Write the solution, proof, hint sequence, or discussion for
+              Round V.
+            </p>
+          </div>
+        </details>
+      </section>
+    </article>
+  </section>
+</BaseLayout>

@@ -1,0 +1,110 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import ProblemsSidebar from "../../../../components/ProblemsSidebar.astro";
+import Math from "../../../../components/Math.astro";
+import Equation from "../../../../components/Equation.astro";
+import MathCanvas2D from "../../../../components/math-graphics/MathCanvas2D.astro";
+---
+<BaseLayout
+  title="Cauchy's Functional Equation"
+  description="TODO: Write a short description for Cauchy's Functional Equation."
+>
+  <section class="la-page">
+    <ProblemsSidebar />
+
+    <article class="topic-article">
+      <header class="topic-hero">
+        <span class="eyebrow">Real Analysis · Problems</span>
+        <h1>Cauchy's Functional Equation</h1>
+
+        <p>
+          TODO: Write a short introduction to this problem set.
+        </p>
+      </header>
+
+      <nav class="topic-toc" aria-label="Problem rounds">
+        <a href="#round-i">Round I</a>
+        <a href="#round-ii">Round II</a>
+        <a href="#round-iii">Round III</a>
+      </nav>
+
+      <section class="topic-section" id="round-i">
+        <h2>Round I</h2>
+
+        <p>
+          TODO: State the first group of exercises. For example, let
+          <Math tex="x, y \in \mathbb{R}" /> and investigate the identity below.
+        </p>
+
+        <Equation
+          tex={String.raw`(x+y)^2 = x^2 + 2xy + y^2.`}
+        />
+
+        <MathCanvas2D
+          id="cauchys-functional-equation-canvas"
+          label="Placeholder visualization for Cauchy's Functional Equation."
+          aspectRatio="16 / 9"
+        />
+
+        <details class="drop-example">
+          <summary>Solution</summary>
+
+          <div class="drop-content">
+            <p>
+              TODO: Write the solution, proof, hint sequence, or discussion for
+              Round I.
+            </p>
+          </div>
+        </details>
+      </section>
+      <section class="topic-section" id="round-ii">
+        <h2>Round II</h2>
+
+        <p>
+          TODO: Add the exercises for Round II. You can use inline
+          mathematics such as <Math tex="n \in \mathbb{N}" /> directly in the
+          problem statement.
+        </p>
+
+        <Equation
+          tex={String.raw`a_{n+1} = a_n + 1.`}
+        />
+
+        <details class="drop-example">
+          <summary>Solution</summary>
+
+          <div class="drop-content">
+            <p>
+              TODO: Write the solution, proof, hint sequence, or discussion for
+              Round II.
+            </p>
+          </div>
+        </details>
+      </section>
+      <section class="topic-section" id="round-iii">
+        <h2>Round III</h2>
+
+        <p>
+          TODO: Add the exercises for Round III. You can use inline
+          mathematics such as <Math tex="n \in \mathbb{N}" /> directly in the
+          problem statement.
+        </p>
+
+        <Equation
+          tex={String.raw`a_{n+1} = a_n + 1.`}
+        />
+
+        <details class="drop-example">
+          <summary>Solution</summary>
+
+          <div class="drop-content">
+            <p>
+              TODO: Write the solution, proof, hint sequence, or discussion for
+              Round III.
+            </p>
+          </div>
+        </details>
+      </section>
+    </article>
+  </section>
+</BaseLayout>

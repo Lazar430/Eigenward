@@ -1,0 +1,297 @@
+---
+import BaseLayout from "../../../../../layouts/BaseLayout.astro";
+import DifferentialGeometrySidebar from "../../../../../components/DifferentialGeometrySidebar.astro";
+import Math from "../../../../../components/Math.astro";
+import Equation from "../../../../../components/Equation.astro";
+import MathCanvas2D from "../../../../../components/math-graphics/MathCanvas2D.astro";
+---
+<BaseLayout
+  title="Ever Wanted To Parameterize Curves?"
+  description="Well, you are going to find out how either way."
+>
+  <section class="la-page">
+    <DifferentialGeometrySidebar />
+
+    <article class="topic-article">
+      <header class="topic-hero">
+        <span class="eyebrow">Differential Geometry · Lesson</span>
+        <h1>Ever Wanted To Parameterize Curves?</h1>
+
+        <p>
+          Well, you are going to find out how either way.
+        </p>
+      </header>
+
+      <nav class="topic-toc" aria-label="Page sections">
+        <a href="#broad-stroke">Broad Stroke</a>
+        <a href="#main-idea">Main Idea</a>
+        <a href="#a-deeper-look">A Deeper Look</a>
+      </nav>
+
+      <section class="topic-section" id="broad-stroke">
+        <h2>Broad Stroke</h2>
+
+        <p>
+	  Curve parameterization is a neat and creative way to repackage the information describing a shape in an arbitrary dimension. Take the dry, vanilla
+	  approach to formalizing a 2D curve, namely a parabola in this case:
+        </p>
+
+        <Equation
+          tex={String.raw`f : \R \rightarrow \R, f(x) = x^2.`}
+        />
+
+	<p> Every point lying on this curve can be seen as having coordinates </p>
+
+	<Equation
+          tex={String.raw`(t, t^2),`}
+        />
+
+	<p>
+	  where <Math tex = "t"/> is a real variable. Or should we say... <span class="emph">parameter</span>? (*wink* *wink*) This is the most
+	  straightforward way to express a parabola in parametric form. The key fact about parameterizations is that they are not unique. The parametric
+	  forms listed below still describe the same parabola:
+	</p>
+
+	<Equation
+          tex={String.raw`(2t, 4t^2),`}
+        />
+
+	<Equation
+          tex={String.raw`\left(\frac{t}{2}, \frac{t^2}{4}\right),`}
+        />
+
+	<Equation
+          tex={String.raw`(3\sqrt{3}t, 27t^2),`}
+        />
+
+	<Equation
+          tex={String.raw`\left( \frac{t - 7}{5}, \frac{t^2 - 14t + 49}{25} \right),`}
+        />
+
+	<Equation
+          tex={String.raw`(t^3, t^6).`}
+        />
+
+	<p> Can you see why that is? The image of all of these is the set of points in the 2D plane: </p>
+
+	<Equation
+          tex={String.raw`\{ (x, y) \in \mathbb{R}^2 : y = x^2 \}.`}
+        />
+
+	<p> By replacing <Math tex = "x"/> with <Math tex = "2t"/> in the expression <Math tex = "y = x^2"/>, indeed we obtain <Math tex = "y = 4t^2"/>,
+	which yields the first reparameterization, <Math tex = "(2t, 4t^2)"/>. We basically introduced a variable <Math tex = "t"/> defined
+	as <Math tex = "t:= \frac{x}{2}"/> and rewrote the entire thing in terms of <Math tex = "t"/>. For the other ones, we used </p>
+
+	<Equation
+          tex={String.raw`t := 2x \Rightarrow x = \frac{t}{2}, y = \frac{t^2}{4},`}
+        />
+
+	<Equation
+          tex={String.raw`t := \frac{x\sqrt{3}}{9} \Rightarrow x = 3\sqrt{3}t, y = 27t^2,`}
+        />
+
+	<Equation
+          tex={String.raw`t := 5x + 7 \Rightarrow x = \frac{t - 7}{5}, y = \frac{t^2 - 14t + 49}{25},`}
+        />
+
+	<Equation
+          tex={String.raw`t := \sqrt[3]{x} \Rightarrow x = t^3, y = t^6.`}
+        />
+
+	<p>
+	  If you've been following along up to this point, you might've noticed that we are sort of implicitly defining some kind of itermediate functions
+          for which we then find their inverses. Consider specifically the parameterization:
+	</p>
+
+	<Equation
+          tex={String.raw`\left( \frac{t - 7}{5}, \frac{t^2 - 14t + 49}{25} \right).`}
+        />
+
+	We can define the function
+
+	<Equation
+          tex={String.raw`\phi : \R \rightarrow \R, \phi(x) = 5x + 7.`}
+        />
+
+	<p>
+	  Since <Math tex = "\phi"/> is <span class="emph">bijective</span>, aka <span class="emph">invertible</span>, we know that, for
+	  every <Math tex = "t := \phi(x)"/> out there, there's a corresponding <Math tex = "x"/>, meaning every real number <Math tex = "x"/> can be rewritten as
+	</p>
+
+	<Equation
+          tex={String.raw`x = \frac{t - 7}{5},`}
+        />
+
+	<p>
+	  where <Math tex = "t"/> is another real number. This principle is precisely what allows us to do these reparameterizations in the first place,
+	knowing that they will indeed work out and yeild the exact same set of coordinates as the original parameterization. The coordinates of the
+        original parametric form, <Math tex = "(t, t^2)"/> can be thought of as functions, <Math tex = "(\alpha_1(t), \alpha_2(t))"/>,
+	  where
+	</p>
+
+	<Equation
+          tex={String.raw`\alpha_1 : \R \rightarrow \R, \alpha_1(t) = t,`}
+        />
+
+	<Equation
+          tex={String.raw`\alpha_1 : \R \rightarrow \R, \alpha_2(t) = t^2,`}
+        />
+
+	<p>
+	  and if you think about what the change of parameter does, it is simply computing the values of <Math tex = "\alpha_1"/> and <Math tex = "\alpha_2"/> for
+	  our new way of expressing the <Math tex = "x"/> coordinate as <Math tex = "\frac{t - 7}{5}"/>:
+	</p>
+
+	<Equation
+          tex={String.raw`\alpha_1\left( \frac{t - 7}{5} \right) = \frac{t - 7}{5},`}
+        />
+
+	<Equation
+          tex={String.raw`\alpha_2\left( \frac{t - 7}{5} \right) = \frac{(t - 7)^2}{5^2} = \frac{t^2 - 14t + 49}{25}.`}
+        />
+
+	<p> This specific example is
+	what's known as an <span class="emph">affine change of parameter</span>. To generalize, consider a function </p>
+
+	<Equation
+          tex={String.raw`\phi : \R \rightarrow \R, \phi(x) = ax + b, a,b \in \R, a \neq 0,`}
+        />
+
+	<p> and its inverse, </p>
+
+	<Equation
+          tex={String.raw`\phi^{-1}(t) = \frac{t - b}{a}.`}
+        />
+
+	<p> The associated change of parameter is then going to be </p>
+
+	<Equation
+          tex={String.raw`\left( \frac{t - b}{a}, \left(\frac{t - b}{a}\right)^2 \right).`}
+        />
+
+	<p>
+	  We can be more adventurous if we want to. Notice what we have to do in order to come up with these changes of parameter is find a bijective
+	  function <Math tex = "\phi"/> whose inverse allows us to recover the entire original domain, which for the parabola example is <Math tex = "\mathbb{R}"/>.
+	  So clearly <Math tex = "\phi"/> must be defined on <Math tex = "\mathbb{R}"/>, but that doesn't mean its range has to be <Math tex = "\mathbb{R}"/> as well.
+	  Just think of any functioned define on <Math tex = "\mathbb{R}"/> whose image is smaller than <Math tex = "\mathbb{R}"/>. For example,
+	</p>
+
+	<Equation
+          tex={String.raw`\phi : \R \rightarrow \left( -\frac{\pi}{2}, \frac{\pi}{2} \right), \phi(x) = \arctan x.`}
+        />
+
+	<p> Its inverse is of course </p>
+
+	<Equation
+          tex={String.raw`\phi^{-1}(t) = \tan t,`}
+        />
+
+	<p> and we know that the image of the tangent function is the entire real line. So another valid parametric form for a parabola is </p>
+
+	<Equation
+          tex={String.raw`(\tan t, \tan^2 t).`}
+        />
+
+	<p>
+	  Similarly, for
+	</p>
+
+	<Equation
+	  tex={String.raw`\phi : \R \rightarrow \left( 0, \infty \right), \phi(x) = e^x; \phi^{-1}(x) = \ln x,`}
+	/>
+
+	<p> we get </p>
+
+	<Equation
+	  tex={String.raw`(\ln t, \ln^2 t).`}
+	/>
+
+	<p> If we wanted to be more esoteric than that, we could even define </p>
+
+	<Equation
+          tex={String.raw`\phi : \R \rightarrow \left( -1, 1 \right), \phi(x) = \tanh x = \frac{e^x - e^{-x}}{e^x + e^{-x}} = \frac{e^{2x} - 1}{e^{2x} + 1}.`}
+        />
+
+	<p>
+	  This is what's known as the <span class="emph">hyperbolic tangent</span>. You can check out more on
+          the <span class="emph">trigonometric hyperbolic functions</span> by clicking <span class="emph">here</span>, but here's a rough argument for
+	  why <Math tex = "\tanh"/> is bijective. In analogous fashion to standard trigonometric functions,
+	</p>
+
+	<Equation
+	  tex={String.raw`(\tanh x)' = \text{sech}^2 x > 0 \forall x \in \R,`}
+	/>
+
+	<p> meaning <Math tex = "\tanh"/> is strictly increasing, hence injective. Since, in addition to that, it is clearly continuous and </p>
+
+	<Equation
+	  tex={String.raw`\lim_{x\rightarrow -\infty}\tanh x = -1, \lim_{x\rightarrow\infty}\tanh x = 1,`}
+	/>
+
+	<p>
+	  the range of <Math tex = "\tanh"/> is therefore <Math tex = "(-1, 1)"/>, which implies <Math tex = "\tanh"/> is also surjective. By equating
+	</p>
+
+	<Equation
+	  tex={String.raw`\frac{e^{2x} - 1}{e^{2x} + 1} = t \Rightarrow t = \frac{1}{2}\ln\left( \frac{1 + t}{1 - t} \right) = \text{arctanh } t.`}
+	/>
+
+	<p> We arrived at yet another parametric form: </p>
+
+	<Equation
+	  tex={String.raw`\left( \frac{1}{2}\ln\left( \frac{1 + t}{1 - t} \right), \frac{1}{4}\ln^2\left( \frac{1 + t}{1 - t} \right) \right).`}
+	/>
+
+	<p> Who doesn't love needlessly complicated formulas for describing substrantially simpler notions? Yay. We can be even more up our own arses and define </p>
+
+	<Equation
+	  tex={String.raw`\phi : \R \rightarrow \R, \phi(x) = x + x^3.`}
+	/>
+
+	Since
+
+	<Equation
+	  tex={String.raw`(x + x^3)' = 1 + 3x^2 > 0 \forall x \in \R; \lim_{x\rightarrow\pm\infty} = \pm\infty,`}
+	/>
+
+	<p> this is another valid change of parameter, and using <span class="emph">Cardano's formula</span> to compute its inverse, we end up with </p>
+
+	<Equation
+	  tex={String.raw`\left(
+          \sqrt[3]{\frac{t}{2} + \sqrt{\frac{t^2}{4} + \frac{1}{27}}} + \sqrt[3]{\frac{t}{2} - \sqrt{\frac{t^2}{4} + \frac{1}{27}}},
+	  \left(\sqrt[3]{\frac{t}{2} + \sqrt{\frac{t^2}{4} + \frac{1}{27}}} + \sqrt[3]{\frac{t}{2} - \sqrt{\frac{t^2}{4} + \frac{1}{27}}}\right)^2
+          \right).`}
+	/>
+
+      </section>
+
+      <section class="topic-section" id="main-idea">
+        <h2>Main Idea</h2>
+
+        <p>
+          TODO: Develop the main construction, example, or argument here.
+        </p>
+
+        <MathCanvas2D
+          id="ever-wanted-to-parameterize-curves-canvas"
+          label="Placeholder visualization for Ever Wanted To Parameterize Curves?."
+          aspectRatio="16 / 9"
+        />
+      </section>
+
+      <section class="topic-section" id="a-deeper-look">
+        <h2>A Deeper Look</h2>
+
+        <p>
+          TODO: Continue with a proof, derivation, generalization, or deeper
+          interpretation. For example, refer to
+          <Math tex="\varepsilon > 0" /> inline.
+        </p>
+
+        <Equation
+          tex={String.raw`\sum_{k=1}^n k = \frac{n(n+1)}{2}.`}
+        />
+      </section>
+    </article>
+  </section>
+</BaseLayout>

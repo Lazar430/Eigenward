@@ -1,0 +1,84 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import ArticlesSidebar from "../../../../components/ArticlesSidebar.astro";
+import Math from "../../../../components/Math.astro";
+import Equation from "../../../../components/Equation.astro";
+import MathCanvas2D from "../../../../components/math-graphics/MathCanvas2D.astro";
+---
+<BaseLayout
+  title="Music Is Math"
+  description="TODO: Write a short description for Music Is Math."
+>
+  <section class="la-page">
+    <ArticlesSidebar />
+
+    <article class="topic-article">
+      <header class="topic-hero">
+        <span class="eyebrow">Misc · Article</span>
+        <h1>Music Is Math</h1>
+
+        <p>
+          TODO: Write the opening paragraph for this article.
+        </p>
+      </header>
+
+      <nav class="topic-toc" aria-label="Page sections">
+        <a href="#broad-stroke">Broad Stroke</a>
+        <a href="#main-idea">Main Idea</a>
+        <a href="#a-deeper-look">A Deeper Look</a>
+      </nav>
+
+      <section class="topic-section" id="broad-stroke">
+        <h2>Broad Stroke</h2>
+
+        <p>
+          TODO: Introduce the subject. Here is some inline mathematics:
+          <Math tex="x \in \mathbb{R}" />.
+        </p>
+
+        <Equation
+          tex={String.raw`f(x) = x^2 + 1.`}
+        />
+      </section>
+
+      <section class="topic-section" id="main-idea">
+        <h2>Main Idea</h2>
+
+        <p>
+          TODO: Develop the main construction, example, or argument here.
+        </p>
+
+        <MathCanvas2D
+          id="air-particles"
+          label="Placeholder visualization for Music Is Math."
+          aspectRatio="16 / 9"
+        />
+
+	<MathCanvas2D
+	  id="wave-equation"
+	  label="Interactive sinusoidal wave with adjustable amplitude, wave number, frequency, and phase."
+	  aspectRatio="16 / 9"
+	/>
+      </section>
+
+      <section class="topic-section" id="a-deeper-look">
+        <h2>A Deeper Look</h2>
+
+        <p>
+          TODO: Continue with a proof, derivation, generalization, or deeper
+          interpretation. For example, refer to
+          <Math tex="\varepsilon > 0" /> inline.
+        </p>
+
+        <Equation
+          tex={String.raw`\sum_{k=1}^n k = \frac{n(n+1)}{2}.`}
+        />
+      </section>
+    </article>
+  </section>
+</BaseLayout>
+
+<script>
+import "../../../../scripts/animations/articles/misc/music-is-math/airParticles";
+import "../../../../scripts/animations/articles/misc/music-is-math/waveEquation";
+</script>

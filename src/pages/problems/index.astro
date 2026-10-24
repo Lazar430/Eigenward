@@ -3,79 +3,6 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import { withBase } from "@/utils/paths";
 import ProblemsSidebar from "../../components/ProblemsSidebar.astro";
 import Math from "../../components/Math.astro";
-
-const problemCards = [
-  {
-    branch: "Algebra · Identities",
-    title: "Shorthand Identities",
-    href: withBase("problems/algebra/shorthand-identities/"),
-    ariaLabel: "Open the Shorthand Identities problem collection",
-    formula: String.raw`\begin{aligned}
-        (a+b)^2 &= a^2+2ab+b^2,\\
-        a^2-b^2 &= (a-b)(a+b),\\
-        a^3+b^3 &= (a+b)(a^2-ab+b^2)
-      \end{aligned}`,
-    text:
-      "A collection of problems built around rapid expansions, factorizations, substitutions, and the recognition of useful algebraic forms."
-  },
-  {
-    branch: "Algebra · Sums of Squares",
-    title: "Lagrange Identities",
-    href: withBase("problems/algebra/lagrange-identities/"),
-    ariaLabel: "Open the Lagrange Identities problem collection",
-    formula: String.raw`\begin{aligned}
-        (a^2+b^2)(c^2+d^2)
-        &=(ac-bd)^2+(ad+bc)^2,\\[0.35em]
-        \left(\sum_{i=1}^{n}a_i^2\right)
-        \left(\sum_{i=1}^{n}b_i^2\right)
-        -\left(\sum_{i=1}^{n}a_ib_i\right)^2
-        &=\sum_{1\le i<j\le n}(a_ib_j-a_jb_i)^2
-      \end{aligned}`,
-    text:
-      "Problems involving products of sums of squares, determinant-like expressions, Cauchy–Schwarz remainders, and classical composition formulas."
-  },
-  {
-    branch: "Analysis · Harmonic Sums",
-    title: "Botez–Catalan",
-    href: withBase("problems/real-analysis/botez-catalan/"),
-    ariaLabel: "Open the Botez-Catalan problem collection",
-    formula: String.raw`\sum_{k=1}^{n}\frac{1}{n+k}
-      =H_{2n}-H_n
-      =\sum_{k=1}^{2n}\frac{(-1)^{k-1}}{k}`,
-    text:
-      "A shelf of finite-sum problems centered on the Botez–Catalan identity, harmonic numbers, alternating sums, estimates, and limiting arguments."
-  },
-  {
-    branch: "Number Theory · Proof Techniques",
-    title: "Irrationality Proofs",
-    href: withBase("problems/irrationality-proofs/"),
-    ariaLabel: "Open the Irrationality Proofs problem collection",
-    formula: String.raw`\sqrt{2}\notin\mathbb{Q},
-      \qquad
-      e=\sum_{n=0}^{\infty}\frac{1}{n!}\notin\mathbb{Q},
-      \qquad
-      \log_{2}3\notin\mathbb{Q}`,
-    text:
-      "Contradiction, infinite descent, divisibility, rational approximation, and series-based arguments for proving that familiar constants are irrational."
-  }
-];
-
-const collections = [
-  "Algebra",
-  "Number Theory",
-  "Geometry",
-  "Combinatorics",
-  "Analysis",
-  "Probability"
-];
-
-const difficultyLevels = [
-  "Warm-up",
-  "Intermediate",
-  "Advanced",
-  "Olympiad",
-  "Open-ended"
-];
 ---
 
 <BaseLayout
@@ -92,7 +19,8 @@ const difficultyLevels = [
         <h1>Problems</h1>
 
         <p>
-	  We all go through them sometimes, man. You just gotta fight your way through and keep your head up high. And buy lots of crypto.
+          We all go through them sometimes, man. You just gotta fight your way
+          through and keep your head up high. And buy lots of crypto.
         </p>
       </section>
 
@@ -112,36 +40,306 @@ const difficultyLevels = [
           </p>
         </div>
 
+        <!--
+          ADDING A NEW PROBLEM COLLECTION
+          --------------------------------
+          Copy one complete <a class="problem-card">...</a> block below,
+          then change:
+            1. href
+            2. aria-label
+            3. branch / topic label
+            4. title
+            5. representative formula
+            6. description
+
+          This is intentionally structured like the Articles index: each
+          collection is written directly in the page instead of being stored
+          in a separate data array.
+        -->
+
         <div class="problem-card-grid">
-          {
-            problemCards.map((problem) => (
-              <a
-                class="problem-card"
-                href={problem.href}
-                aria-label={problem.ariaLabel}
-              >
-                <header class="problem-card-header">
-                  <span class="problem-branch">{problem.branch}</span>
+          <a
+            class="problem-card"
+            href={withBase("problems/algebra/shorthand-identities/")}
+            aria-label="Open the Shorthand Identities problem collection"
+          >
+            <header class="problem-card-header">
+              <span class="problem-branch">
+                Algebra · Identities
+              </span>
 
-                  <h3>{problem.title}</h3>
-                </header>
+              <h3>Shorthand Identities</h3>
+            </header>
 
-                <div
-                  class="problem-formula"
-                  role="img"
-                  aria-label={`Representative equations for ${problem.title}`}
-                >
-                  <Math tex={problem.formula} display />
-                </div>
+            <div
+              class="problem-formula"
+              role="img"
+              aria-label="Representative equations for Shorthand Identities"
+            >
+              <Math
+                tex={String.raw`\begin{aligned}
+                  (a+b)^2 &= a^2+2ab+b^2,\\
+                  a^2-b^2 &= (a-b)(a+b),\\
+                  a^3+b^3 &= (a+b)(a^2-ab+b^2)
+                \end{aligned}`}
+                display
+              />
+            </div>
 
-                <p class="problem-description">{problem.text}</p>
+            <p class="problem-description">
+              A collection of problems built around rapid expansions,
+              factorizations, substitutions, and the recognition of useful
+              algebraic forms.
+            </p>
 
-                <span class="read-label" aria-hidden="true">
-                  View collection <span>→</span>
-                </span>
-              </a>
-            ))
-          }
+            <span class="read-label" aria-hidden="true">
+              View collection <span>→</span>
+            </span>
+          </a>
+
+          <a
+            class="problem-card"
+            href={withBase("problems/algebra/lagrange-identities/")}
+            aria-label="Open the Lagrange Identities problem collection"
+          >
+            <header class="problem-card-header">
+              <span class="problem-branch">
+                Algebra · Sums of Squares
+              </span>
+
+              <h3>Lagrange Identities</h3>
+            </header>
+
+            <div
+              class="problem-formula"
+              role="img"
+              aria-label="Representative equations for Lagrange Identities"
+            >
+              <Math
+                tex={String.raw`\begin{aligned}
+                  (a^2+b^2)(c^2+d^2)
+                  &=(ac-bd)^2+(ad+bc)^2,\\[0.35em]
+                  \left(\sum_{i=1}^{n}a_i^2\right)
+                  \left(\sum_{i=1}^{n}b_i^2\right)
+                  -\left(\sum_{i=1}^{n}a_ib_i\right)^2
+                  &=\sum_{1\le i<j\le n}(a_ib_j-a_jb_i)^2
+                \end{aligned}`}
+                display
+              />
+            </div>
+
+            <p class="problem-description">
+              Problems involving products of sums of squares,
+              determinant-like expressions, Cauchy–Schwarz remainders, and
+              classical composition formulas.
+            </p>
+
+            <span class="read-label" aria-hidden="true">
+              View collection <span>→</span>
+            </span>
+          </a>
+
+          <a
+            class="problem-card"
+            href={withBase("problems/real-analysis/botez-catalan/")}
+            aria-label="Open the Botez-Catalan problem collection"
+          >
+            <header class="problem-card-header">
+              <span class="problem-branch">
+                Analysis · Harmonic Sums
+              </span>
+
+              <h3>Botez–Catalan</h3>
+            </header>
+
+            <div
+              class="problem-formula"
+              role="img"
+              aria-label="Representative equations for Botez-Catalan"
+            >
+              <Math
+                tex={String.raw`\sum_{k=1}^{n}\frac{1}{n+k}
+                  =H_{2n}-H_n
+                  =\sum_{k=1}^{2n}\frac{(-1)^{k-1}}{k}`}
+                display
+              />
+            </div>
+
+            <p class="problem-description">
+              A shelf of finite-sum problems centered on the Botez–Catalan
+              identity, harmonic numbers, alternating sums, estimates, and
+              limiting arguments.
+            </p>
+
+            <span class="read-label" aria-hidden="true">
+              View collection <span>→</span>
+            </span>
+          </a>
+
+          <a
+            class="problem-card"
+            href={withBase("problems/irrationality-proofs/")}
+            aria-label="Open the Irrationality Proofs problem collection"
+          >
+            <header class="problem-card-header">
+              <span class="problem-branch">
+                Number Theory · Proof Techniques
+              </span>
+
+              <h3>Irrationality Proofs</h3>
+            </header>
+
+            <div
+              class="problem-formula"
+              role="img"
+              aria-label="Representative equations for Irrationality Proofs"
+            >
+              <Math
+                tex={String.raw`\sqrt{2}\notin\mathbb{Q},
+                  \qquad
+                  e=\sum_{n=0}^{\infty}\frac{1}{n!}\notin\mathbb{Q},
+                  \qquad
+                  \log_{2}3\notin\mathbb{Q}`}
+                display
+              />
+            </div>
+
+            <p class="problem-description">
+              Contradiction, infinite descent, divisibility, rational
+              approximation, and series-based arguments for proving that
+              familiar constants are irrational.
+            </p>
+
+            <span class="read-label" aria-hidden="true">
+              View collection <span>→</span>
+            </span>
+          </a>
+
+	  <a
+            class="problem-card"
+            href={withBase("problems/real-analysis/cauchys-functional-equation/")}
+          >
+            <header class="problem-card-header">
+              <span class="problem-branch">
+                Number Theory · Proof Techniques
+              </span>
+
+              <h3>Cauchy's Functional Equation</h3>
+            </header>
+
+            <div
+              class="problem-formula"
+              role="img"
+              aria-label="Representative equations for Irrationality Proofs"
+            >
+              <Math
+                tex={String.raw`\text{idk.}`}
+                display
+              />
+            </div>
+
+            <p class="problem-description">
+	      idk.
+            </p>
+
+            <span class="read-label" aria-hidden="true">
+              View collection <span>→</span>
+            </span>
+          </a>
+
+	  <a
+            class="problem-card"
+            href={withBase("problems/algebra/functional-equations-the-ins-and-outs/")}
+          >
+            <header class="problem-card-header">
+              <span class="problem-branch">
+                Number Theory · Proof Techniques
+              </span>
+
+              <h3>Functional Equations: The Ins and Outs</h3>
+            </header>
+
+            <div
+              class="problem-formula"
+              role="img"
+            >
+              <Math
+                tex={String.raw`\text{idk.}`}
+                display
+              />
+            </div>
+
+            <p class="problem-description">
+	      idk.
+            </p>
+
+            <span class="read-label" aria-hidden="true">
+              View collection <span>→</span>
+            </span>
+          </a>
+
+	  <a
+            class="problem-card"
+            href={withBase("problems/measure/guess-the-sigmas-algebras-edition/")}
+          >
+            <header class="problem-card-header">
+              <span class="problem-branch">
+                Number Theory · Proof Techniques
+              </span>
+
+              <h3>Guess The Sigmas (Algebra's Edition)</h3>
+            </header>
+
+            <div
+              class="problem-formula"
+              role="img"
+            >
+              <Math
+                tex={String.raw`\text{idk.}`}
+                display
+              />
+            </div>
+
+            <p class="problem-description">
+	      idk.
+            </p>
+
+            <span class="read-label" aria-hidden="true">
+              View collection <span>→</span>
+            </span>
+          </a>
+
+	  <a
+            class="problem-card"
+            href={withBase("problems/analysis/balls-yes/")}
+          >
+            <header class="problem-card-header">
+              <span class="problem-branch">
+                Number Theory · Proof Techniques
+              </span>
+
+              <h3>Balls (Yes)</h3>
+            </header>
+
+            <div
+              class="problem-formula"
+              role="img"
+            >
+              <Math
+                tex={String.raw`\text{idk.}`}
+                display
+              />
+            </div>
+
+            <p class="problem-description">
+	      idk.
+            </p>
+
+            <span class="read-label" aria-hidden="true">
+              View collection <span>→</span>
+            </span>
+          </a>
+	  
         </div>
       </section>
 
@@ -156,7 +354,12 @@ const difficultyLevels = [
           <h2>Subjects</h2>
 
           <ul>
-            {collections.map((collection) => <li>{collection}</li>)}
+            <li>Algebra</li>
+            <li>Number Theory</li>
+            <li>Geometry</li>
+            <li>Combinatorics</li>
+            <li>Analysis</li>
+            <li>Probability</li>
           </ul>
         </a>
 
@@ -170,7 +373,11 @@ const difficultyLevels = [
           <h2>Difficulty</h2>
 
           <ul>
-            {difficultyLevels.map((level) => <li>{level}</li>)}
+            <li>Warm-up</li>
+            <li>Intermediate</li>
+            <li>Advanced</li>
+            <li>Olympiad</li>
+            <li>Open-ended</li>
           </ul>
         </a>
       </section>

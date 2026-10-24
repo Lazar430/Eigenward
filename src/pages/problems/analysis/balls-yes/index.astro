@@ -1,0 +1,283 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import ProblemsSidebar from "../../../../components/ProblemsSidebar.astro";
+import Math from "../../../../components/Math.astro";
+import Equation from "../../../../components/Equation.astro";
+import MathCanvas2D from "../../../../components/math-graphics/MathCanvas2D.astro";
+---
+<BaseLayout
+  title="Balls (Yes)"
+  description="TODO: Write a short description for Balls (Yes)."
+>
+  <section class="la-page">
+    <ProblemsSidebar />
+
+    <article class="topic-article">
+      <header class="topic-hero">
+        <span class="eyebrow">Analysis · Problems</span>
+        <h1>Balls (Yes)</h1>
+
+        <p>
+          TODO: Write a short introduction to this problem set.
+        </p>
+      </header>
+
+      <nav class="topic-toc" aria-label="Problem rounds">
+        <a href="#round-i">Round I</a>
+        <a href="#round-ii">Round II</a>
+        <a href="#round-iii">Round III</a>
+        <a href="#round-iv">Round IV</a>
+        <a href="#round-v">Round V</a>
+      </nav>
+
+      <section class="topic-section" id="round-i">
+        <h2>Round I</h2>
+
+        <Equation
+          tex={String.raw`A = \{ (x_1, x_2) \in \R^2 : |x_1| + |x_2| \leq 1 \}.`}
+        />
+
+        <MathCanvas2D
+          id="balls-yes-canvas"
+          label="Placeholder visualization for Balls (Yes)."
+          aspectRatio="16 / 9"
+        />
+
+        <details class="drop-example">
+          <summary>Solution</summary>
+
+          <div class="drop-content">
+            <p>
+	      We'll consider the special case that turns the inequality sign into an equality one:
+            </p>
+
+	    <Equation
+              tex={String.raw`|x_1| + |x_2| = 1.`}
+            />
+
+	    <p>
+	      First, observe that since <Math tex = "|x_1| = 1 - |x_2| \geq 0"/> and <Math tex = "|x_2| = 1 - |x_1| \geq 0"/>, it means
+              both <Math tex = "x_1"/> and <Math tex = "x_2"/> lie between <Math tex = "0"/> and <Math tex = "1"/>.
+            </p>
+
+	    <p>
+	      By considering all the relevant intervals, we can write <Math tex = "x_1"/> in terms of <Math tex = "x_2"/> like so:
+	    </p>
+
+	    <Equation
+              tex={String.raw`
+	      x_1 =
+	      \left\{
+	      \begin{array}{cc}
+	      1 - x_2 & x_1 \geq 0, x_2 \geq 0\\
+	      1 + x_2 & x_1 \geq 0, x_2 \leq 0\\
+	      x_2 - 1 & x_1 \leq 0, x_2 \geq 0\\
+	      -x_2 - 1 & x_1 \leq 0, x_2 \leq 0\\
+	      \end{array}
+	      \right..
+              `}
+            />
+
+	    <p> These are all line equations: </p>
+	      
+	    <Equation
+	      tex={String.raw`d_1: x_1 = 1 - x_2;`}
+	    />
+
+	    <Equation
+	      tex={String.raw`d_2: x_1 = 1 + x_2;`}
+	    />
+
+	    <Equation
+	      tex={String.raw`d_3: x_1 = x_2 - 1;`}
+	    />
+
+	    <Equation
+	      tex={String.raw`d_4: x_1 = -x_2 - 1.`}
+	    />
+
+	    <p> To be able to represent them graphically, we are going to find their respective axes intersection points: </p>
+
+	    <Equation
+	      tex={String.raw`(1, 0), (0, 1) \in d_1;`}
+	    />
+
+	    <Equation
+	      tex={String.raw`(1, 0), (0, -1) \in d_2;`}
+	    />
+
+	    <Equation
+	      tex={String.raw`(-1, 0), (0, 1) \in d_3;`}
+	    />
+
+	    <Equation
+	      tex={String.raw`(-1, 0), (0, -1) \in d_4.`}
+	    />
+
+	    <MathCanvas2D
+	      id="diamond_ball"
+	      label="The set A represented geometrically."
+	      aspectRatio="16 / 9"
+	    />
+
+	    
+          </div>
+        </details>
+      </section>
+      <section class="topic-section" id="round-ii">
+        <h2>Round II</h2>
+
+        <p>
+          TODO: Add the exercises for Round II. You can use inline
+          mathematics such as <Math tex="n \in \mathbb{N}" /> directly in the
+          problem statement.
+        </p>
+
+         <Equation
+          tex={String.raw`B = \{ (x_1, x_2) \in \R^2 : x_2 \geq |x_1|, x_2 \leq 2 \}.`}
+        />
+
+        <details class="drop-example">
+          <summary>Solution</summary>
+
+          <div class="drop-content">
+	    <p> The restriction this time is:  <Math tex = "x_2 \geq |x_1| \geq 0"/>. </p>
+	    
+            <p>
+	      Repeating the previous process, we end up with the lines:
+            </p>
+
+	    <Equation
+	      tex={String.raw`d_1: x_1 = x_2;`}
+	    />
+
+	    <Equation
+	      tex={String.raw`d_2: x_1 = -x_2;`}
+	    />
+
+	    <Equation
+	      tex={String.raw`d_3: x_2 = 2.`}
+	    />
+
+	    <MathCanvas2D
+	      id="triangle_ball"
+	      label="The set B represented geometrically."
+	      aspectRatio="16 / 9"
+	    />
+	    
+          </div>
+        </details>
+      </section>
+      <section class="topic-section" id="round-iii">
+        <h2>Round III</h2>
+
+        <p>
+          TODO: Add the exercises for Round III. You can use inline
+          mathematics such as <Math tex="n \in \mathbb{N}" /> directly in the
+          problem statement.
+        </p>
+
+        <Equation
+          tex={String.raw`C = \{  (x_1, x_2) \in \mathbb{R}^2 : x_1^2 + x_2^2 \leq 3, x_1 \leq 2|x_2| \}.`}
+        />
+
+        <details class="drop-example">
+          <summary>Solution</summary>
+
+          <div class="drop-content">
+            <p>
+	      Since <Math tex = "x_1^2 + x_2^2 \leq 3"/>, the domain for both <Math tex = "x_1"/> and <Math tex = "x_2"/> is <Math tex = "[-\sqrt{3}, \sqrt{3}]"/>.
+	      This particular equation is of course one of a circle of center <Math tex = "(0, 0)"/> and radius <Math tex = "\sqrt{3}"/>.
+            </p>
+
+	    <p> Considering the case of equality for the second inequation, we get: </p>
+
+	    <Equation
+	      tex={String.raw`d_1: x_1 = 2x_2;`}
+	    />
+
+	    <Equation
+	      tex={String.raw`d_2: x_1 = -2x_2.`}
+	    />
+
+	    <p> We have to find the intersection points between the aforementioned circle and the two lines we've just find. </p>
+
+	    <Equation
+	      tex={String.raw`
+	      \frac{1}{2}x_1 = \sqrt{3 - x_1^2}.
+              `}
+	    />
+
+	    <p>
+	      Solving this and the analogous second equation, we obtain the
+              points <Math tex = "\left(\frac{2\sqrt{15}}{5}, \frac{\sqrt{15}}{5}\right)"/> and <Math tex = "\left(\frac{2\sqrt{15}}{5}, -\frac{\sqrt{15}}{5}\right)"/>
+	      respectively.
+	    </p>
+
+	    
+	    <MathCanvas2D
+	      id="circle_sector_ball"
+	      label="The set C represented geometrically."
+	      aspectRatio="16 / 9"
+	    />
+	    
+          </div>
+        </details>
+      </section>
+      <section class="topic-section" id="round-iv">
+        <h2>Round IV</h2>
+
+        <p>
+          TODO: Add the exercises for Round IV. You can use inline
+          mathematics such as <Math tex="n \in \mathbb{N}" /> directly in the
+          problem statement.
+        </p>
+
+        <Equation
+          tex={String.raw`a_{n+1} = a_n + 1.`}
+        />
+
+        <details class="drop-example">
+          <summary>Solution</summary>
+
+          <div class="drop-content">
+            <p>
+              TODO: Write the solution, proof, hint sequence, or discussion for
+              Round IV.
+            </p>
+          </div>
+        </details>
+      </section>
+      <section class="topic-section" id="round-v">
+        <h2>Round V</h2>
+
+        <p>
+          TODO: Add the exercises for Round V. You can use inline
+          mathematics such as <Math tex="n \in \mathbb{N}" /> directly in the
+          problem statement.
+        </p>
+
+        <Equation
+          tex={String.raw`a_{n+1} = a_n + 1.`}
+        />
+
+        <details class="drop-example">
+          <summary>Solution</summary>
+
+          <div class="drop-content">
+            <p>
+              TODO: Write the solution, proof, hint sequence, or discussion for
+              Round V.
+            </p>
+          </div>
+        </details>
+      </section>
+    </article>
+  </section>
+</BaseLayout>
+
+<script>
+  import "../../../../scripts/animations/problems/analysis/balls-yes/diamondBall";
+  import "../../../../scripts/animations/problems/analysis/balls-yes/triangleBall";
+  import "../../../../scripts/animations/problems/analysis/balls-yes/circleSectorBall";
+</script>
