@@ -294,12 +294,12 @@ const formulas = {
   top: createFormulaLabel(
     "difference-of-squares-formula-top",
     String.raw`a^2`,
-    [0.45, -1.10],
+    [0.0, -1.20],
   ),
   bottom: createFormulaLabel(
     "difference-of-squares-formula-bottom",
     String.raw``,
-    [0.45, -1.90],
+    [0.0, -1.92],
   ),
 };
 

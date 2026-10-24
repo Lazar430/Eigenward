@@ -184,7 +184,7 @@ export function createFormulaLabel(
     name,
     latex,
     position,
-    anchor: [0, 0.5],
+    anchor: [0.5, 0.5],
     ...ALGEBRA_FORMULA_LABEL_STYLE,
   });
 }
