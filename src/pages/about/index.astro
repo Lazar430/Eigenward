@@ -194,4 +194,16 @@ import MathCanvas2D from "../../components/math-graphics/MathCanvas2D.astro";
     margin: 1rem 0 0;
     font-size: 0.93rem;
   }
+
+  /*
+   * Preserve the existing article-style environment exactly as-is.
+   * Only make the three algebra animation canvases opaque so the Julia
+   * background cannot show through during screen recording.
+   */
+  :global(#binomial-square-sum-scene),
+  :global(#binomial-square-difference-scene),
+  :global(#difference-of-squares-scene) {
+    background: #11101a !important;
+  }
+
 </style>
